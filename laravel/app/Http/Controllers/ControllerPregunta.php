@@ -25,8 +25,14 @@ class ControllerPregunta extends Controller
         return response()->json($pregunta, 201);
     }
 
-    public function show(Pregunta $pregunta)
+    public function show(Request $request)
     {
+        $pregunta = Pregunta::find($request->id);
+
+        if (!$pregunta) {
+            return response()->json(['message' => 'Pregunta no encontrada'], 404);
+        }
+
         return response()->json($pregunta);
     }
 

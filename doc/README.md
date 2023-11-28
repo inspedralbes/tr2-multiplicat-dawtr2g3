@@ -13,3 +13,38 @@ eines necessaries i com es crea l'entorn per que algú us ajudi en el vostre pro
 
 ## API / Endpoints / punts de comunicació
 Heu d'indicar quins són els punts d'entrada de la API i quins són els JSON que s'envien i es reben a cada endpoint
+
+Endpoint de get preguntes 
+RUTA: /api/preguntes METHOD: GET
+[{
+"id":VALOR,
+"tipus":"VALOR",
+"valorInicial":VALOR,
+"unitatInicial":"VALOR",
+"valorFinal":VALOR,
+"unitatFinal":"VALOR",
+"enunciat":"VALOR",
+"intermig":"VALOR",
+"dificultat":VALOR,
+"categoria":VALOR,
+"created_at":VALOR,
+"updated_at":VALOR
+}]
+
+Endpoint de get una pregunta
+RUTA: /api/preguntes/VALORID ex: /api/preguntes/1  METHOD: GET
+
+{
+"id":VALOR,
+"tipus":"VALOR",
+"valorInicial":VALOR,
+"unitatInicial":"VALOR",
+"valorFinal":VALOR,
+"unitatFinal":"VALOR",
+"enunciat":"VALOR",
+"intermig":"VALOR",
+"dificultat":VALOR,
+"categoria":VALOR,
+"created_at":VALOR,
+"updated_at":VALOR
+}

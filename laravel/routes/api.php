@@ -22,3 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('/preguntes',[ControllerPregunta::class, 'index']); 
+Route::get('/preguntes/{id}',[ControllerPregunta::class, 'show']); 
