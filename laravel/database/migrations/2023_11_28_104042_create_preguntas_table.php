@@ -13,7 +13,6 @@ return new class extends Migration {
         Schema::create('preguntas', function (Blueprint $table) {
             $table->id();
 
-            $table->string('tipus');
             $table->float('valorInicial',2);
             $table->string('unitatInicial');
             $table->float('valorFinal',2);
@@ -21,6 +20,8 @@ return new class extends Migration {
             $table->string('enunciat');
             $table->string('intermig');
             $table->integer('dificultat');
+            $table->unsignedBigInteger('tipus')->nullable();
+            $table->foreign('tipus')->references('id')->on('tipus')->onDelete('set null');
             $table->unsignedBigInteger('categoria')->nullable();
             $table->foreign('categoria')->references('id')->on('categorias')->onDelete('set null');
             $table->timestamps();
