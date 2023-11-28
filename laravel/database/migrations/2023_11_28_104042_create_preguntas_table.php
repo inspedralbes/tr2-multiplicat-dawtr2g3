@@ -14,8 +14,10 @@ return new class extends Migration {
             $table->id();
 
             $table->string('tipus');
-            $table->string('inicial');
-            $table->string('final');
+            $table->float('valorInicial',2);
+            $table->string('unitatInicial');
+            $table->float('valorFinal',2);
+            $table->string('unitatFinal');
             $table->string('enunciat');
             $table->string('intermig');
             $table->integer('dificultat');
