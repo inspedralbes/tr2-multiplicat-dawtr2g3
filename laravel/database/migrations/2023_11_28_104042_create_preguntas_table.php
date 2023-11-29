@@ -38,10 +38,7 @@ return new class extends Migration {
             'dificultat' => 2,
             'categoria' => 1,
             'respostes' => json_encode([
-                ['resposta' => 500],
-                ['resposta' => 50],
-                ['resposta' => 5],
-                ['resposta' => 100],
+                 500,50,5,100
             ]),
             'created_at' => now(),
             'updated_at' => now(),
@@ -58,12 +55,7 @@ return new class extends Migration {
             'intermig' => null,
             'dificultat' => 2,
             'categoria' => 2,
-            'respostes' => json_encode([
-                ['resposta' => 60],
-                ['resposta' => 30],
-                ['resposta' => 45],
-                ['resposta' => 90],
-            ]),
+            'respostes' => json_encode([60,30,45,90]),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -79,12 +71,7 @@ return new class extends Migration {
             'intermig' => null,
             'dificultat' => 3,
             'categoria' => 3,
-            'respostes' => json_encode([
-                ['resposta' => 0.5],
-                ['resposta' => 5],
-                ['resposta' => 50],
-                ['resposta' => 0.05],
-            ]),
+            'respostes' => json_encode([0.5,5,50,0.05]),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -100,12 +87,7 @@ return new class extends Migration {
             'intermig' => null,
             'dificultat' => 2,
             'categoria' => 4,
-            'respostes' => json_encode([
-                ['resposta' => 2000],
-                ['resposta' => 20],
-                ['resposta' => 200],
-                ['resposta' => 2],
-            ]),
+            'respostes' => json_encode([2000,20,200,2]),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -121,12 +103,7 @@ return new class extends Migration {
             'intermig' => null,
             'dificultat' => 3,
             'categoria' => 5,
-            'respostes' => json_encode([
-                ['resposta' => 16.67],
-                ['resposta' => 20],
-                ['resposta' => 15],
-                ['resposta' => 25],
-            ]),
+            'respostes' => json_encode([16.67,20,15,25]),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
