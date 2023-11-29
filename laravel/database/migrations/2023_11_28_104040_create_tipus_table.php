@@ -16,6 +16,11 @@ return new class extends Migration
             $table->string('nom');
             $table->timestamps();
         });
+        DB::table('tipus')->insert([
+            'nom' => 'Test',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     /**

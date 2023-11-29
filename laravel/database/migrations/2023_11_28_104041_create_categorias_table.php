@@ -16,6 +16,31 @@ return new class extends Migration
             $table->string('nom');
             $table->timestamps();
         });
+        DB::table('categorias')->insert([
+            'nom' => 'Unitats de longitud',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('categorias')->insert([
+            'nom' => 'Unitats de temp',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('categorias')->insert([
+            'nom' => 'Unitats de massa',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('categorias')->insert([
+            'nom' => 'Unitats de volum',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('categorias')->insert([
+            'nom' => 'Velocitat',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     /**
@@ -25,4 +50,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('categorias');
     }
+    
+
 };

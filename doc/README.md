@@ -28,23 +28,20 @@ RUTA: /api/preguntes METHOD: GET
 "dificultat":VALOR,
 "categoria":VALOR,
 "created_at":VALOR,
+"respuestas":[{
+respuesta:CORRECTA
+},
+{
+respuesta:INCORRECTA
+},
+{
+respuesta:INCORRECTA TAMBIEN  
+},
+{
+respuesta:INCORRECTA TAMBIEN  
+}],
 "updated_at":VALOR
 }]
 
-Endpoint de get una pregunta
-RUTA: /api/preguntes/VALORID ex: /api/preguntes/1  METHOD: GET
 
-{
-"id":VALOR,
-"tipus":"VALOR",
-"valorInicial":VALOR,
-"unitatInicial":"VALOR",
-"valorFinal":VALOR,
-"unitatFinal":"VALOR",
-"enunciat":"VALOR",
-"intermig":"VALOR",
-"dificultat":VALOR,
-"categoria":VALOR,
-"created_at":VALOR,
-"updated_at":VALOR
-}
+
