@@ -1,0 +1,97 @@
+[
+    {
+        "idPregunta": 0,
+        "pregunta": "Quant és 500 grams en quilograms?",
+        "categoria": 1,
+        "tipus": 0,
+        "parametres": {
+            "respostes": [
+                "0.5 kg",
+                "1 kg",
+                "2 kg",
+                "5 kg"
+            ],
+            "unitats": {
+                "valorInicial": null,
+                "unitatInicial": null,
+                "unitatFinal": null
+            }
+        }
+    },
+    {
+        "idPregunta": 1,
+        "pregunta": "Quant és 3 metres en centímetres?",
+        "categoria": 1,
+        "tipus": 0,
+        "parametres": {
+            "respostes": [
+                "30 cm",
+                "100 cm",
+                "300 cm",
+                "1000 cm"
+            ],
+            "unitats": {
+                "valorInicial": null,
+                "unitatInicial": null,
+                "unitatFinal": null
+            }
+        }
+    },
+    {
+        "idPregunta": 2,
+        "pregunta": "Quants litres hi ha en 2 galons?",
+        "categoria": 2,
+        "tipus": 0,
+        "parametres": {
+            "respostes": [
+                "4.5 L",
+                "7.5 L",
+                "9.5 L",
+                "11.5 L"
+            ],
+            "unitats": {
+                "valorInicial": null,
+                "unitatInicial": null,
+                "unitatFinal": null
+            }
+        }
+    },
+    {
+        "idPregunta": 3,
+        "pregunta": "Quina és la superfície d'un rectangle de 8 cm de llarg i 5 cm d'ample?",
+        "categoria": 3,
+        "tipus": 0,
+        "parametres": {
+            "respostes": [
+                "13 cm²",
+                "26 cm²",
+                "40 cm²",
+                "56 cm²"
+            ],
+            "unitats": {
+                "valorInicial": null,
+                "unitatInicial": null,
+                "unitatFinal": null
+            }
+        }
+    },
+    {
+        "idPregunta": 4,
+        "pregunta": "Quant temps es tarda en recórrer 120 km si la velocitat és de 60 km/h?",
+        "categoria": 4,
+        "tipus": 0,
+        "parametres": {
+            "respostes": [
+                "1 h",
+                "2 h",
+                "3 h",
+                "4 h"
+            ],
+            "unitats": {
+                "valorInicial": null,
+                "unitatInicial": null,
+                "unitatFinal": null
+            }
+        }
+    }
+]
