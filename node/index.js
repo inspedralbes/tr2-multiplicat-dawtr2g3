@@ -1,10 +1,24 @@
-const express = require('express')
+import express from 'express';
+import { data } from "./preguntes.js";
 const app = express()
 const port = 3000
 
-var mysql = require('mysql');
+// fetch no funcional
 
-function conectarBBDD() {
+// const conect = 'http://jsonestatic.daw.inspedralbes.cat/data.json'
+// let preguntas = getPreguntes();
+// function  getPreguntes() {
+//     fetch(conect)
+//     .then((response) => response.json())
+//     .then((jsonData) => {
+//         return jsonData;
+//     });
+// }
+
+console.log("info", data);
+ 
+//coneccio a la base de dades
+/*function conectarBBDD() {
     var con = mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -21,7 +35,10 @@ function tancarBBDD(con) {
     return 1;
 }
 
-
+function mostrarPreguntas() {
+    
+}
+//Veura la informacio de la base de dades
 app.get('/', (req, res) => {
     connexio = conectarBBDD();
     
@@ -33,49 +50,7 @@ app.get('/', (req, res) => {
             tancarBBDD(connexio);
           });
     });
-});
-
-app.get('/:mensage', (req, res) => {
-    connexio = conectarBBDD();
-    
-    connexio.connect(function (err) {
-        if (err) throw err;
-        var sql = `INSERT INTO probanode (mensage) VALUES ('${req.params.nom}', '${req.params.mensage}')`;
-        connexio.query(sql, function (err, result, fields) {
-            if (err) throw err;
-            res.send(result);
-            tancarBBDD(connexio);
-          });
-    });
-});
-
-app.get('/eliminar/:id', (req, res) => {
-    connexio = conectarBBDD();
-    
-    connexio.connect(function (err) {
-        if (err) throw err;
-        var sql = `DELETE FROM probanode WHERE id = ${req.params.id}`;
-        connexio.query(sql, function (err, result, fields) {
-            if (err) throw err;
-            res.send(result);
-            tancarBBDD(connexio);
-          });
-    });
-});
-
-app.get('/modificar/:id/:key/:valor', (req, res) => {
-    connexio = conectarBBDD();
-    
-    connexio.connect(function (err) {
-        if (err) throw err;
-        var sql = `UPDATE probanode SET ${req.params.key} = '${req.params.valor}' WHERE id = '${req.params.id}'`;
-        connexio.query(sql, function (err, result, fields) {
-            if (err) throw err;
-            res.send(result);
-            tancarBBDD(connexio);
-          });
-    });
-});
+});*/
 
 
 app.listen(port, () => {
