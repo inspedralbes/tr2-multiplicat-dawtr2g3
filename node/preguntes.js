@@ -2,7 +2,7 @@
 export const data = [
     {
       "id": 0,
-      "tipus": 0,
+      "tipus": 1,
       "valorInicial": null,
       "unitatInicial": null,
       "valorFinal": null,
@@ -17,7 +17,7 @@ export const data = [
     },
     {
       "id": 1,
-      "tipus": 0,
+      "tipus": 1,
       "valorInicial": null,
       "unitatInicial": null,
       "valorFinal": null,
@@ -32,7 +32,7 @@ export const data = [
     },
     {
       "id": 2,
-      "tipus": 0,
+      "tipus": 1,
       "valorInicial": null,
       "unitatInicial": null,
       "valorFinal": null,
@@ -47,7 +47,7 @@ export const data = [
     },
     {
       "id": 3,
-      "tipus": 0,
+      "tipus": 1,
       "valorInicial": null,
       "unitatInicial": null,
       "valorFinal": null,
@@ -62,7 +62,7 @@ export const data = [
     },
     {
       "id": 4,
-      "tipus": 0,
+      "tipus": 1,
       "valorInicial": null,
       "unitatInicial": null,
       "valorFinal": null,

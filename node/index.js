@@ -3,6 +3,44 @@ import { data } from "./preguntes.js";
 const app = express()
 const port = 3000
 
+let preguntasMal = data;
+let pregunta = {};
+
+let arrayPreg = [];
+
+preguntasMal.forEach((preguntaMal, index) => {
+    switch (preguntaMal.tipus) {
+        case 1:
+            
+            pregunta = tipusTest(preguntaMal ,index);
+            arrayPreg.push(pregunta);
+            break;
+    
+        default:
+            break;
+    }
+})
+
+function tipusTest(preguntaMal, index) {
+    let bien = {
+
+        "idPregunta": index,
+        "pregunta": preguntaMal.enunciat,
+        "categoria": preguntaMal.categoria,
+        "tipus": preguntaMal.tipus,
+        "parametres": {
+            "respostes":preguntaMal.respuestas,
+            "unitats": {
+                "valorInicial": 0,
+                "unitatInicial": "",
+                "unitatFinal": ""
+            }
+            
+        }
+    }
+    return bien;
+}
+console.log(arrayPreg);
 // fetch no funcional
 
 // const conect = 'http://jsonestatic.daw.inspedralbes.cat/data.json'
@@ -15,7 +53,6 @@ const port = 3000
 //     });
 // }
 
-console.log("info", data);
  
 //coneccio a la base de dades
 /*function conectarBBDD() {
