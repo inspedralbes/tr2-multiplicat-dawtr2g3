@@ -6,23 +6,45 @@ export const useAppStore = defineStore('app', {
     loginInfo: {
       loggedIn: false,
       username: '',
-      image: '',
     },
-    infoVotos:{
-      votos:[]
-    }
+    players: [],
+    question: null,
+    answer: null,
+    questionIndex: -1,
   }),
   actions: {
     setLoginInfo( loggedIn, username, image ) {
       this.loginInfo.loggedIn = loggedIn;
       this.loginInfo.username = username;
-      this.loginInfo.image = image;
     },
-    setVotos(votos){
-      this.infoVotos.votos=votos;
+    logout(){
+      this.loginInfo.loggedIn = false;
+      this.loginInfo.username = '';
     },
-    getVotos(){
-      return this.infoVotos.votos;
+    setPlayers( playerArray ) {
+      this.players = playerArray;
+    },
+    aumentar(){
+      this.questionIndex++;
+    },
+    getQuestionIndex(){
+      return this.questionIndex;
+    },
+    setQuestion( question ) {
+      this.question = question;
+      this.questionIndex++;
+    },
+    getQuestionIndex(){
+      return this.questionIndex;
+    },
+    getQuestion(){
+      return this.question;
+    },
+    getPlayers(){
+      return this.players;
+    },
+    setAnswer( answer ) {
+      this.question.answer = answer;
     },
     isLoggedIn(){
       return this.loginInfo.loggedIn;

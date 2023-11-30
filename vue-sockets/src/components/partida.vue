@@ -1,22 +1,27 @@
 <template>
-    <div v-if="state.loading">
+    <div>
         <div class="spinner-grow text-primary" role="status">
             <span class="sr-only">Loading...</span>
         </div>
     </div>
-    <div v-else>
+    <div>
         <div>
-            <h2>{{ partida.data[partida.actual].pregunta }}</h2>
+            <h2>{{ game.questionIndex }}</h2>
         </div>
-        <span v-for="(resposta, index) in partida.data[partida.actual].parametres.respostes">
-            <Button :label="resposta" @click="respondre(index)"></Button> 
-        </span>
+        <button @click="sumar">Sumar</button>
+
     </div>
 </template>
 
 <script>
+import { socket } from '../socket';
+import { computed } from 'vue';
+
+import { useAppStore } from "../stores/app.js";
 export default {
     data() {
+        const store = useAppStore();
+
         return {
             constants: {
                 // API_URL: "https://api.github.com",
@@ -26,35 +31,27 @@ export default {
                 loading: true,
                 error: false,
             },
-            partida: {
-                data: [],
-                actual: 0,
+            game: {
+
+              
+                questionIndex:computed(() => store.questionIndex),
+                players:computed(() => store.players),
+                question:computed(() => store.question)
+
             },
-            
+
         };
     },
     methods: {
-        /**
-         * Fetches the data from the JSON file.
-         
-         */
-        fetchData() {
-            fetch("src/assets/json/rebre.json")
-                .then((response) => response.json())
-                .then((jsonData) => {
-                    this.partida.data = jsonData;
-                    this.state.loading = false;
-                })
-                .catch((error) => {
-                    console.error("Error fetching data:", error);
-                    this.state.loading = false;
-                    this.state.error = true;
-                });
+        sumar() {
+            const store = useAppStore();
+            store.aumentar();
+            console.log(store.getQuestionIndex());
         },
 
         respondre(index) {
             if (index == 0) {
-                if (this.partida.actual  == this.partida.data.length - 1) {
+                if (this.partida.actual == this.partida.data.length - 1) {
                     this.$router.push('/final');
                 } else {
                     this.partida.actual++;
@@ -66,13 +63,20 @@ export default {
     },
 
     mounted() {
-        this.loading = true;
-        this.fetchData();
+        this.loading = false;
+        const store = useAppStore();
+        console.log(store.getQuestionIndex());
     },
-    created() {
+    setup() {
+        const store = useAppStore();
 
-    },
+        return {
+            partida: {
+                actual: computed(() => store.questionIndex),
+            },
+        }
 
+    }
 }
 </script>
 
