@@ -6,7 +6,7 @@
     </div>
     <div>
         <div>
-            <h1>{{ game.question.pregunta }}</h1>
+            <h1>{{ game.question.enunciat }}</h1>
             <h2>Pregunta:{{ game.questionIndex }}</h2>
             <div class="respostes">
                 <div class="resposta" v-for="(resposta, index) in game.question.respostes">
