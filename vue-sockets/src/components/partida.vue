@@ -6,7 +6,13 @@
     </div>
     <div>
         <div>
-            <h2>{{ game.questionIndex }}</h2>
+            <h1>{{ game.question.pregunta }}</h1>
+            <h2>Pregunta:{{ game.questionIndex }}</h2>
+            <div class="respostes">
+                <div class="resposta" v-for="(resposta, index) in game.question.respostes">
+                    <button @click="answer(index)">{{ resposta }}</button>
+                </div>
+            </div>
         </div>
         <button @click="sumar">Sumar</button>
 
@@ -16,7 +22,6 @@
 <script>
 import { socket } from '../socket';
 import { computed } from 'vue';
-
 import { useAppStore } from "../stores/app.js";
 export default {
     data() {
@@ -33,10 +38,11 @@ export default {
             },
             game: {
 
-              
-                questionIndex:computed(() => store.questionIndex),
-                players:computed(() => store.players),
-                question:computed(() => store.question)
+
+                questionIndex: computed(() => store.questionIndex),
+                players: computed(() => store.players),
+                question: computed(() => store.question),
+                answer: computed(() => store.answer)
 
             },
 
@@ -49,16 +55,9 @@ export default {
             console.log(store.getQuestionIndex());
         },
 
-        respondre(index) {
-            if (index == 0) {
-                if (this.partida.actual == this.partida.data.length - 1) {
-                    this.$router.push('/final');
-                } else {
-                    this.partida.actual++;
-                }
-            } else {
-                this.partida.actual = 0;
-            }
+        answer(index) {
+            socket.emit('answer', game.question.id, index);
+
         }
     },
 
@@ -66,17 +65,17 @@ export default {
         this.loading = false;
         const store = useAppStore();
         console.log(store.getQuestionIndex());
+        store.$subscribe((answer) => {
+            if (answer == true){
+                console.log("YIPPIE");
+                socket.emit("send");
+            }else{
+                console.log(":(")
+            }
+            answer = null;
+        })
     },
-    setup() {
-        const store = useAppStore();
 
-        return {
-            partida: {
-                actual: computed(() => store.questionIndex),
-            },
-        }
-
-    }
 }
 </script>
 
