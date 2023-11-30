@@ -1,5 +1,7 @@
-import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { createApp } from 'vue'
+import { useAppStore } from './stores/app'
+import { storeToRefs } from 'pinia';
 
 import PrimeVue from 'primevue/config';
 import App from './App.vue'
@@ -15,8 +17,9 @@ import Button from "primevue/button"
 import InputText from "primevue/inputtext"
 
 const app = createApp(App)
+const pinia = createPinia();
 
-app.use(createPinia());
+app.use(pinia);
 app.use(router);
 app.use(PrimeVue);
 
@@ -25,3 +28,4 @@ app.component('Button', Button);
 app.component('InputText', InputText);
 
 app.mount('#app')
+export const store = useAppStore();

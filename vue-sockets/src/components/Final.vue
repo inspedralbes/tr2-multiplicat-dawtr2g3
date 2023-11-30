@@ -1,9 +1,6 @@
 <template>
-  <div>
-    <h1>Landing Page</h1>
-    <Button label="Jugar" @click="$router.push('/partida')"></Button>
-  </div>
 
+YIPPIE
 </template>
 <script>
 // import { useAppStore } from "../stores/app.js";
@@ -23,6 +20,6 @@ export default {
   created() {
 
   },
-  
+
 }
 </script>
