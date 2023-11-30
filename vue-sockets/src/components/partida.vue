@@ -74,6 +74,8 @@ export default {
             }
             answer = null;
         })
+        socket.emit('join');
+
     },
 
 }

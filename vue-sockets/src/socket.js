@@ -4,7 +4,7 @@ import router from '@/router'; // Import the router from your project
 // "undefined" means the URL will be computed from the `window.location` object
 const URL = "http://localhost:3000";
 
-export const socket = io(/**URL*/);
+export const socket = io(URL);
 
 socket.on("update players", (playerArray) => {
   const store = useAppStore();
@@ -30,7 +30,9 @@ socket.on("end", () => {
 
 socket.on("play", (question) => {
   const store = useAppStore();
+  console.log('play');
   store.setQuestion(question);
-  router.push('/partida');
+  this.$router.push('/partida');
+  
 });
 
