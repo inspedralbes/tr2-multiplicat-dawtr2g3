@@ -12,17 +12,101 @@ return new class extends Migration {
     {
         Schema::create('preguntas', function (Blueprint $table) {
             $table->id();
-
-            $table->string('tipus');
-            $table->string('inicial');
-            $table->string('final');
-            $table->string('enunciat');
-            $table->string('intermig');
+            $table->float('valorInicial', 2)->nullable();
+            $table->string('unitatInicial')->nullable();
+            $table->float('valorFinal', 2)->nullable();
+            $table->string('unitatFinal')->nullable();
+            $table->string('enunciat')->nullable();
+            $table->string('intermig')->nullable();
             $table->integer('dificultat');
+            $table->string('respostes')->nullable();
+            $table->unsignedBigInteger('tipus')->nullable();
             $table->unsignedBigInteger('categoria')->nullable();
-            $table->foreign('categoria')->references('id')->on('categorias')->onDelete('set null');
             $table->timestamps();
+            $table->foreign('tipus')->references('id')->on('tipus')->onDelete('set null');
+            $table->foreign('categoria')->references('id')->on('categorias')->onDelete('set null');
         });
+
+        DB::table('preguntas')->insert([
+            'tipus' => 1,
+            'valorInicial' => null,
+            'unitatInicial' => null,
+            'valorFinal' => null,
+            'unitatFinal' => null,
+            'enunciat' => 'Quina és la longitud de 5 metres en centímetres?',
+            'intermig' => null,
+            'dificultat' => 2,
+            'categoria' => 1,
+            'respostes' => json_encode([
+                 500,50,5,100
+            ]),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Pregunta 2
+        DB::table('preguntas')->insert([
+            'tipus' => 1,
+            'valorInicial' => null,
+            'unitatInicial' => null,
+            'valorFinal' => null,
+            'unitatFinal' => null,
+            'enunciat' => 'Quant temps hi ha en una hora?',
+            'intermig' => null,
+            'dificultat' => 2,
+            'categoria' => 2,
+            'respostes' => json_encode([60,30,45,90]),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Pregunta 3
+        DB::table('preguntas')->insert([
+            'tipus' => 1,
+            'valorInicial' => null,
+            'unitatInicial' => null,
+            'valorFinal' => null,
+            'unitatFinal' => null,
+            'enunciat' => 'Quina és la massa de 500 grams en quilograms?',
+            'intermig' => null,
+            'dificultat' => 3,
+            'categoria' => 3,
+            'respostes' => json_encode([0.5,5,50,0.05]),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Pregunta 4
+        DB::table('preguntas')->insert([
+            'tipus' => 1,
+            'valorInicial' => null,
+            'unitatInicial' => null,
+            'valorFinal' => null,
+            'unitatFinal' => null,
+            'enunciat' => 'Quina és la capacitat d\'una ampolla de 2 litres en mililitres?',
+            'intermig' => null,
+            'dificultat' => 2,
+            'categoria' => 4,
+            'respostes' => json_encode([2000,20,200,2]),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Pregunta 5
+        DB::table('preguntas')->insert([
+            'tipus' => 1,
+            'valorInicial' => null,
+            'unitatInicial' => null,
+            'valorFinal' => null,
+            'unitatFinal' => null,
+            'enunciat' => 'Quina és la velocitat de 60 quilòmetres per hora en metres per segon?',
+            'intermig' => null,
+            'dificultat' => 3,
+            'categoria' => 5,
+            'respostes' => json_encode([16.67,20,15,25]),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     /**
@@ -32,4 +116,6 @@ return new class extends Migration {
     {
         Schema::dropIfExists('preguntas');
     }
+    
 };
+
