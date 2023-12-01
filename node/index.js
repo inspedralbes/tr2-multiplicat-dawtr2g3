@@ -102,7 +102,7 @@ io.on('connection', (socket) => {
                 llistatUsuarisMinim.push(userMinim);
             })
 
-            io.emit("update players")
+            io.emit("update players", llistatUsuarisMinim)
 
             if (acabat) {
                 io.emit('end');
