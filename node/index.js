@@ -14,7 +14,7 @@ const io = new Server(server, {
         origin: '*',
         methods: ['GET', 'POST'],
         credentials: true,
-       allowedHeaders: ["Access-Control-Allow-Origin"],
+        allowedHeaders: ["Access-Control-Allow-Origin"],
     }
 });
 
@@ -26,19 +26,22 @@ let arrayPreg = [];
 
 
 randomArray(preguntasMal);
+function iniciarArrayPreg(){
+    preguntasMal.forEach((preguntaMal, index) => {
+        switch (preguntaMal.tipus) {
+            case 1:
+    
+                pregunta = tipusTest(preguntaMal, index);
+                arrayPreg.push(pregunta);
+                break;
+    
+            default:
+                break;
+        }
+    })
 
-preguntasMal.forEach((preguntaMal, index) => {
-    switch (preguntaMal.tipus) {
-        case 1:
-
-            pregunta = tipusTest(preguntaMal, index);
-            arrayPreg.push(pregunta);
-            break;
-
-        default:
-            break;
-    }
-})
+}
+iniciarArrayPreg();
 
 let llistatUsuaris = [];
 
@@ -46,6 +49,7 @@ let llistatUsuaris = [];
 io.on('connection', (socket) => {
     console.log('hola');
     socket.on('join', (nom) => {
+        console.log(nom);
         let user = {
             "idSocket": socket.id,
             "nick": nom,
@@ -53,6 +57,7 @@ io.on('connection', (socket) => {
             "encertades": 0
         }
         llistatUsuaris.push(user);
+        console.log(llistatUsuaris);
         let llistatUsuarisMinim = [];
 
         llistatUsuaris.forEach((user) => {
@@ -71,26 +76,42 @@ io.on('connection', (socket) => {
             io.emit('play', arrayPreg[0]);
         }
     })
+    socket.on('disconnect', () => {
+        console.log("adeu");
+        const disconnectedUser = llistatUsuaris.find((user) => user.idSocket === socket.id);
+        if (disconnectedUser) {
+            const index = llistatUsuaris.indexOf(disconnectedUser);
+            llistatUsuaris.splice(index, 1);
+            console.log(llistatUsuaris);
+        }
+        function resetearDatos() {
+            preguntasMal = data;
+            pregunta = {};
+            arrayPreg = [];
+            randomArray(preguntasMal);
+            llistatUsuaris = [];
+        }
+        resetearDatos();
+        iniciarArrayPreg();
 
+    });
     socket.on('answer', (idPreg, posResp) => {
 
         let correcte = false;
         let acabat = false;
-
-        if (arrayPreg[idPreg].parametres.respostes[posResp].contains(preguntasMal[idPreg].respuestas[respuestaCorrecta])) {
+        if (arrayPreg[idPreg].respostes[posResp].includes(preguntasMal[idPreg].respuestas[respuestaCorrecta])) {
             correcte = true;
 
-
-            if (posResp == arrayPreg.length - 1) {
+            if (idPreg == arrayPreg.length - 1) {
                 acabat = true;
             }
 
             let llistatUsuarisMinim = [];
 
-            user = llistatUsuaris.find((usuari) => {
+            let user = llistatUsuaris.find((usuari) => {
                 return usuari.idSocket == socket.id;
             });
-
+            console.log(user.encertades);
             user.encertades++;
             user.preguntaActual++;
 
@@ -107,20 +128,32 @@ io.on('connection', (socket) => {
             io.emit("update players")
 
             if (acabat) {
+                
                 io.emit('end');
+                function resetearDatos() {
+                    preguntasMal = data;
+                    pregunta = {};
+                    arrayPreg = [];
+                    randomArray(preguntasMal);
+                    llistatUsuaris = [];
+                }
+                resetearDatos();
+                iniciarArrayPreg();
+
             }
-            socket.emit('check', correcte, acabat);
         }
+        socket.emit('check', correcte, acabat);
     })
 
-    socket.on('send',()=>{
-        user = llistatUsuaris.find((usuari) => {
+    socket.on('send', () => {
+        let user = llistatUsuaris.find((usuari) => {
             return usuari.idSocket == socket.id;
         });
 
         socket.emit('new question', arrayPreg[user.preguntaActual]);
     })
 
+    
 })
 
 
@@ -131,15 +164,14 @@ function tipusTest(preguntaaModificar, index) {
         "pregunta": preguntaaModificar.enunciat,
         "categoria": preguntaaModificar.categoria,
         "tipus": preguntaaModificar.tipus,
-        "parametres": {
-            "respostes": preguntaaModificar.respuestas,
-            "unitats": {
-                "valorInicial": 0,
-                "unitatInicial": "",
-                "unitatFinal": ""
-            }
-
+        "respostes": preguntaaModificar.respuestas,
+        "unitats": {
+            "valorInicial": 0,
+            "unitatInicial": "",
+            "unitatFinal": ""
         }
+
+
     }
     return bien;
 }

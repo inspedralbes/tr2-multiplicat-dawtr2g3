@@ -6,10 +6,16 @@
     </div>
     <div>
         <div>
-            <h1>{{ game.question.enunciat }}</h1>
+            <div class="jugadors">
+                <div class="jugador" v-for="jugador in game.players">
+                {{ jugador.nick  }}
+                </div>
+            </div>
+            <h1>{{ game.question.pregunta }}</h1>
             <h2>Pregunta:{{ game.questionIndex }}</h2>
             <div class="respostes">
                 <div class="resposta" v-for="(resposta, index) in game.question.respostes">
+                    
                     <button @click="answer(index)">{{ resposta }}</button>
                 </div>
             </div>
@@ -42,22 +48,18 @@ export default {
                 questionIndex: computed(() => store.questionIndex),
                 players: computed(() => store.players),
                 question: computed(() => store.question),
-                answer: computed(() => store.answer)
-
+                answer: computed(() => store.answer),
             },
 
         };
     },
     methods: {
         sumar() {
-            const store = useAppStore();
-            store.aumentar();
-            console.log(store.getQuestionIndex());
+            console.log(this.game.players);
         },
 
         answer(index) {
-            socket.emit('answer', game.question.id, index);
-
+            socket.emit('answer', this.game.question.idPregunta, index);
         }
     },
 
@@ -66,16 +68,15 @@ export default {
         const store = useAppStore();
         console.log(store.getQuestionIndex());
         store.$subscribe((answer) => {
-            if (answer == true){
+            if (store.getAnswer() == true){
                 console.log("YIPPIE");
                 socket.emit("send");
-            }else{
+            }else if (store.getAnswer() == false){
                 console.log(":(")
             }
-            answer = null;
+            console.log(store.getAnswer());
+            store.setAnswer(null);
         })
-        socket.emit('join');
-
     },
 
 }

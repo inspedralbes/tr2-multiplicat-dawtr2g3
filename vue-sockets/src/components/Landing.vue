@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Landing Page</h1>
+    <input type="text" id="nomJugador">
     <Button label="Jugar" @click="empezar"></Button>
   </div>
 
@@ -18,8 +19,7 @@ export default {
   methods: {
     empezar(){
       console.log("empezar");
-
-      socket.emit('join');
+      socket.emit('join',document.getElementById("nomJugador").value);
 
     }
   },
