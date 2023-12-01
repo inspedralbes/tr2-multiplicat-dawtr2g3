@@ -68,6 +68,7 @@ export default {
         const store = useAppStore();
         console.log(store.getQuestionIndex());
         store.$subscribe((answer) => {
+            console.log(this.game.question.respostes);
             if (store.getAnswer() == true){
                 console.log("YIPPIE");
                 socket.emit("send");

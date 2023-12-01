@@ -1,5 +1,12 @@
+export async function fetchPreguntas() {
 
-export const data = [
+    const response = await fetch('http://localhost:8000/api/preguntes');
+    const data = await response.json();
+    return data;
+}
+
+
+/**export const data = [
     {
       "id": 0,
       "tipus": 1,
@@ -76,3 +83,4 @@ export const data = [
       "updated_at": null
     }
   ]
+  **/

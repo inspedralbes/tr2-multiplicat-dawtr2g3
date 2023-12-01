@@ -1,5 +1,5 @@
 import express from 'express';
-import { data } from "./preguntes.js";
+import { fetchPreguntas } from "./preguntes.js";
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import cors from 'cors';
@@ -17,7 +17,7 @@ const io = new Server(server, {
         allowedHeaders: ["Access-Control-Allow-Origin"],
     }
 });
-
+const data = await fetchPreguntas();
 const respuestaCorrecta = 0
 let preguntasMal = data;
 let pregunta = {};
@@ -26,15 +26,19 @@ let arrayPreg = [];
 
 
 randomArray(preguntasMal);
-function iniciarArrayPreg(){
+function iniciarArrayPreg() {
     preguntasMal.forEach((preguntaMal, index) => {
         switch (preguntaMal.tipus) {
             case 1:
-    
-                pregunta = tipusTest(preguntaMal, index);
+
+                let pregunta = tipusTest(preguntaMal, index);
+                let arrayResp = '['+pregunta.respostes+']';
+                pregunta.respostes = JSON.parse(arrayResp);
+                preguntasMal[index].respostes = JSON.parse(arrayResp);
+                console.log(pregunta.respostes);
                 arrayPreg.push(pregunta);
                 break;
-    
+
             default:
                 break;
         }
@@ -99,7 +103,8 @@ io.on('connection', (socket) => {
 
         let correcte = false;
         let acabat = false;
-        if (arrayPreg[idPreg].respostes[posResp].includes(preguntasMal[idPreg].respuestas[respuestaCorrecta])) {
+        console.log(preguntasMal[idPreg].respostes[respuestaCorrecta]);
+        if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
             correcte = true;
 
             if (idPreg == arrayPreg.length - 1) {
@@ -111,7 +116,6 @@ io.on('connection', (socket) => {
             let user = llistatUsuaris.find((usuari) => {
                 return usuari.idSocket == socket.id;
             });
-            console.log(user.encertades);
             user.encertades++;
             user.preguntaActual++;
 
@@ -128,7 +132,7 @@ io.on('connection', (socket) => {
             io.emit("update players", llistatUsuarisMinim)
 
             if (acabat) {
-                
+
                 io.emit('end');
                 function resetearDatos() {
                     preguntasMal = data;
@@ -153,7 +157,7 @@ io.on('connection', (socket) => {
         socket.emit('new question', arrayPreg[user.preguntaActual]);
     })
 
-    
+
 })
 
 
@@ -164,7 +168,7 @@ function tipusTest(preguntaaModificar, index) {
         "pregunta": preguntaaModificar.enunciat,
         "categoria": preguntaaModificar.categoria,
         "tipus": preguntaaModificar.tipus,
-        "respostes": preguntaaModificar.respuestas,
+        "respostes": JSON.parse('['+preguntaaModificar.respostes+']'),
         "unitats": {
             "valorInicial": 0,
             "unitatInicial": "",
