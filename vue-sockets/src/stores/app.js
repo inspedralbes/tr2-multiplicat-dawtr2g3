@@ -43,8 +43,11 @@ export const useAppStore = defineStore('app', {
     getPlayers(){
       return this.players;
     },
-    setAnswer( answer ) {
-      this.question.answer = answer;
+    setAnswer( neWanswer ) {
+      this.answer = neWanswer;
+    },
+    getAnswer(){
+      return this.answer;
     },
     isLoggedIn(){
       return this.loginInfo.loggedIn;
