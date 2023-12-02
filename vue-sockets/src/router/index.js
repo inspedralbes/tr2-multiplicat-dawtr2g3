@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Landing from '../components/Landing.vue'
 import Partida from "../components/Partida.vue";
 import Final from "../components/Final.vue";
-
+import Lobby from "../components/Lobby.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -20,6 +20,11 @@ const router = createRouter({
       path: '/final',
       name: 'final',
       component: Final
+    },
+    {
+      path: '/lobby',
+      name: 'lobby',
+      component: Lobby
     }
   ]
 })

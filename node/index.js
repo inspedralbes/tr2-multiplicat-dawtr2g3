@@ -76,9 +76,7 @@ io.on('connection', (socket) => {
         })
 
         io.emit('update players', llistatUsuarisMinim);
-        if (llistatUsuaris.length == 2) {
-            io.emit('play', arrayPreg[0]);
-        }
+        
     })
     socket.on('disconnect', () => {
         console.log("adeu");
@@ -88,16 +86,12 @@ io.on('connection', (socket) => {
             llistatUsuaris.splice(index, 1);
             console.log(llistatUsuaris);
         }
-        function resetearDatos() {
-            preguntasMal = data;
-            pregunta = {};
-            arrayPreg = [];
-            randomArray(preguntasMal);
-            llistatUsuaris = [];
+        io.emit('update players', llistatUsuaris);
+    });
+    socket.on('start', () => {
+        if (llistatUsuaris.length >= 2) {
+            io.emit('play', arrayPreg[0]);
         }
-        resetearDatos();
-        iniciarArrayPreg();
-
     });
     socket.on('answer', (idPreg, posResp) => {
 

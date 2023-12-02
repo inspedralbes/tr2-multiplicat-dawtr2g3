@@ -9,6 +9,7 @@
 <script>
 // import { useAppStore } from "../stores/app.js";
 import { socket } from '../socket';
+import router from '@/router'
 
 export default {
   data() {
@@ -20,7 +21,7 @@ export default {
     empezar(){
       console.log("empezar");
       socket.emit('join',document.getElementById("nomJugador").value);
-
+      router.push('/lobby');
     }
   },
 
