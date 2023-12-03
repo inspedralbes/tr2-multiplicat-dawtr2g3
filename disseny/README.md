@@ -52,5 +52,14 @@ DOCUMENTACIÓ DE DISENY
         - Taronja: Per a background de titols.
         -Vermell: El seu ús es per a butons i per la progress bar de la sala d'espera.
         - Verd: El color verd s'utilitza únicament per els botons.
-        - Celeste: 
+        - Celeste: Aquest color s'utilitza per a butons petits o mitjans, i per el fons de la segona posició en la classificació.
+        - Blau: S'utilitza per als butons de la pantalla de joc, i un fons suau en cas de que sigui necesari.
+        - Violeta: Es el color que utilitzem per a l'aplicació, el color principal. S'utilitza més de fons o per a la lletra de butons o el fons d'algún botó.
     }
+
+- Estil de lletres {
+    - Battle beats (Regular): Aquesta tipografia s'utilitza per als títols generalment, o alguns botons, molt pocs.
+    - Share tech (Regular): Es la tipografia principal de l'aplicació.
+}
+
+El framework que utilitzarem per a desenvolupar la aplicació es Vuetify, els motius son per la seva comptabilitat amb Vue i per els componentes i eines que ens ofereix. Creiem que son les més adequades per al estil que volem aconseguir en la aplicació de Math Royale.
