@@ -10,6 +10,16 @@ const routes = [
     name: 'home',
     component: Landing
   },
+  {
+    path: '/partida',
+    name: 'partida',
+    component: Partida
+  },
+  {
+    path: '/final',
+    name: 'final',
+    component: Final
+  }
 ]
 
 const router = createRouter({
