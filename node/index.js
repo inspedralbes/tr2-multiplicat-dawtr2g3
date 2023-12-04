@@ -35,7 +35,7 @@ function iniciarArrayPreg() {
                 let arrayResp = '['+pregunta.respostes+']';
                 pregunta.respostes = JSON.parse(arrayResp);
                 preguntasMal[index].respostes = JSON.parse(arrayResp);
-                console.log(pregunta.respostes);
+                // console.log(pregunta.respostes);
                 arrayPreg.push(pregunta);
                 break;
 
@@ -53,7 +53,7 @@ let llistatUsuaris = [];
 io.on('connection', (socket) => {
     console.log('hola');
     socket.on('join', (nom) => {
-        console.log(nom);
+        // console.log(nom);
         let user = {
             "idSocket": socket.id,
             "nick": nom,
@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
             "encertades": 0
         }
         llistatUsuaris.push(user);
-        console.log(llistatUsuaris);
+        // console.log(llistatUsuaris);
         let llistatUsuarisMinim = [];
 
         llistatUsuaris.forEach((user) => {
@@ -79,12 +79,12 @@ io.on('connection', (socket) => {
         
     })
     socket.on('disconnect', () => {
-        console.log("adeu");
+        // console.log("adeu");
         const disconnectedUser = llistatUsuaris.find((user) => user.idSocket === socket.id);
         if (disconnectedUser) {
             const index = llistatUsuaris.indexOf(disconnectedUser);
             llistatUsuaris.splice(index, 1);
-            console.log(llistatUsuaris);
+            // console.log(llistatUsuaris);
         }
         io.emit('update players', llistatUsuaris);
     });
@@ -97,7 +97,7 @@ io.on('connection', (socket) => {
 
         let correcte = false;
         let acabat = false;
-        console.log(preguntasMal[idPreg].respostes[respuestaCorrecta]);
+        // console.log(preguntasMal[idPreg].respostes[respuestaCorrecta]);
         if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
             correcte = true;
 
@@ -112,6 +112,10 @@ io.on('connection', (socket) => {
             });
             user.encertades++;
             user.preguntaActual++;
+
+            llistatUsuaris.sort((a, b) => { return b.preguntaActual - a.preguntaActual });
+
+            console.log(llistatUsuaris);
 
             llistatUsuaris.forEach((user) => {
 
@@ -173,7 +177,7 @@ function tipusTest(preguntaaModificar, index) {
     }
     return bien;
 }
-console.log(arrayPreg);
+// console.log(arrayPreg);
 
 
 /**
