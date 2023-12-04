@@ -12,7 +12,10 @@ socket.on("update players", (playerArray) => {
   console.log(playerArray);
   store.setPlayers(playerArray);
 });
-
+socket.on("update chat", (msg) => {
+  const store = useAppStore();
+  store.pushChat(msg);
+});
 socket.on("new question", (question) => {
   const store = useAppStore();
   store.setQuestion(question);

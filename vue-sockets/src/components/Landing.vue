@@ -8,6 +8,7 @@
 </template>
 <script>
 // import { useAppStore } from "../stores/app.js";
+import { useAppStore } from "../stores/app.js";
 import { socket } from '../socket';
 import router from '@/router'
 
@@ -19,8 +20,11 @@ export default {
   },
   methods: {
     empezar(){
+      const store = useAppStore();
       console.log("empezar");
-      socket.emit('join',document.getElementById("nomJugador").value);
+      let nick = document.getElementById("nomJugador").value;
+      socket.emit('join',nick);
+      store.setNick(nick);
       router.push('/lobby');
     }
   },
