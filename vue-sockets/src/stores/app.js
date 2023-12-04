@@ -7,6 +7,7 @@ export const useAppStore = defineStore('app', {
       loggedIn: false,
       username: '',
     },
+    chat: [],
     players: [],
     question: null,
     answer: null,
@@ -16,6 +17,9 @@ export const useAppStore = defineStore('app', {
     setLoginInfo( loggedIn, username, image ) {
       this.loginInfo.loggedIn = loggedIn;
       this.loginInfo.username = username;
+    },
+    pushChat( msg ) {  
+      this.chat.push(msg);
     },
     logout(){
       this.loginInfo.loggedIn = false;
@@ -39,6 +43,9 @@ export const useAppStore = defineStore('app', {
     },
     getQuestion(){
       return this.question;
+    },
+    setNick( nick ) {
+      this.loginInfo.username = nick;
     },
     getPlayers(){
       return this.players;

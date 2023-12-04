@@ -21,7 +21,6 @@ const data = await fetchPreguntas();
 const respuestaCorrecta = 0
 let preguntasMal = data;
 let pregunta = {};
-
 let arrayPreg = [];
 
 
@@ -92,6 +91,14 @@ io.on('connection', (socket) => {
         if (llistatUsuaris.length >= 2) {
             io.emit('play', arrayPreg[0]);
         }
+    });
+    socket.on('enviar missatge', (missatge, nick) => {
+        
+        let obj = {
+            "nick": nick,
+            "msg": missatge
+        }
+        io.emit('update chat', obj);
     });
     socket.on('answer', (idPreg, posResp) => {
 
