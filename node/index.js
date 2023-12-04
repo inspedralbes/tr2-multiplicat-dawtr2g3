@@ -132,6 +132,9 @@ io.on('connection', (socket) => {
             if (acabat) {
 
                 io.emit('end');
+                /**
+                 * Reinicia las variables para volver a empezar
+                 */
                 function resetearDatos() {
                     preguntasMal = data;
                     pregunta = {};
@@ -158,7 +161,12 @@ io.on('connection', (socket) => {
 
 })
 
-
+/**
+ * Formata la pregunta per a que sigui correctament llegida per el client
+ * @param {object} preguntaaModificar objecte que conté la pregunta a modificar
+ * @param {int} index 
+ * @returns  la pregunta formatada correctament
+ */
 function tipusTest(preguntaaModificar, index) {
     let bien = {
 
