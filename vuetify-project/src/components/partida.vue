@@ -8,7 +8,7 @@
         <div>
             <div class="jugadors">
                 <div class="jugador" v-for="jugador in game.players">
-                {{ jugador.nick  }}
+                    <span>{{ jugador.nick  }}</span><span>  {{ jugador.encertades  }}</span>
                 </div>
             </div>
             <h1>{{ game.question.pregunta }}</h1>
@@ -18,6 +18,13 @@
                     
                     <button @click="answer(index)">{{ resposta }}</button>
                 </div>
+            </div>
+            <div class="chat">
+                <div class="missatge" v-for="missatge in game.chat">
+                    <span>{{ missatge.nick  }}</span>:<span>  {{ missatge.msg  }}</span>
+                </div>
+                <input type="text" id="inputChat">
+                <button @click="enviarMissatge()">Enviar</button>
             </div>
         </div>
         <button @click="sumar">Sumar</button>
@@ -44,7 +51,7 @@ export default {
             },
             game: {
 
-
+                chat: computed(() => store.chat),
                 questionIndex: computed(() => store.questionIndex),
                 players: computed(() => store.players),
                 question: computed(() => store.question),
@@ -60,6 +67,13 @@ export default {
 
         answer(index) {
             socket.emit('answer', this.game.question.idPregunta, index);
+        },
+        enviarMissatge() {
+            const store = useAppStore();
+
+            var input = document.getElementById("inputChat");
+            socket.emit('enviar missatge', input.value,store.loginInfo.username);
+            input.value = "";
         }
     },
 

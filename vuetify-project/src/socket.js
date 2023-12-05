@@ -1,4 +1,4 @@
-import { io } from 'socket.io-client';
+import { io } from "socket.io-client";
 import { useAppStore } from '@/store/app';
 
 import router from '@/router'; // Import the router from your project
@@ -12,7 +12,10 @@ socket.on("update players", (playerArray) => {
   console.log(playerArray);
   store.setPlayers(playerArray);
 });
-
+socket.on("update chat", (msg) => {
+  const store = useAppStore();
+  store.pushChat(msg);
+});
 socket.on("new question", (question) => {
   const store = useAppStore();
   store.setQuestion(question);
