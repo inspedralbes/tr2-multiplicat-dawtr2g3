@@ -3,10 +3,11 @@ import { createApp } from 'vue'
 import { useAppStore } from './stores/app'
 import { storeToRefs } from 'pinia';
 
+
 import PrimeVue from 'primevue/config';
 import App from './App.vue'
-import router from './router'
 
+import router from './router'
 
 // imports dels css de primevue
 import '/node_modules/primeflex/primeflex.css'
