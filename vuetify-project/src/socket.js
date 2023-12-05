@@ -3,9 +3,17 @@ import { useAppStore } from '@/store/app';
 
 import router from '@/router'; // Import the router from your project
 // "undefined" means the URL will be computed from the `window.location` object
+/**
+ * Si estas treballant en local ferem  url =localhost:3000
+ * Si estas en producció ferem url = http://mathroyale.daw.inspedralbes.cat:3000
+ */
 const URL = "http://localhost:3000";
 
-export const socket = io(URL);
+export const socket = io(URL,{
+  extraHeaders:  {
+    "Access-Control-Allow-Origin": "*",
+  },
+});
 
 socket.on("update players", (playerArray) => {
   const store = useAppStore();
