@@ -31,10 +31,10 @@ function iniciarArrayPreg() {
             case 1:
 
                 let pregunta = tipusTest(preguntaMal, index);
+                
                 let arrayResp = '['+pregunta.respostes+']';
-                pregunta.respostes = JSON.parse(arrayResp);
                 preguntasMal[index].respostes = JSON.parse(arrayResp);
-                // console.log(pregunta.respostes);
+                pregunta.respostes = randomArray(JSON.parse(arrayResp));
                 arrayPreg.push(pregunta);
                 break;
 
@@ -207,6 +207,7 @@ function randomArray(array) {
         array[i] = array[j];
         array[j] = temp;
     }
+    return array;
 
 }
 // fetch no funcional
