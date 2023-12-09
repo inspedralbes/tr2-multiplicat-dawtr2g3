@@ -14,7 +14,11 @@ export const socket = io(URL,{
     "Access-Control-Allow-Origin": "*",
   },
 });
+socket.on("llista partides", (arrayRoom) => {
+  const store = useAppStore();
+  store.setPartides(arrayRoom);
 
+});
 socket.on("update players", (playerArray) => {
   const store = useAppStore();
   console.log(playerArray);
@@ -29,14 +33,13 @@ socket.on("new question", (question) => {
   store.setQuestion(question);
 });
 
-socket.on("check", (answer, acabat) => {
+socket.on("check", (answer) => {
   const store = useAppStore();
   console.log(answer);
   store.setAnswer(answer);
-  if (acabat) {
-    router.push('/final');
-  };
+  
 });
+
 socket.on("end", () => {
   router.push('/final');
 
