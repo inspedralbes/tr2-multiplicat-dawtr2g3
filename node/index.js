@@ -122,14 +122,12 @@ io.on('connection', (socket) => {
         io.emit('llista partides', arrayRoomMinim);
     })
 
-    socket.on('disconnect', () => {
+    socket.on('disconnecting', () => {
         let rooms = socket.rooms;
         let roomID;
         rooms.forEach((room) => {
             roomID = room;
         });
-        console.log(roomID);
-
 
         if (roomID != undefined) {
             arrayRoom.map((room) => {
