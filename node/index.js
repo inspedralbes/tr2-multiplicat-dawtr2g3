@@ -29,10 +29,11 @@ function iniciarArrayPreg() {
     preguntasMal.forEach((preguntaMal, index) => {
         switch (preguntaMal.tipus) {
             case 1:
+            case 2:
 
                 let pregunta = tipusTest(preguntaMal, index);
-                
-                let arrayResp = '['+pregunta.respostes+']';
+
+                let arrayResp = '[' + pregunta.respostes + ']';
                 preguntasMal[index].respostes = JSON.parse(arrayResp);
                 pregunta.respostes = randomArray(JSON.parse(arrayResp));
                 arrayPreg.push(pregunta);
@@ -75,7 +76,7 @@ io.on('connection', (socket) => {
         })
 
         io.emit('update players', llistatUsuarisMinim);
-        
+
     })
     socket.on('disconnect', () => {
         // console.log("adeu");
@@ -93,7 +94,7 @@ io.on('connection', (socket) => {
         }
     });
     socket.on('enviar missatge', (missatge, nick) => {
-        
+
         let obj = {
             "nick": nick,
             "msg": missatge
@@ -181,7 +182,7 @@ function tipusTest(preguntaaModificar, index) {
         "pregunta": preguntaaModificar.enunciat,
         "categoria": preguntaaModificar.categoria,
         "tipus": preguntaaModificar.tipus,
-        "respostes": JSON.parse('['+preguntaaModificar.respostes+']'),
+        "respostes": JSON.parse('[' + preguntaaModificar.respostes + ']'),
         "unitats": {
             "valorInicial": 0,
             "unitatInicial": "",

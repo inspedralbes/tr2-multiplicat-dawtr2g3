@@ -9,6 +9,8 @@ import App from './App.vue'
 
 import router from './router'
 
+// import Drag from 'components/Drag.vue'
+
 // imports dels css de primevue
 import '/node_modules/primeflex/primeflex.css'
 import 'primevue/resources/themes/lara-light-blue/theme.css';
@@ -27,6 +29,7 @@ app.use(PrimeVue);
 // components de primevue
 app.component('Button', Button);
 app.component('InputText', InputText);
+// app.component('Drag', Drag); 
 
 app.mount('#app')
 export const store = useAppStore();
