@@ -8,7 +8,8 @@
         <div>
             <div class="jugadors">
                 <div class="jugador" v-for="jugador in game.players">
-                    <span>{{ jugador.nick  }}</span><span>  {{ jugador.encertades  }}</span>
+                    <span>{{ jugador.nick  }}</span
+                    ><span>  {{ jugador.encertades  }}</span>
                 </div>
             </div>
             <h1>{{ game.question.pregunta }}</h1>

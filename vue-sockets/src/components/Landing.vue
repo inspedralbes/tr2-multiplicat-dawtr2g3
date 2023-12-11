@@ -3,6 +3,7 @@
     <h1>Landing Page</h1>
     <input type="text" id="nomJugador">
     <Button label="Jugar" @click="empezar"></Button>
+    <v-btn @click="login">Login</v-btn>
   </div>
 
 </template>
@@ -26,6 +27,9 @@ export default {
       socket.emit('join',nick);
       store.setNick(nick);
       router.push('/lobby');
+    },
+    login(){
+      router.push('/login');
     }
   },
 
