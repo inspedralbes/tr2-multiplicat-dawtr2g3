@@ -133,18 +133,18 @@ io.on('connection', (socket) => {
             if (roomID == socket.id && index != '-1') {
 
                 arrayRoom.splice(index, 1);
+                io.to(roomID).emit('lobby tencada');
+                let idOrig = socket.id;
+                let llistatUsuaris = arrayRoomMinim.find((room) => room.id == roomID).jugadors;
+
+                llistatUsuaris.forEach((user) => {
+                    socket.id = user.idSocket;
+                    socket.leave(roomID);
+                });
+                socket.id = idOrig;
+                
                 if (arrayRoomMinim.findIndex((room) => room.id == roomID) != undefined) {
-                    io.to(roomID).emit('lobby tencada');
-                    let idOrig = socket.id;
-                    let llistatUsuaris = arrayRoomMinim.find((room) => room.id == roomID).jugadors;
-
-                    llistatUsuaris.forEach((user) => {
-                        socket.id = user.idSocket;
-                        socket.leave(roomID);
-                    });
-                    socket.id = idOrig;
                     arrayRoomMinim.splice(index, 1);
-
                     io.emit('llista partides', arrayRoomMinim);
                 }
 

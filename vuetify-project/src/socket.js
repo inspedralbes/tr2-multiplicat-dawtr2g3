@@ -56,6 +56,8 @@ socket.on("check", (correcte, acabat) => {
 
 socket.on("end", () => {
   router.push('/final');
+  const store = useAppStore();
+  store.setQuestionIndex(-1);
 
 });
 

@@ -42,6 +42,10 @@ export const useAppStore = defineStore('app', {
       this.question = question;
       this.questionIndex++;
     },
+    setQuestionIndex( index ) {
+      this.questionIndex = index;
+
+    },
     getQuestionIndex(){
       return this.questionIndex;
     },
