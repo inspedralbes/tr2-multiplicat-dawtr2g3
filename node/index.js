@@ -60,7 +60,6 @@ io.on('connection', (socket) => {
     socket.emit('llista partides', arrayRoomMinim);
     socket.on('join', (roomID, nom) => {
         socket.join(roomID);
-        console.log(roomID);
         let user = {
             "idSocket": socket.id,
             "nick": nom,
@@ -87,12 +86,11 @@ io.on('connection', (socket) => {
 
         let jugadorsMinim = arrayRoomMinim.find((room) => room.id == roomID).jugadors;
         io.to(roomID).emit('update players', jugadorsMinim);
-
+        io.emit('llista partides', arrayRoomMinim);
     })
 
     socket.on('crearPartida', (nom, maxJugadors, nick) => {
         socket.join(socket.id);
-        console.log(socket.id);
         let user = {
             "idSocket": socket.id,
             "nick": nick,
@@ -119,6 +117,7 @@ io.on('connection', (socket) => {
             "jugadors": [userMinim],
         })
         iniciarLobby(socket.id);
+        io.to(socket.id).emit('update players', [userMinim]);
         io.emit('llista partides', arrayRoomMinim);
     })
 
@@ -130,34 +129,57 @@ io.on('connection', (socket) => {
         });
 
         if (roomID != undefined) {
-            arrayRoom.map((room) => {
-                if (room.id == roomID) {
-                    let index = room.jugadors.findIndex((idSocket) => idSocket == socket.id);
-                    room.jugadors.splice(index, 1);
+            let index = arrayRoom.findIndex((room) => room.id == roomID);
+            if (roomID == socket.id && index != '-1') {
+
+                arrayRoom.splice(index, 1);
+                if (arrayRoomMinim.findIndex((room) => room.id == roomID) != undefined) {
+                    io.to(roomID).emit('lobby tencada');
+                    let idOrig = socket.id;
+                    let llistatUsuaris = arrayRoomMinim.find((room) => room.id == roomID).jugadors;
+
+                    llistatUsuaris.forEach((user) => {
+                        socket.id = user.idSocket;
+                        socket.leave(roomID);
+                    });
+                    socket.id = idOrig;
+                    arrayRoomMinim.splice(index, 1);
+
+                    io.emit('llista partides', arrayRoomMinim);
                 }
-            });
-            if (arrayRoomMinim.find((room) => room.id == roomID) != undefined) {
-                arrayRoomMinim.map((room) => {
+
+            } else if( index != '-1') {
+
+
+                arrayRoom.map((room) => {
                     if (room.id == roomID) {
                         let index = room.jugadors.findIndex((idSocket) => idSocket == socket.id);
                         room.jugadors.splice(index, 1);
                     }
                 });
-                io.emit('llista partides', arrayRoomMinim);
-            }
-            let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-            let llistatUsuarisMinim = [];
-            llistatUsuaris.forEach((user) => {
-
-                let userMinim = {
-                    "nick": user.nick,
-                    "encertades": user.encertades
+                if (arrayRoomMinim.find((room) => room.id == roomID) != undefined) {
+                    arrayRoomMinim.map((room) => {
+                        if (room.id == roomID) {
+                            let index = room.jugadors.findIndex((idSocket) => idSocket == socket.id);
+                            room.jugadors.splice(index, 1);
+                        }
+                    });
+                    io.emit('llista partides', arrayRoomMinim);
                 }
+                let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+                let llistatUsuarisMinim = [];
+                llistatUsuaris.forEach((user) => {
 
-                llistatUsuarisMinim.push(userMinim);
-            });
+                    let userMinim = {
+                        "nick": user.nick,
+                        "encertades": user.encertades
+                    }
 
-            io.to(roomID).emit('update players', llistatUsuarisMinim);
+                    llistatUsuarisMinim.push(userMinim);
+                });
+
+                io.to(roomID).emit('update players', llistatUsuarisMinim);
+            }
         }
     });
 
@@ -165,10 +187,10 @@ io.on('connection', (socket) => {
         let arrayPreg = arrayRoom.find((room) => room.id == socket.id).arrayPreg;
         if (arrayRoom.find(room => room.id == socket.id).jugadors.length >= 2) {
             io.to(socket.id).emit('play', arrayPreg[0]);
+            let index = arrayRoomMinim.findIndex((room) => room.id == socket.id);
+            arrayRoomMinim.splice(index, 1);
+            io.emit('llista partides', arrayRoomMinim);
         }
-        let index = arrayRoomMinim.findIndex((room) => room.id == socket.id);
-        arrayRoomMinim.splice(index, 1);
-        io.emit('llista partides', arrayRoomMinim);
 
     });
 
@@ -178,7 +200,6 @@ io.on('connection', (socket) => {
         rooms.forEach((room) => {
             roomID = room;
         });
-        console.log(roomID);
 
         let obj = {
             "nick": nick,
@@ -190,7 +211,6 @@ io.on('connection', (socket) => {
 
         let correcte = false;
         let acabat = false;
-        // console.log(preguntasMal[idPreg].respostes[respuestaCorrecta]);
         let rooms = socket.rooms;
         let roomID;
         rooms.forEach((room) => {
@@ -202,7 +222,6 @@ io.on('connection', (socket) => {
         let llistatUsuarisMinim = [];
         if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
             correcte = true;
-
             if (idPreg == arrayPreg.length - 1) {
                 acabat = true;
             }
@@ -217,8 +236,6 @@ io.on('connection', (socket) => {
 
 
             llistatUsuaris.sort((a, b) => { return b.preguntaActual - a.preguntaActual });
-
-            console.log(llistatUsuaris);
 
             llistatUsuaris.forEach((user) => {
 
@@ -242,9 +259,21 @@ io.on('connection', (socket) => {
 
 
         }
-        socket.emit('check', correcte);
+        // let obj = {"correcte": correcte,"acabat":acabat}
+        socket.emit('check',correcte,acabat);
         if (acabat) {
+
             io.to(roomID).emit('end');
+            
+            let idOrig = socket.id;
+            let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+            let index = arrayRoom.findIndex((room) => room.id == roomID);
+            arrayRoom.splice(index, 1);
+            llistatUsuaris.forEach((user) => {
+                socket.id = user.idSocket;
+                socket.leave(roomID);
+            });
+            socket.id = idOrig;
         }
     })
 
@@ -290,7 +319,6 @@ function tipusTest(preguntaaModificar, index) {
     }
     return bien;
 }
-// console.log(arrayPreg);
 
 
 /**

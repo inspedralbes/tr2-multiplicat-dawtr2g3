@@ -9,8 +9,8 @@ import router from '@/router'; // Import the router from your project
  */
 const URL = "http://localhost:3000";
 
-export const socket = io(URL,{
-  extraHeaders:  {
+export const socket = io(URL, {
+  extraHeaders: {
     "Access-Control-Allow-Origin": "*",
   },
 });
@@ -21,23 +21,37 @@ socket.on("llista partides", (arrayRoom) => {
 });
 socket.on("update players", (playerArray) => {
   const store = useAppStore();
-  console.log(playerArray);
   store.setPlayers(playerArray);
 });
 socket.on("update chat", (msg) => {
   const store = useAppStore();
   store.pushChat(msg);
 });
+
+socket.on("lobby tencada", () => {
+  const store = useAppStore();
+  router.push('/partides');
+});
+
 socket.on("new question", (question) => {
   const store = useAppStore();
   store.setQuestion(question);
 });
 
-socket.on("check", (answer) => {
+socket.on("check", (correcte, acabat) => {
   const store = useAppStore();
-  console.log(answer);
-  store.setAnswer(answer);
-  
+  store.setAnswer(correcte);
+  console.log("correcte", correcte);
+  console.log("acabat", acabat);
+  if (!acabat && correcte) {
+    socket.emit("send");
+
+    console.log('NO ACABAT');
+  }
+  if(acabat){
+    console.log('ACABAT');
+    router.push('/final');
+  }
 });
 
 socket.on("end", () => {
@@ -47,10 +61,9 @@ socket.on("end", () => {
 
 socket.on("play", (question) => {
   const store = useAppStore();
-  console.log('play');
   store.setQuestion(question);
   store.setAnswer(null);
   router.push('/partida');
-  
+
 });
 
