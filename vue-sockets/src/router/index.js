@@ -27,16 +27,6 @@ const router = createRouter({
       path: '/lobby',
       name: 'lobby',
       component: Lobby
-    },
-    {
-      path: '/drag',
-      name: 'drag',
-      component: Drag
-    },
-    {
-      path: '/prova',
-      name: 'prova',
-      component: ProvaPartida
     }
   ]
 })
