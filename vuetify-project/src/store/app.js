@@ -7,6 +7,7 @@ export const useAppStore = defineStore('app', {
       loggedIn: false,
       username: '',
     },
+    partides: [],
     chat: [],
     players: [],
     question: null,
@@ -14,6 +15,9 @@ export const useAppStore = defineStore('app', {
     questionIndex: -1,
   }),
   actions: {
+    setPartides( arrayRoom ) {
+      this.partides = arrayRoom;
+    },
     setLoginInfo( loggedIn, username, image ) {
       this.loginInfo.loggedIn = loggedIn;
       this.loginInfo.username = username;
@@ -37,6 +41,10 @@ export const useAppStore = defineStore('app', {
     setQuestion( question ) {
       this.question = question;
       this.questionIndex++;
+    },
+    setQuestionIndex( index ) {
+      this.questionIndex = index;
+
     },
     getQuestionIndex(){
       return this.questionIndex;
