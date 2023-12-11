@@ -23,7 +23,7 @@
             <div v-else>
                 <h1>{{ game.question.pregunta }}</h1>
                 <h2>Pregunta:{{ game.questionIndex }}</h2>
-                <Drag />
+                <Drag :respostes="game.question.respostes" @comprovar="(index) => answer(index)"/>
             </div>
 
             <div class="chat">

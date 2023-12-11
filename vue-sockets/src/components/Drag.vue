@@ -6,39 +6,37 @@
         <div class="dragEnd" @dragover="handleDragOver($event)" @drop="handleDrop($event)">drop</div>
     </div>
 
-    <ProvaPartida @enlarge="console.log('hola')" />
 </template>
 
 <script>
-import ProvaPartida from "./ProvaPartida.vue";
 export default {
     name: "Drag",
+    props: {
+        respostes: {
+            type: Array,
+            required: true
+        }
+    },
     data() {
         return {
-            respostes: ["hola", "adeu", "bon dia", "bona tarda", "bona nit"],
             actual: "",
-            postFontSize: 1
         };
     },
     methods: {
         handleDragStart(index) {
-            console.log("drag start");
-            this.actual = this.respostes[index];
-            console.log(this.actual);
+            this.actual = index;
         },
         handleDragOver(event) {
             event.preventDefault();
-            console.log("drag over");
         },
         handleDrop(event) {
             event.preventDefault();
-            console.log("drop");
-            console.log(this.actual);
+
+            this.$emit("comprovar", this.actual);
         }
     },
     mounted() {
     },
-    components: { ProvaPartida }
 }
 </script>
 
