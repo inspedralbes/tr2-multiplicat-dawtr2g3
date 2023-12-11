@@ -15,7 +15,6 @@
             <h2>Pregunta:{{ game.questionIndex }}</h2>
             <div class="respostes">
                 <div class="resposta" v-for="(resposta, index) in game.question.respostes">
-                    
                     <button @click="answer(index)">{{ resposta }}</button>
                 </div>
             </div>
