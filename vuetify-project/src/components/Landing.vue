@@ -1,29 +1,39 @@
 <template>
   <div>
-    <h1 class="text-h1">Math Royale</h1>
-    <v-card class="ma-4 pa-4" width="400">
-      <v-card-title>Landing Page</v-card-title>
-      <v-card-item>
-        <v-text-field class="pa-2" label="UserJugador" id="nomJugador"></v-text-field>
-      </v-card-item>
-      <v-card-actions>
-        <v-btn class="pa-2" @click="empezar">Jugar</v-btn>
-      </v-card-actions>
-    </v-card>
+    <h1 class="title-landing text-center">Math Royale</h1>
+    <div class="text-center">
+      <v-row>
+        <v-col class="text-center">
+          <v-card class="ma-4 pa-4" width="400">
+            <v-text-field class="pa-2" label="UserJugador" id="nomJugador"></v-text-field>
+            <v-btn rounded color="#106b03" class="px-5 mr-5">Tutorial</v-btn>
+            <v-btn rounded color="#fad09e" class="px-5 ml-2 text-white">Registre</v-btn>
+            <v-btn rounded color="#f5a23d" class="px-5 ml-2 text-white">Login</v-btn>
+          </v-card>
+        </v-col>
+        <v-col class="text-center">
+          <v-btn rounded class="ma-4 text-black" color="#f5a23d" @click="empezar">Entrar</v-btn>
+          <v-btn rounded class="ma-4 text-black" color="#f5a23d">Crear</v-btn>
+        </v-col>
+      </v-row>
+    </div>
   </div>
 </template>
 
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    background: #46178f;
-  }
+* {
+  /* background-color: #46178f; */
+  /* color: white; */
+}
 
-  h1{
-    font-family: "Share Tech";
-  }
-  
+.title-landing {
+  font-family: "Battle Beasts";
+  font-size: 6rem !important;
+  font-weight: 300;
+  line-height: 6rem;
+  text-transform: none !important;
+  color: #ffc00a;
+}
 </style>
 
 <script>
@@ -39,12 +49,12 @@ export default {
     };
   },
   methods: {
-    empezar(){
+    empezar() {
 
       const store = useAppStore();
       console.log("empezar");
       let nick = document.getElementById("nomJugador").value;
-      socket.emit('join',nick);
+      socket.emit('join', nick);
       store.setNick(nick);
       router.push('/lobby');
 
