@@ -253,7 +253,7 @@ io.on('connection', (socket) => {
                 if (user.idSocket == socket.id) {
                     user.encertades++;
                     user.preguntaActual++;
-                    user.encertades++;
+                    user.falladesConsecutives = 0;
                 }
 
                 if (user.encertades == 3) {
@@ -261,7 +261,7 @@ io.on('connection', (socket) => {
 
                     let poder = getRandomPoder(user);
                     user.poder = poder;
-                    
+
                     socket.emit('poder', poder);
                 }
             });
@@ -429,8 +429,8 @@ function createNewUser(idSocket, nick) {
         "vida": 100,
         "skip": 1,
         "falladesConsecutives": 0,
-        "encertades": 0,
-    }
+        "poder": "",
+        }
     return user;
 }
 
@@ -447,7 +447,7 @@ function createUserMinim(user) {
         "vida": user.vida,
         "skip": user.skip,
         "falladesConsecutives": user.falladesConsecutives,
-        "encertades": user.encertades,
+        "poder": user.poder,
 
     }
     return userMinim;
