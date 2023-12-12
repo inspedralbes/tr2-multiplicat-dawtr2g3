@@ -115,10 +115,10 @@ io.on('connection', (socket) => {
             let index = arrayRoom.findIndex((room) => room.id == roomID);
             if (roomID == socket.id && index != '-1') {
 
-                arrayRoom.splice(index, 1);
                 io.to(roomID).emit('lobby tencada');
                 let idOrig = socket.id;
                 let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+                arrayRoom.splice(index, 1);
 
                 llistatUsuaris.forEach((user) => {
                     socket.id = user.idSocket;
