@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-
+import { socket } from '../socket';
 export const useAppStore = defineStore('app', {
   state: () => ({
     loginInfo: {
@@ -10,6 +10,7 @@ export const useAppStore = defineStore('app', {
     partides: [],
     chat: [],
     players: [],
+    ownPlayer:[],
     question: null,
     answer: null,
     questionIndex: -1,
@@ -31,6 +32,11 @@ export const useAppStore = defineStore('app', {
     },
     setPlayers( playerArray ) {
       this.players = playerArray;
+      playerArray.forEach(player => {
+        if(player.socketId === socket.id){
+          this.ownPlayer = player;
+        }
+      });
     },
     aumentar(){
       this.questionIndex++;

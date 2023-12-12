@@ -35,8 +35,8 @@
                 <button @click="enviarMissatge()">Enviar</button>
             </div>
         </div>
-        <button @click="sumar">Sumar</button>
-
+        <button @click="skip">Skip</button>
+        <p>Vida: {{ game.ownPlayer.vida }}</p>
     </div>
 </template>
 
@@ -64,6 +64,7 @@ export default {
                 chat: computed(() => store.chat),
                 questionIndex: computed(() => store.questionIndex),
                 players: computed(() => store.players),
+                ownPlayer: computed(() => store.ownPlayer),
                 question: computed(() => store.question),
                 answer: computed(() => store.answer),
             },
@@ -72,8 +73,8 @@ export default {
     },
     components: { Drag },
     methods: {
-        sumar() {
-            console.log(this.game.players);
+        skip() {
+            socket.emit('skip');
         },
 
         answer(index) {
