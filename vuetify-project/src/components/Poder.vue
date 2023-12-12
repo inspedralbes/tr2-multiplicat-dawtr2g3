@@ -24,7 +24,7 @@ import { socket } from '../socket';
             utilitzarPoder() {
                 if (this.poder.length > 0) {
                     console.log("si tens poder");
-                    socket.emit("utilitzarPoder", this.poder);
+                    socket.emit("utilitzar poder", this.poder, socket.id);
                 } else {
                     console.log("No tens poder");
                 }

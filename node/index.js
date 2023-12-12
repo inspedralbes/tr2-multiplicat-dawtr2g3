@@ -402,6 +402,46 @@ io.on('connection', (socket) => {
         socket.emit('new question', arrayPreg[user.preguntaActual]);
     })
 
+    socket.on('utilitzar poder', (poder, objectiu) => {
+        let rooms = socket.rooms;
+        let roomID;
+        rooms.forEach((room) => {
+            roomID = room;
+        });
+        let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        let user = llistatUsuaris.find((usuari) => {
+            return usuari.idSocket == socket.id;
+        });
+        let userObjectiu = llistatUsuaris.find((usuari) => {
+            return usuari.idSocket == objectiu;
+        });
+        switch (poder) {
+            case "salt":
+                user.skip++;
+                break;
+            case "vida":
+                userObjectiu.vida += 20;
+                if (userObjectiu.vida > 100) {
+                    userObjectiu.vida = 100;
+                }
+                break;
+            case "escut":
+                userObjectiu.escut = true;
+                break;
+            default:
+                break;
+        }
+        user.poder = "";
+        let llistatUsuarisMinim = [];
+        llistatUsuaris.forEach((user) => {
+
+            let userMinim = createUserMinim(user);
+
+            llistatUsuarisMinim.push(userMinim);
+        })
+        io.to(roomID).emit("update players", llistatUsuarisMinim)
+    })
+
 
 })
 
