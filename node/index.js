@@ -58,7 +58,18 @@ let llistatUsuaris = [];
 
 
 io.on('connection', (socket) => {
+
+    /**
+     * Envia la llista de partides
+     * @param {Array} arrayRoomMinim Array que conté la informació de les partides
+     */
     socket.emit('llista partides', arrayRoomMinim);
+
+    /**
+     * Entra a una partida
+     * @param {string} roomID Identificador de la partida
+     * @param {string} nom Nom de l'usuari que entra a la partida
+     */
     socket.on('join', (roomID, nom) => {
         socket.join(roomID);
         let user = createNewUser(socket.id, nom)
@@ -80,6 +91,13 @@ io.on('connection', (socket) => {
         io.to(roomID).emit('update players', jugadorsMinim);
         io.emit('llista partides', arrayRoomMinim);
     })
+
+    /**
+     * Crea una nova partida
+     * @param {string} nom Nom de la partida
+     * @param {int} maxJugadors Màxim de jugadors de la partida
+     * @param {string} nick Nom de l'usuari que crea la partida
+     */
 
     socket.on('crearPartida', (nom, maxJugadors, nick) => {
         socket.join(socket.id);
@@ -104,6 +122,9 @@ io.on('connection', (socket) => {
         io.emit('llista partides', arrayRoomMinim);
     })
 
+    /**
+     * Elimina el jugador de la partida i de la llista de jugadors, si és l'últim jugador de la partida o el creador, la tanca
+     */
     socket.on('disconnecting', () => {
         let rooms = socket.rooms;
         let roomID;
@@ -163,6 +184,10 @@ io.on('connection', (socket) => {
         }
     });
 
+    /**
+     * Inicia la partida
+     */
+
     socket.on('start', () => {
         let arrayPreg = arrayRoom.find((room) => room.id == socket.id).arrayPreg;
         if (arrayRoom.find(room => room.id == socket.id).jugadors.length >= 2) {
@@ -173,6 +198,12 @@ io.on('connection', (socket) => {
         }
 
     });
+
+    /**
+     * Envia el missatge a tots els usuaris de la sala
+     * @param {string} missatge Missatge a enviar
+     * @param {string} nick Nom de l'usuari que envia el missatge
+     */
 
     socket.on('enviar missatge', (missatge, nick) => {
         let rooms = socket.rooms;
@@ -187,6 +218,12 @@ io.on('connection', (socket) => {
         }
         io.to(roomID).emit('update chat', obj);
     });
+
+    /**
+     * Comprova si la resposta és correcta o no, i si és la última pregunta
+     * @param {int} idPreg Identificador de la pregunta
+     * @param {int} posResp Posició de la resposta
+     */
     socket.on('answer', (idPreg, posResp) => {
 
         let correcte = false;
@@ -205,6 +242,7 @@ io.on('connection', (socket) => {
 
         let llistatUsuarisMinim = [];
 
+        // encerta la pregunta
         if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
             correcte = true;
             if (idPreg == arrayPreg.length - 1) {
@@ -215,12 +253,18 @@ io.on('connection', (socket) => {
                 if (user.idSocket == socket.id) {
                     user.encertades++;
                     user.preguntaActual++;
+                    user.encertades++;
+                }
+
+                if (user.encertades == 3) {
+                    user.encertades = 0;
+
+                    let poder = getRandomPoder(user);
+                    user.poder = poder;
+                    
+                    socket.emit('poder', poder);
                 }
             });
-
-
-
-            // llistatUsuaris.sort((a, b) => { return b.preguntaActual - a.preguntaActual });
 
             llistatUsuaris.forEach((user) => {
 
@@ -270,7 +314,6 @@ io.on('connection', (socket) => {
 
             io.to(roomID).emit("update players", llistatUsuarisMinim)
         }
-        // let obj = {"correcte": correcte,"acabat":acabat}
         socket.emit('check', correcte, acabat);
 
         if (acabat) {
@@ -288,6 +331,10 @@ io.on('connection', (socket) => {
             socket.id = idOrig;
         }
     })
+
+    /**
+     * Salta la pregunta actual si l'usuari té skips disponibles, si no, li resta vida
+     */
     socket.on('skip', () => {
         let rooms = socket.rooms;
         let roomID;
@@ -326,6 +373,10 @@ io.on('connection', (socket) => {
         console.log(user);
         socket.emit('new question', arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual]);
     });
+
+    /**
+     * Envia la pregunta actual a l'usuari
+     */
     socket.on('send', () => {
         let rooms = socket.rooms;
         let roomID;
@@ -344,6 +395,25 @@ io.on('connection', (socket) => {
 
 })
 
+function getRandomPoder(user) {
+    let random = Math.floor(Math.random() * 3) + 1;
+    let poder = "";
+    switch (random) {
+        case 1:
+            poder = "salt";
+            break;
+        case 2:
+            poder = "vida";
+            break;
+        case 3:
+            poder = "escut";
+            break;
+        default:
+            break;
+    }
+    return poder;
+}
+
 /**
  * Crea un usuari
  * @param {int} idSocket Identificador del socket
@@ -359,6 +429,7 @@ function createNewUser(idSocket, nick) {
         "vida": 100,
         "skip": 1,
         "falladesConsecutives": 0,
+        "encertades": 0,
     }
     return user;
 }
@@ -376,6 +447,7 @@ function createUserMinim(user) {
         "vida": user.vida,
         "skip": user.skip,
         "falladesConsecutives": user.falladesConsecutives,
+        "encertades": user.encertades,
 
     }
     return userMinim;
