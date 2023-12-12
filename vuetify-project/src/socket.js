@@ -43,10 +43,9 @@ socket.on("check", (correcte, acabat) => {
   store.setAnswer(correcte);
   console.log("correcte", correcte);
   console.log("acabat", acabat);
+  store.setAnswer(correcte);
   if (!acabat && correcte) {
     socket.emit("send");
-
-    console.log('NO ACABAT');
   }
   if(acabat){
     console.log('ACABAT');

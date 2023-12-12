@@ -6,7 +6,6 @@
     </div>
     <div>
         <div>
-            <button @click="fallar">Fallar</button>
             <img id="fallar" src="https://w7.pngwing.com/pngs/591/346/png-transparent-error-cross-red-cross-error.png" class="hidden" alt="">
             <div class="jugadors">
                 <div class="jugador" v-for="jugador in game.players">
@@ -46,28 +45,17 @@
     display: none;
 }
 #fallar{
-    width: 500px;
-    height: 500px;
+    width: 300px;
+    height: 300px;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform:  translate(-50%, -50%);
     animation-name: identifier;
     animation-duration: 1s;
-    
+   
 }
-@keyframes identifier {
-    0% {
-        scale: 0;
-    }
-    
-    100% {
-        scale: 
-        1;
 
-    }
-    
-}
 
 </style>
 <script>
@@ -129,14 +117,16 @@ export default {
         this.loading = false;
         const store = useAppStore();
         store.$subscribe((answer) => {
-            if (answer == true){
+            if (store.getAnswer() == true){
                 console.log("YIPPIEe");
 
-            }else if (answer == false){
-                console.log(":(")
+            }else if (store.getAnswer()  == false){
+                console.log("   :(");
+                this.fallar();
             }
             store.setAnswer(null);
         })
+        
     },
 
 }
