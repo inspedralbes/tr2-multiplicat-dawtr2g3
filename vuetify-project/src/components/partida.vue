@@ -78,9 +78,17 @@ export default {
             socket.emit('skip');
         },
 
+        /**
+         * respon a la pregunta
+         * @param {int} index index de la resposta
+         */
         answer(index) {
             socket.emit('answer', this.game.question.idPregunta, index);
         },
+
+        /**
+         * Envia un missatge al chat
+         */
         enviarMissatge() {
             const store = useAppStore();
 

@@ -381,7 +381,6 @@ io.on('connection', (socket) => {
             llistatUsuarisMinim.push(userMinim);
         })
         io.to(roomID).emit("update players", llistatUsuarisMinim)
-        console.log(user);
         socket.emit('new question', arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual]);
     });
 
@@ -432,8 +431,7 @@ function getRandomPoder(user) {
  * @returns Objecte que conté la informació de l'usuari
  */
 function createNewUser(idSocket, nick) {
-    console.log(idSocket);
-    let user = {
+        let user = {
         "idSocket": idSocket,
         "nick": nick,
         "preguntaActual": 0,
