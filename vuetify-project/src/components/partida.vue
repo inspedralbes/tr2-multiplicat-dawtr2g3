@@ -8,7 +8,8 @@
         <div>
             <div class="jugadors">
                 <div class="jugador" v-for="jugador in game.players">
-                    <span>{{ jugador.nick }}</span><span>-{{ jugador.encertades }}</span><span>-{{ jugador.vida }}/100</span>
+                    <span>{{ jugador.nick }}</span><span> - {{ jugador.encertades }}</span><span> - {{ jugador.vida }}/100</span>
+                    <div>{{ jugador.poder }}</div>
                 </div>
             </div>
             <div v-if="game.question.tipus == 1">

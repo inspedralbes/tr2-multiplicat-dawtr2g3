@@ -262,7 +262,6 @@ io.on('connection', (socket) => {
                     let poder = getRandomPoder(user);
                     user.poder = poder;
 
-                    socket.emit('poder', poder);
                 }
             });
 
@@ -421,6 +420,7 @@ function getRandomPoder(user) {
  * @returns Objecte que conté la informació de l'usuari
  */
 function createNewUser(idSocket, nick) {
+    console.log(idSocket);
     let user = {
         "idSocket": idSocket,
         "nick": nick,
