@@ -6,6 +6,8 @@
     </div>
     <div>
         <div>
+            <button @click="fallar">Fallar</button>
+            <img id="fallar" src="https://w7.pngwing.com/pngs/591/346/png-transparent-error-cross-red-cross-error.png" class="hidden" alt="">
             <div class="jugadors">
                 <div class="jugador" v-for="jugador in game.players">
                     <span>{{ jugador.nick }}</span><span>-{{ jugador.encertades }}</span><span>-{{ jugador.vida }}/100</span>
@@ -39,7 +41,35 @@
         <p>Vida: {{ game.ownPlayer.vida }}</p>
     </div>
 </template>
+<style>
+.hidden{
+    display: none;
+}
+#fallar{
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    animation-name: identifier;
+    animation-duration: 1s;
+    
+}
+@keyframes identifier {
+    0% {
+        scale: 0;
+    }
+    
+    100% {
+        scale: 
+        1;
 
+    }
+    
+}
+
+</style>
 <script>
 import { socket } from '../socket';
 import { computed } from 'vue';
@@ -76,7 +106,13 @@ export default {
         skip() {
             socket.emit('skip');
         },
-
+        fallar() {
+            var fallar = document.getElementById("fallar");
+            fallar.classList.remove("hidden");
+            setTimeout(() => {
+                fallar.classList.add("hidden");
+            }, 1000);
+        },
         answer(index) {
             socket.emit('answer', this.game.question.idPregunta, index);
         },
