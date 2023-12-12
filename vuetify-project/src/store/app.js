@@ -34,7 +34,6 @@ export const useAppStore = defineStore('app', {
       this.players = playerArray;
       playerArray.forEach((player) => {
         if(player.idSocket === socket.id){
-          console.log("hola");
           this.ownPlayer = player;
         }
       });

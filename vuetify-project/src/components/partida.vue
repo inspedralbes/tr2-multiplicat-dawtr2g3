@@ -95,7 +95,7 @@ export default {
         const store = useAppStore();
         store.$subscribe((answer) => {
             if (answer == true){
-                console.log("YIPPIEe");
+                console.log("YIPPIE");
 
             }else if (answer == false){
                 console.log(":(")

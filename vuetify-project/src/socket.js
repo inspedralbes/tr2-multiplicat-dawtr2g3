@@ -28,7 +28,6 @@ socket.on("llista partides", (arrayRoom) => {
  * Modifica l'array d'usuaris
  */
 socket.on("update players", (playerArray) => {
-  console.log(playerArray);
   const store = useAppStore();
   store.setPlayers(playerArray);
 });
@@ -63,15 +62,11 @@ socket.on("new question", (question) => {
 socket.on("check", (correcte, acabat) => {
   const store = useAppStore();
   store.setAnswer(correcte);
-  console.log("correcte", correcte);
-  console.log("acabat", acabat);
+
   if (!acabat && correcte) {
     socket.emit("send");
-
-    console.log('NO ACABAT');
   }
   if(acabat){
-    console.log('ACABAT');
     router.push('/final');
   }
 });
