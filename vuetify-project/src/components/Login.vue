@@ -1,10 +1,14 @@
 <template>
+  <h1>MATH ROYALE</h1>
   <div class="container">
-    <div>
-      <v-form v-model="form" @submit.prevent="onSubmit" class="container-login">
-        <v-text-field v-model="user" :readonly="loading" :rules="[required]" clearable label="User"></v-text-field>
-        <v-text-field v-model="password" :readonly="loading" :rules="[required]" clearable label="Password"
-          placeholder="Enter your password"></v-text-field>
+    <div class="container__login">
+      <v-form v-model="form" @submit.prevent="onSubmit" class="login">
+        <div class="container__form">
+          <v-text-field v-model="user" :readonly="loading" :rules="[required]" clearable label="User" class="input__text"></v-text-field>
+          <v-text-field v-model="password" :readonly="loading" :rules="[required]" clearable label="Password"
+          placeholder="Enter your password" class="input__text"></v-text-field>
+          
+        </div>
         <v-btn class="sign">Entrar</v-btn>
       </v-form>
     </div>
@@ -12,6 +16,7 @@
   </div>
 </template>
 <style>
+
 * {
   padding: 0;
   margin: 0;
@@ -31,19 +36,46 @@ body {
 .sign {
   background-color: #33cccc;
 }
-
-.container-login {
-  background-color: aliceblue;
+.container__login{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+  border-radius: 10px;
+}
+.login {
+  background-color: rgb(37, 7, 107, 0.7);
+  height: 50vh;
+  width: 35vw;
+  border-radius: 6px;
+  width: clamp(40vh,50%,35vh);
 }
 
 .container-imagen {
   background-image: url('../assets/backgrounds/background-login.png');
   height: 100vh;
 }
+
+.input__text{
+  color: aliceblue;
+}
+
+h1{
+  color: #ffa502;
+  font-family: 'Battle Beasts';
+  display: flex;
+  position: absolute;
+
+}
+
+.container__form{
+  width: 40vh;
+}
+
 </style>
 
 <script>
-export default {
+/*export default {
   data: () => ({
     form: false,
     email: null,
@@ -63,5 +95,5 @@ export default {
       return !!v || 'Field is required'
     },
   },
-}
+}*/
 </script>
