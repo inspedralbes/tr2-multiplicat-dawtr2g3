@@ -7,6 +7,8 @@ export const useAppStore = defineStore('app', {
       loggedIn: false,
       username: '',
     },
+    guanyador: {},
+    perdedors: [],
     partides: [],
     chat: [],
     players: [],
@@ -16,6 +18,12 @@ export const useAppStore = defineStore('app', {
     questionIndex: -1,
   }),
   actions: {
+    setPerdedors( perdedors ) {
+      this.perdedors = perdedors;
+    },
+    setGuanyador( guanyador ) {
+      this.guanyador = guanyador;
+    },
     setPartides( arrayRoom ) {
       this.partides = arrayRoom;
     },
