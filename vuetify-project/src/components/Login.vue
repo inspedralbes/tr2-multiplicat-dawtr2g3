@@ -7,9 +7,9 @@
           <v-text-field v-model="user" :readonly="loading" :rules="[required]" clearable label="User" class="input__text"></v-text-field>
           <v-text-field v-model="password" :readonly="loading" :rules="[required]" clearable label="Password"
           placeholder="Enter your password" class="input__text"></v-text-field>
-          
+          <v-btn class="sign">Entrar</v-btn>
         </div>
-        <v-btn class="sign">Entrar</v-btn>
+        
       </v-form>
     </div>
     <div class="container-imagen"></div>
@@ -44,11 +44,10 @@ body {
   border-radius: 10px;
 }
 .login {
-  background-color: rgb(37, 7, 107, 0.7);
+  background-color: rgb(37, 7, 107,0.8);
   height: 50vh;
-  width: 35vw;
   border-radius: 6px;
-  width: clamp(40vh,50%,35vh);
+  width: clamp(48vh,50%,35vh);
 }
 
 .container-imagen {
@@ -70,6 +69,9 @@ h1{
 
 .container__form{
   width: 40vh;
+  position: absolute;
+  top: 33vh;
+  left:17vh;
 }
 
 </style>
