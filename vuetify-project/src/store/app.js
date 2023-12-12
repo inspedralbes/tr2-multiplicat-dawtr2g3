@@ -33,7 +33,7 @@ export const useAppStore = defineStore('app', {
     setPlayers( playerArray ) {
       this.players = playerArray;
       playerArray.forEach(player => {
-        if(player.socketId === socket.id){
+        if(player.idSocket == socket.id){
           this.ownPlayer = player;
         }
       });

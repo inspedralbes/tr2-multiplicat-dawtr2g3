@@ -207,10 +207,6 @@ io.on('connection', (socket) => {
 
         if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
             correcte = true;
-            if (idPreg == arrayPreg.length - 1) {
-                acabat = true;
-            }
-
             llistatUsuaris.map((user) => {
                 if (user.idSocket == socket.id) {
                     user.encertades++;
@@ -240,9 +236,13 @@ io.on('connection', (socket) => {
 
 
         } else {
+            let mort = false
             llistatUsuaris.map((user) => {
                 if (user.idSocket == socket.id) {
                     user.vida -= 10;
+                    if(user.vida <= 0){
+                        mort = true;
+                    }
                     user.falladesConsecutives++;
                     if (user.falladesConsecutives == 3) {
                         user.preguntaActual++;
@@ -252,7 +252,12 @@ io.on('connection', (socket) => {
                     }
                 }
             });
-
+            if(mort){
+                let userVius = jugadorsVius(llistatUsuaris);
+                if(userVius.length == 1){
+                    acabat = true;
+                }
+            }
             llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
 
             llistatUsuaris.forEach((user) => {
@@ -421,6 +426,16 @@ function randomArray(array) {
     }
     return array;
 
+}
+
+function jugadorsVius(arrayJugadors) {
+    let jugadorsVius = [];
+    arrayJugadors.forEach((jugador) => {
+        if (jugador.vida > 0) {
+            jugadorsVius.push(jugador);
+        }
+    });
+    return jugadorsVius;
 }
 // fetch no funcional
 
