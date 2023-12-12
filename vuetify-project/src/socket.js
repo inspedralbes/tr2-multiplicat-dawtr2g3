@@ -74,11 +74,14 @@ socket.on("check", (correcte, acabat) => {
 /**
  * Mou a la pantalla final
  */
-socket.on("end", () => {
-  router.push('/final');
+socket.on("end", (guanyador, perdedors) => {
   const store = useAppStore();
+  console.log("guanyador", guanyador);
+  console.log("perdedors", perdedors);
   store.setQuestionIndex(-1);
-
+  store.setGuanyador(guanyador);
+  store.setPerdedors(perdedors);
+  router.push('/final');
 });
 
 /**

@@ -1,6 +1,8 @@
 <template>
   <h1>Final de la partida</h1>
-  <div class="jugador" v-for="(jugador, index) in players">
+  <h1>Guanyador: {{ guanyador.nick }}</h1>
+  <h2>Perdedors</h2>
+  <div class="jugador" v-for="(jugador, index) in perdedors">
     <span>Jugador: {{ jugador.nick }}</span><span>  Puntuació: {{ jugador.encertades }}</span>
   </div>
 <button @click="$router.push('/');">Tornar a jugar</button>
@@ -15,7 +17,8 @@ export default {
   data() {
     const store = useAppStore();
     return {
-      players: computed(() => store.players),
+      guanyador: computed(() => store.guanyador),
+      perdedors: computed(() => store.perdedors),
     };
   },
   methods: {
