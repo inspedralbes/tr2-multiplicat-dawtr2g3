@@ -37,6 +37,7 @@
             </div>
         </div>
         <button @click="skip">Skip</button>
+        <Poder :poder="game.ownPlayer.poder" />
         <p>Vida: {{ game.ownPlayer.vida }}</p>
     </div>
 </template>
@@ -46,16 +47,13 @@ import { socket } from '../socket';
 import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
 import Drag from "./Drag.vue";
+import Poder from "./Poder.vue";
 
 export default {
     data() {
         const store = useAppStore();
 
         return {
-            constants: {
-                // API_URL: "https://api.github.com",
-                numRespostesTest: 4,
-            },
             state: {
                 loading: true,
                 error: false,
@@ -72,7 +70,8 @@ export default {
 
         };
     },
-    components: { Drag },
+    components: { Drag, Poder },
+    
     methods: {
         skip() {
             socket.emit('skip');
