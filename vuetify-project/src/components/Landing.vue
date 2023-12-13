@@ -15,11 +15,11 @@
               <v-text-field class="pa-2" label="UserJugador" id="nomJugador"></v-text-field>
             </div>
             <div class="items__btn-tutorial btn-tutorial">
-              <v-btn rounded color="#106b03" class="px-5 mr-5">Tutorial</v-btn>
+              <v-btn rounded color="#106b03" class="px-5 mr-5 mt-3">Tutorial</v-btn>
             </div>
             <div class="items__btn-log-reg">
-              <v-btn rounded color="#fad09e" class="px-5 ml-2 text-white">Registre</v-btn>
-              <v-btn rounded color="#f5a23d" class="px-5 ml-2 text-white">Login</v-btn>
+              <v-btn rounded color="#fad09e" class="px-5 ml-2 mt-3 text-white">Registre</v-btn>
+              <v-btn rounded color="#f5a23d" class="px-5 ml-2 mt-3 text-white">Login</v-btn>
             </div>
           </div>
         </v-card>
@@ -89,6 +89,11 @@
     
   }
 
+  .avatar-refresh {
+    top: 72%;
+    right: 25%;
+  }
+
   .items__userName {
     grid-area: userName;
     display: flex;
@@ -99,12 +104,14 @@
     grid-area: tutorial;
     display: flex;
     justify-content: start;
+    border-top: 1px solid rgb(255, 255, 255);
   }
   
   .items__btn-log-reg {
     grid-area: logReg;
     display: flex;
     justify-content: end;
+    border-top: 1px solid rgb(255, 255, 255);
   }
 
   .container__buttons {
