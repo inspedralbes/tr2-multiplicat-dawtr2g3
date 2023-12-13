@@ -13,7 +13,17 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
+      component: Landing
+    },
+    {
+      path: '/register',
+      name: 'register',
       component: Register
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     },
     {
       path: '/partida',
@@ -41,4 +51,5 @@ const router = createRouter({
   ]
 })
 
+//asdf
 export default router

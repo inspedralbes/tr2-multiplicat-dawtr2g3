@@ -8,6 +8,8 @@
         <v-btn class="pa-2" @click="empezar">Jugar</v-btn>
       </v-card-actions>
     </v-card>
+    <button @click="$router.push('/login')">Login</button>
+    <button  @click="$router.push('/register')">Register</button>
 </template>
 <script>
 // import { useAppStore } from "../stores/app.js";
