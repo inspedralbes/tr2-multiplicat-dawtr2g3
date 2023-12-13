@@ -128,7 +128,7 @@
   .btn__entrar, .btn__crear {
     font-size: 3rem !important;
   }
-  
+
   @media screen and (max-width: 1350px) {
     
     .container {

@@ -1,5 +1,5 @@
 <template>
-  <h1>MATH ROYALE</h1>
+  <h1 class="title-login">MATH ROYALE</h1>
   <div class="container">
     <div class="container__login">
       <v-form v-model="form" class="login">
@@ -59,12 +59,11 @@ body {
   color: aliceblue;
 }
 
-h1{
+.title-login{
   color: #ffa502;
   font-family: 'Battle Beasts';
   display: flex;
   position: absolute;
-
 }
 
 .container__form{
