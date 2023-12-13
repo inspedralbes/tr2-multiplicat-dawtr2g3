@@ -18,8 +18,8 @@
               <v-btn rounded color="#106b03" class="px-5 mr-5 mt-3">Tutorial</v-btn>
             </div>
             <div class="items__btn-log-reg">
-              <v-btn rounded color="#fad09e" class="px-5 ml-2 mt-3 text-white">Registre</v-btn>
-              <v-btn rounded color="#f5a23d" class="px-5 ml-2 mt-3 text-white">Login</v-btn>
+              <v-btn rounded color="#fad09e" class="px-5 ml-2 mt-3 text-white" @click="$router.push('/register')">Registre</v-btn>
+              <v-btn rounded color="#f5a23d" class="px-5 ml-2 mt-3 text-white" @click="$router.push('/login')">Login</v-btn>
             </div>
           </div>
         </v-card>
@@ -128,7 +128,7 @@
   .btn__entrar, .btn__crear {
     font-size: 3rem !important;
   }
-
+  
   @media screen and (max-width: 1350px) {
     
     .container {
@@ -150,35 +150,33 @@
 </style>
 
 <script>
-  // import { useAppStore } from "../stores/app.js";
-  import { socket } from '../socket';
-  import { useAppStore } from '@/store/app';
-  import router from '@/router'
+// import { useAppStore } from "../stores/app.js";
+import { socket } from '../socket';
+import { useAppStore } from '@/store/app';
+import router from '@/router'
 
-  export default {
-    data() {
-      return {
+export default {
+  data() {
+    return {
 
-      };
-    },
-    methods: {
-      empezar() {
+    };
+  },
+  methods: {
+    empezar(){
+      
+      const store = useAppStore();
+      let nick = document.getElementById("nomJugador").value;
+      store.setNick(nick);
+      router.push('/partides');
 
-        const store = useAppStore();
-        console.log("empezar");
-        let nick = document.getElementById("nomJugador").value;
-        socket.emit('join', nick);
-        store.setNick(nick);
-        router.push('/lobby');
+    }
+  },
 
-      }
-    },
+  mounted() {
+  },
+  created() {
 
-    mounted() {
-    },
-    created() {
+  },
 
-    },
-
-  }
+}
 </script>
