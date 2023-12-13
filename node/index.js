@@ -467,9 +467,23 @@ function getRandomPoder(user) {
     return poder;
 }
 
+/**
+ * Utilitza el poder d'aconseguir un salt
+ * @param {obj} user l'usuari que utilitza el poder
+ * @param {obj} userObjectiu l'usuari que rep el poder
+ * @param {int} roomID identificador de la sala
+ */
+
 function utilitzarPoderSalt(user, userObjectiu, roomID) {
     user.skip++;
 }
+
+/**
+ * Utilitza el poder de recuperar vida
+ * @param {obj} user l'usuari que utilitza el poder
+ * @param {obj} userObjectiu l'usuari que rep el poder
+ * @param {int} roomID identificador de la sala
+ */
 
 function utilizarPoderVida(user, userObjectiu, roomID) {
     userObjectiu.vida += 20;
@@ -477,6 +491,13 @@ function utilizarPoderVida(user, userObjectiu, roomID) {
         userObjectiu.vida = 100;
     }
 }
+
+/**
+ * Utilitza el poder escut
+ * @param {obj} user l'usuari que utilitza el poder
+ * @param {obj} userObjectiu l'usuari que rep el poder
+ * @param {int} roomID identificador de la sala
+ */
 
 function utilitzarPoderEscut(user, userObjectiu, roomID) {
     userObjectiu.escut = true;
@@ -502,7 +523,7 @@ function createNewUser(idSocket, nick) {
         "infoPoders": {
             "escut": false,
             "robarVida": false,
-            
+
         }
     }
     return user;
@@ -522,6 +543,10 @@ function createUserMinim(user) {
         "skip": user.skip,
         "falladesConsecutives": user.falladesConsecutives,
         "poder": user.poder,
+        "infoPoders": {
+            "escut": user.infoPoders.escut,
+            "robarVida": user.infoPoders.robarVida,
+        }
 
     }
     return userMinim;
@@ -541,6 +566,7 @@ function tipusTest(preguntaaModificar, index) {
         "categoria": preguntaaModificar.categoria,
         "tipus": preguntaaModificar.tipus,
         "respostes": JSON.parse('[' + preguntaaModificar.respostes + ']'),
+        "temps": preguntaaModificar.temps,
         "unitats": {
             "valorInicial": 0,
             "unitatInicial": "",

@@ -52,6 +52,7 @@ socket.on("lobby tencada", () => {
  * Guarda la pregunta
  */
 socket.on("new question", (question) => {
+  console.log(question);
   const store = useAppStore();
   store.setQuestion(question);
 });

@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->string('respostes')->nullable();
             $table->unsignedBigInteger('tipus')->nullable();
             $table->unsignedBigInteger('categoria')->nullable();
+            $table->integer('temps');
             $table->timestamps();
             $table->foreign('tipus')->references('id')->on('tipus')->onDelete('set null');
             $table->foreign('categoria')->references('id')->on('categorias')->onDelete('set null');
@@ -29,6 +30,7 @@ return new class extends Migration {
 
         DB::table('preguntas')->insert([
             'tipus' => 1,
+            'temps' => 20,
             'valorInicial' => null,
             'unitatInicial' => null,
             'valorFinal' => null,
@@ -47,6 +49,7 @@ return new class extends Migration {
         // Pregunta 2
         DB::table('preguntas')->insert([
             'tipus' => 1,
+            'temps' => 20,
             'valorInicial' => null,
             'unitatInicial' => null,
             'valorFinal' => null,
@@ -63,6 +66,7 @@ return new class extends Migration {
         // Pregunta 3
         DB::table('preguntas')->insert([
             'tipus' => 1,
+            'temps' => 20,
             'valorInicial' => null,
             'unitatInicial' => null,
             'valorFinal' => null,
@@ -79,6 +83,7 @@ return new class extends Migration {
         // Pregunta 4
         DB::table('preguntas')->insert([
             'tipus' => 1,
+            'temps' => 20,
             'valorInicial' => null,
             'unitatInicial' => null,
             'valorFinal' => null,
@@ -95,6 +100,7 @@ return new class extends Migration {
         // Pregunta 5
         DB::table('preguntas')->insert([
             'tipus' => 1,
+            'temps' => 20,
             'valorInicial' => null,
             'unitatInicial' => null,
             'valorFinal' => null,

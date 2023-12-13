@@ -8,7 +8,8 @@
         <div>
             <div class="jugadors">
                 <div class="jugador" v-for="jugador in game.players">
-                    <span>{{ jugador.nick }}</span><span> - {{ jugador.encertades }}</span><span> - {{ jugador.vida }}/100</span>
+                    <span>{{ jugador.nick }}</span><span> - {{ jugador.encertades }}</span><span> - {{ jugador.vida
+                    }}/100</span>
                     <div>{{ jugador.poder }}</div>
                 </div>
             </div>
@@ -27,6 +28,17 @@
                 <h2>Pregunta:{{ game.questionIndex }}</h2>
                 <Drag :respostes="game.question.respostes" @comprovar="(index) => answer(index)" />
             </div>
+
+            <vue-countdown ref="foo" :time="game.question.temps * baseMilliseconds" :auto-start="false" :interval="1000" :transform="transformSlotProps" v-slot="{ seconds }"
+                @end="() => console.log('hola')"
+                @abort="() => {game.question.temps = tempsRestant.totalMilliseconds/1000}">
+                Time Remaining: {{ seconds }} seconds.
+            </vue-countdown>
+
+            <button @click="startTimer">Start timer</button>
+
+            <button @click="stopTimer">Stop timer</button>
+
 
             <div class="chat">
                 <div class="missatge" v-for="missatge in game.chat">
@@ -52,9 +64,13 @@ import Poder from "./Poder.vue";
 export default {
     data() {
         const store = useAppStore();
-
+        
         return {
+            tempsRestant: null,
+            baseMilliseconds: 1000,
+
             state: {
+                
                 loading: true,
                 error: false,
             },
@@ -71,8 +87,24 @@ export default {
         };
     },
     components: { Drag, Poder },
-    
+
     methods: {
+        startTimer() {
+            this.$refs.foo.start();
+        },
+        stopTimer() {
+            this.$refs.foo.abort();
+        },
+
+        transformSlotProps(props) {
+            this.tempsRestant = {};
+
+            Object.entries(props).forEach(([key, value]) => {
+                this.tempsRestant[key] = value < 10 ? `0${value}` : String(value);
+            });
+            return this.tempsRestant;
+        },
+
         skip() {
             socket.emit('skip');
         },
@@ -101,10 +133,10 @@ export default {
         this.loading = false;
         const store = useAppStore();
         store.$subscribe((answer) => {
-            if (answer == true){
+            if (answer == true) {
                 console.log("YIPPIE");
 
-            }else if (answer == false){
+            } else if (answer == false) {
                 console.log(":(")
             }
             store.setAnswer(null);
