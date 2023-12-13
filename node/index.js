@@ -417,16 +417,14 @@ io.on('connection', (socket) => {
         });
         switch (poder) {
             case "salt":
-                user.skip++;
+                utilitzarPoderSalt(user, userObjectiu, roomID);
+
                 break;
             case "vida":
-                userObjectiu.vida += 20;
-                if (userObjectiu.vida > 100) {
-                    userObjectiu.vida = 100;
-                }
+                utilizarPoderVida(user, userObjectiu, roomID);
                 break;
             case "escut":
-                userObjectiu.escut = true;
+                utilitzarPoderEscut(user, userObjectiu, roomID);
                 break;
             default:
                 break;
@@ -445,6 +443,11 @@ io.on('connection', (socket) => {
 
 })
 
+/**
+ * et dona un poder aleatori
+ * @param {obj} user l'usuari i per conseqüencia el quadrant al qual es troba, per saber quin poder donar-li
+ * @returns el poder que li ha tocat
+ */
 function getRandomPoder(user) {
     let random = Math.floor(Math.random() * 3) + 1;
     let poder = "";
@@ -464,6 +467,21 @@ function getRandomPoder(user) {
     return poder;
 }
 
+function utilitzarPoderSalt(user, userObjectiu, roomID) {
+    user.skip++;
+}
+
+function utilizarPoderVida(user, userObjectiu, roomID) {
+    userObjectiu.vida += 20;
+    if (userObjectiu.vida > 100) {
+        userObjectiu.vida = 100;
+    }
+}
+
+function utilitzarPoderEscut(user, userObjectiu, roomID) {
+    userObjectiu.escut = true;
+}
+
 /**
  * Crea un usuari
  * @param {int} idSocket Identificador del socket
@@ -471,7 +489,7 @@ function getRandomPoder(user) {
  * @returns Objecte que conté la informació de l'usuari
  */
 function createNewUser(idSocket, nick) {
-        let user = {
+    let user = {
         "idSocket": idSocket,
         "nick": nick,
         "preguntaActual": 0,
@@ -481,7 +499,12 @@ function createNewUser(idSocket, nick) {
         "temps": 0, //Es posa el temps quan mor el jugador, de base sera 0
         "falladesConsecutives": 0,
         "poder": "",
+        "infoPoders": {
+            "escut": false,
+            "robarVida": false,
+            
         }
+    }
     return user;
 }
 
