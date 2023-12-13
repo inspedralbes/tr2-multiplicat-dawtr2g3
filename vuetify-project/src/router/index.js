@@ -3,6 +3,8 @@ import Landing from '../components/Landing.vue'
 import Partida from "../components/Partida.vue";
 import Final from "../components/Final.vue";
 import Lobby from "../components/Lobby.vue";
+import Rooms from "../components/Rooms.vue";
+import CrearPartida from "../components/CrearPartida.vue";
 import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
 const router = createRouter({
@@ -27,6 +29,14 @@ const router = createRouter({
       path: '/lobby',
       name: 'lobby',
       component: Lobby
+    },{
+      path: '/partides',
+      name: 'partides',
+      component: Rooms
+    },{
+      path: '/crearPartida',
+      name: 'CrearPartida',
+      component: CrearPartida
     }
   ]
 })

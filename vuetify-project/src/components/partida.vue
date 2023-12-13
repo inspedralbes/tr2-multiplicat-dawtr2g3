@@ -6,36 +6,64 @@
     </div>
     <div>
         <div>
+            <img id="fallar" src="https://w7.pngwing.com/pngs/591/346/png-transparent-error-cross-red-cross-error.png" class="hidden" alt="">
             <div class="jugadors">
                 <div class="jugador" v-for="jugador in game.players">
-                    <span>{{ jugador.nick  }}</span><span>  {{ jugador.encertades  }}</span>
+                    <span>{{ jugador.nick }}</span><span>-{{ jugador.encertades }}</span><span>-{{ jugador.vida }}/100</span>
                 </div>
             </div>
-            <h1>{{ game.question.pregunta }}</h1>
-            <h2>Pregunta:{{ game.questionIndex }}</h2>
-            <div class="respostes">
-                <div class="resposta" v-for="(resposta, index) in game.question.respostes">
-                    
-                    <button @click="answer(index)">{{ resposta }}</button>
+            <div v-if="game.question.tipus == 1">
+                <h1>{{ game.question.pregunta }}</h1>
+                <h2>Pregunta:{{ game.questionIndex }}</h2>
+                <div class="respostes">
+                    <div class="resposta" v-for="(resposta, index) in game.question.respostes">
+
+                        <button @click="answer(index)">{{ resposta }}</button>
+                    </div>
                 </div>
             </div>
+            <div v-else>
+                <h1>{{ game.question.pregunta }}</h1>
+                <h2>Pregunta:{{ game.questionIndex }}</h2>
+                <Drag :respostes="game.question.respostes" @comprovar="(index) => answer(index)" />
+            </div>
+
             <div class="chat">
                 <div class="missatge" v-for="missatge in game.chat">
-                    <span>{{ missatge.nick  }}</span>:<span>  {{ missatge.msg  }}</span>
+                    <span>{{ missatge.nick }}</span>:<span> {{ missatge.msg }}</span>
                 </div>
                 <input type="text" id="inputChat">
                 <button @click="enviarMissatge()">Enviar</button>
             </div>
         </div>
-        <button @click="sumar">Sumar</button>
-
+        <button @click="skip">Skip</button>
+        <p>Vida: {{ game.ownPlayer.vida }}</p>
     </div>
 </template>
+<style>
+.hidden{
+    display: none;
+}
+#fallar{
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform:  translate(-50%, -50%);
+    animation-name: identifier;
+    animation-duration: 1s;
+   
+}
 
+
+</style>
 <script>
 import { socket } from '../socket';
 import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
+import Drag from "./Drag.vue";
+
 export default {
     data() {
         const store = useAppStore();
@@ -54,17 +82,25 @@ export default {
                 chat: computed(() => store.chat),
                 questionIndex: computed(() => store.questionIndex),
                 players: computed(() => store.players),
+                ownPlayer: computed(() => store.ownPlayer),
                 question: computed(() => store.question),
                 answer: computed(() => store.answer),
             },
 
         };
     },
+    components: { Drag },
     methods: {
-        sumar() {
-            console.log(this.game.players);
+        skip() {
+            socket.emit('skip');
         },
-
+        fallar() {
+            var fallar = document.getElementById("fallar");
+            fallar.classList.remove("hidden");
+            setTimeout(() => {
+                fallar.classList.add("hidden");
+            }, 1000);
+        },
         answer(index) {
             socket.emit('answer', this.game.question.idPregunta, index);
         },
@@ -72,7 +108,7 @@ export default {
             const store = useAppStore();
 
             var input = document.getElementById("inputChat");
-            socket.emit('enviar missatge', input.value,store.loginInfo.username);
+            socket.emit('enviar missatge', input.value, store.loginInfo.username);
             input.value = "";
         }
     },
@@ -80,18 +116,17 @@ export default {
     mounted() {
         this.loading = false;
         const store = useAppStore();
-        console.log(store.getQuestionIndex());
         store.$subscribe((answer) => {
-            console.log(this.game.question.respostes);
             if (store.getAnswer() == true){
-                console.log("YIPPIE");
-                socket.emit("send");
-            }else if (store.getAnswer() == false){
-                console.log(":(")
+                console.log("YIPPIEe");
+
+            }else if (store.getAnswer()  == false){
+                console.log("   :(");
+                this.fallar();
             }
-            console.log(store.getAnswer());
             store.setAnswer(null);
         })
+        
     },
 
 }

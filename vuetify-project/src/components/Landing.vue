@@ -25,11 +25,9 @@ export default {
     empezar(){
       
       const store = useAppStore();
-      console.log("empezar");
       let nick = document.getElementById("nomJugador").value;
-      socket.emit('join',nick);
       store.setNick(nick);
-      router.push('/lobby');
+      router.push('/partides');
 
     }
   },

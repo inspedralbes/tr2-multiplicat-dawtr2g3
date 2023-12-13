@@ -13,7 +13,7 @@
                 <input type="text" id="inputChat">
                 <button @click="enviarMissatge()">Enviar</button>
             </div>
-        <button @click="start">Començar partida</button>
+        <button v-if="$router.options.history.state.back == '/crearPartida'" @click="start">Començar partida</button>
     </div>
 </template>
 <script>

@@ -1,19 +1,32 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-
+import { socket } from '../socket';
 export const useAppStore = defineStore('app', {
   state: () => ({
     loginInfo: {
       loggedIn: false,
       username: '',
     },
+    guanyador: {},
+    perdedors: [],
+    partides: [],
     chat: [],
     players: [],
+    ownPlayer:[],
     question: null,
     answer: null,
     questionIndex: -1,
   }),
   actions: {
+    setPerdedors( perdedors ) {
+      this.perdedors = perdedors;
+    },
+    setGuanyador( guanyador ) {
+      this.guanyador = guanyador;
+    },
+    setPartides( arrayRoom ) {
+      this.partides = arrayRoom;
+    },
     setLoginInfo( loggedIn, username, image ) {
       this.loginInfo.loggedIn = loggedIn;
       this.loginInfo.username = username;
@@ -27,6 +40,11 @@ export const useAppStore = defineStore('app', {
     },
     setPlayers( playerArray ) {
       this.players = playerArray;
+      playerArray.forEach(player => {
+        if(player.idSocket == socket.id){
+          this.ownPlayer = player;
+        }
+      });
     },
     aumentar(){
       this.questionIndex++;
@@ -37,6 +55,10 @@ export const useAppStore = defineStore('app', {
     setQuestion( question ) {
       this.question = question;
       this.questionIndex++;
+    },
+    setQuestionIndex( index ) {
+      this.questionIndex = index;
+
     },
     getQuestionIndex(){
       return this.questionIndex;
