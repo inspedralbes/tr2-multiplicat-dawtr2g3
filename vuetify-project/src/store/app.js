@@ -6,6 +6,7 @@ export const useAppStore = defineStore('app', {
     loginInfo: {
       loggedIn: false,
       username: '',
+      token: '',
     },
     guanyador: {},
     perdedors: [],
@@ -27,9 +28,10 @@ export const useAppStore = defineStore('app', {
     setPartides( arrayRoom ) {
       this.partides = arrayRoom;
     },
-    setLoginInfo( loggedIn, username, image ) {
+    setLoginInfo( loggedIn, username, token ) {
       this.loginInfo.loggedIn = loggedIn;
       this.loginInfo.username = username;
+      this.loginInfo.token = token;
     },
     pushChat( msg ) {  
       this.chat.push(msg);
