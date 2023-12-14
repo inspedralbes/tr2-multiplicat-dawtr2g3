@@ -12,7 +12,13 @@ class ControllerUsuari extends Controller
 {
     public function register(Request $request)
     {
-
+        if ($request->nom == 'undefined' || $request->mail == 'undefined' || $request->password == 'undefined' || $request->tutor == 'undefined') {
+            $response = [
+                'status' => 399,
+                'missatge' => 'Falten camps per omplir'
+            ];
+            return response($response,399);
+        }
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|unique:users,nom',
             'password' => 'required|string|confirmed'
