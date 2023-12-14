@@ -3,16 +3,15 @@
     <div class="container__register">
       <v-card class="mx-auto register" max-width="344" title="Registrar">
         <v-container >
-          <v-text-field v-model="first" color="deep-purple-darken-1" label="First name" variant="solo" ></v-text-field>
-
-          <v-text-field v-model="last" color="deep-purple-darken-1" label="Last name" variant="solo"></v-text-field>
+          <v-text-field v-model="nom" color="deep-purple-darken-1" label="Nickname" variant="solo" ></v-text-field>
 
           <v-text-field v-model="email" color="deep-purple-darken-1" label="Email" variant="solo"></v-text-field>
 
-          <v-text-field v-model="password" color="deep-purple-darken-1" label="Password" placeholder="Enter your password"
+          <v-text-field type="password" v-model="password" color="deep-purple-darken-1" label="Password" placeholder="Enter your password"
             variant="solo"></v-text-field>
-
-          <v-btn class="button__register">Entrar</v-btn>
+            <v-text-field type="password" v-model="password_confirmation" color="deep-purple-darken-1" label="Password confirmation" placeholder="Confirm your password"
+            variant="solo"></v-text-field>
+          <v-btn class="button__register" @click="submit">Entrar</v-btn>
         </v-container>
       </v-card>
     </div>
