@@ -55,6 +55,7 @@ socket.on("new question", (question) => {
   console.log(question);
   const store = useAppStore();
   store.setQuestion(question);
+  store.canvi = true;
 });
 
 /**
