@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <div v-if="state.loading">
         <div class="spinner-grow text-primary" role="status">
             <span class="sr-only">Loading...</span>
         </div>
     </div>
-    <div>
+    <div v-else>
         <div>
             <div class="jugadors">
                 <div class="jugador" v-for="jugador in game.players">
@@ -29,10 +29,10 @@
                 <Drag :respostes="game.question.respostes" @comprovar="(index) => answer(index)" />
             </div>
 
-            <vue-countdown ref="foo" :time="game.question.temps * baseMilliseconds" :auto-start="false" :interval="1000" :transform="transformSlotProps" v-slot="{ seconds }"
-                @end="() => console.log('hola')"
-                @abort="() => {game.question.temps = tempsRestant.totalMilliseconds/1000}">
-                Time Remaining: {{ seconds }} seconds.
+            <vue-countdown ref="foo" :time="game.question.temps * timer.baseMilliseconds" :auto-start="false" :interval="100"
+                :transform="transformSlotProps" v-slot="{ seconds, milliseconds }" @end="() => console.log('hola')"
+                @abort="() => { game.question.temps = timer.tempsRestant / 1000 }">
+                Temps restant: {{ seconds }}.{{ Math.floor(milliseconds/100) }} seconds.
             </vue-countdown>
 
             <button @click="startTimer">Start timer</button>
@@ -64,13 +64,16 @@ import Poder from "./Poder.vue";
 export default {
     data() {
         const store = useAppStore();
-        
+
         return {
-            tempsRestant: null,
-            baseMilliseconds: 1000,
+
+            timer: {
+                tempsRestant: 0,
+                baseMilliseconds: 1000,
+            },
 
             state: {
-                
+
                 loading: true,
                 error: false,
             },
@@ -97,12 +100,13 @@ export default {
         },
 
         transformSlotProps(props) {
-            this.tempsRestant = {};
+            const formattedProps = {};
 
             Object.entries(props).forEach(([key, value]) => {
-                this.tempsRestant[key] = value < 10 ? `0${value}` : String(value);
+                formattedProps[key] = value < 10 ? `0${value}` : String(value);
             });
-            return this.tempsRestant;
+            this.timer.tempsRestant = parseInt(formattedProps.totalMilliseconds);
+            return formattedProps;
         },
 
         skip() {
@@ -114,7 +118,10 @@ export default {
          * @param {int} index index de la resposta
          */
         answer(index) {
+            this.stopTimer();
+            this.timer.temps += 3;
             socket.emit('answer', this.game.question.idPregunta, index);
+            
         },
 
         /**
@@ -130,7 +137,10 @@ export default {
     },
 
     mounted() {
-        this.loading = false;
+        this.state.loading = false;
+        setTimeout(() => {
+            this.startTimer();
+        }, 1000);
         const store = useAppStore();
         store.$subscribe((answer) => {
             if (answer == true) {
@@ -138,9 +148,11 @@ export default {
 
             } else if (answer == false) {
                 console.log(":(")
+                this.startTimer();
             }
             store.setAnswer(null);
-        })
+        });
+
     },
 
 }

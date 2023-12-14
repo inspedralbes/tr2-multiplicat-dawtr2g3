@@ -58,7 +58,7 @@ socket.on("new question", (question) => {
 });
 
 /**
- * Guarda si la resposta es correcte i si la partida  no ha acabat
+ * Guarda si la resposta es correcte i si la partida no ha acabat
  */
 socket.on("check", (correcte, acabat) => {
   const store = useAppStore();
