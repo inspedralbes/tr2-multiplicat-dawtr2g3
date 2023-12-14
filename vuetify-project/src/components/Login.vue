@@ -81,6 +81,7 @@ h1{
 import store from '@/store';
 import  CommunicationManager from '../communicationManager.js';
 import router from '@/router'
+import { useAppStore } from '@/store/app';
 export default {
   data: () => ({
     form: false,
@@ -93,10 +94,12 @@ export default {
   methods: {
     async submit() {
       console.log(this.manager.fetchLink);
+      const store = useAppStore();
       let response = await this.manager.login(this.nick,this.password);
+
       if(response.status == 201){
-        store.setLoginInfo(true,response.user.nom,response.token)
-        this.$router.push({name: 'Home'});
+        store.setLoginInfo(true,response.user.nom,response.token);
+        router.push('/partides');
       }
       else{
         alert("Usuario o contraseña incorrectos");
