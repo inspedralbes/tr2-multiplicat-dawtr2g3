@@ -92,7 +92,6 @@ export default {
 
   methods: {
     async submit() {
-      console.log(this.manager.fetchLink);
       const store = useAppStore();
       let response = await this.manager.login(this.nick,this.password);
 
