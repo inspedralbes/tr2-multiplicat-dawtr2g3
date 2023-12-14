@@ -14,30 +14,52 @@ export const socket = io(URL, {
     "Access-Control-Allow-Origin": "*",
   },
 });
+
+/**
+ * Guarda la llista de partides
+ */
 socket.on("llista partides", (arrayRoom) => {
   const store = useAppStore();
   store.setPartides(arrayRoom);
 
 });
+
+/**
+ * Modifica l'array d'usuaris
+ */
 socket.on("update players", (playerArray) => {
   const store = useAppStore();
   store.setPlayers(playerArray);
 });
+
+/**
+ * Envia el missatge al chat
+ */
 socket.on("update chat", (msg) => {
   const store = useAppStore();
   store.pushChat(msg);
 });
 
+/**
+ * Mou a la pantalla de la partida
+ */
 socket.on("lobby tencada", () => {
   const store = useAppStore();
   router.push('/partides');
 });
 
+/**
+ * Guarda la pregunta
+ */
 socket.on("new question", (question) => {
+  console.log(question);
   const store = useAppStore();
   store.setQuestion(question);
 });
 
+/**
+ * Guarda si la resposta es correcte i si la partida no ha acabat
+ */
 socket.on("check", (correcte, acabat) => {
   const store = useAppStore();
   store.setAnswer(correcte);
@@ -48,11 +70,13 @@ socket.on("check", (correcte, acabat) => {
     socket.emit("send");
   }
   if(acabat){
-    console.log('ACABAT');
     router.push('/final');
   }
 });
 
+/**
+ * Mou a la pantalla final
+ */
 socket.on("end", (guanyador, perdedors) => {
   const store = useAppStore();
   console.log("guanyador", guanyador);
@@ -63,6 +87,9 @@ socket.on("end", (guanyador, perdedors) => {
   router.push('/final');
 });
 
+/**
+ * Mou a la pantalla de la partida
+ */
 socket.on("play", (question) => {
   const store = useAppStore();
   store.setQuestion(question);
@@ -70,4 +97,9 @@ socket.on("play", (question) => {
   router.push('/partida');
 
 });
+
+// socket.on("get power", (poder) => {
+//   const store = useAppStore();
+//   store.setPower(poder);
+// });
 

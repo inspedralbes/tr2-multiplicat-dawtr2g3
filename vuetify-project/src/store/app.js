@@ -74,8 +74,8 @@ export const useAppStore = defineStore('app', {
     getPlayers(){
       return this.players;
     },
-    setAnswer( neWanswer ) {
-      this.answer = neWanswer;
+    setAnswer( newAnswer ) {
+      this.answer = newAnswer;
     },
     getAnswer(){
       return this.answer;

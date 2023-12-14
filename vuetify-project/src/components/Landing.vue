@@ -144,18 +144,20 @@ import router from '@/router'
 export default {
   data() {
     return {
-
+      tempsRestant: null,
     };
   },
   methods: {
-    empezar(){
-      
+    empezar() {
+
       const store = useAppStore();
       let nick = document.getElementById("nomJugador").value;
       store.setNick(nick);
       router.push('/partides');
 
-    }
+    },
+
+    
   },
 
   mounted() {
