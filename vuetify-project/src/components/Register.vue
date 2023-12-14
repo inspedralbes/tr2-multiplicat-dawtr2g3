@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="container__register">
-      <v-card class="mx-auto register" max-width="344" title="Registrar">
+      <v-card class="mx-auto register" title="Registrar">
         <v-container >
           <v-text-field v-model="first" color="deep-purple-darken-1" label="First name" variant="solo" ></v-text-field>
 
@@ -12,7 +12,9 @@
           <v-text-field v-model="password" color="deep-purple-darken-1" label="Password" placeholder="Enter your password"
             variant="solo"></v-text-field>
 
-          <v-btn class="button__register">Entrar</v-btn>
+          <div class="button-box">
+            <v-btn color="#33cccc">Registrar-se</v-btn>
+          </div>
         </v-container>
       </v-card>
     </div>
@@ -50,11 +52,9 @@
   color: aliceblue;
 }
 
-.button__register {
-  background-color: #33cccc;
-  position: static;
+.button-box{
   display: flex;
-  margin-left: 30vh;
+  justify-content: end;
 }
 </style>
 <script>
