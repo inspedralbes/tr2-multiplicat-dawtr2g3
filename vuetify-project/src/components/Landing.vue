@@ -1,5 +1,4 @@
 <template>
-  <div>
     <h1 class="title-landing text-center">Math Royale</h1>
     <div class="container">
       <div class="container__card card">
@@ -26,27 +25,12 @@
       </div>
       <div class="container__buttons buttons">
         <v-btn rounded="xl" class="btn__entrar" color="#f5a23d" size="x-large" @click="empezar">Entrar</v-btn>
-        <v-btn rounded="xl" class="btn__crear" color="#f5a23d" size="x-large">Crear</v-btn>
+        <v-btn rounded="xl" class="btn__crear" color="#f5a23d" size="x-large"  @click="$router.push('/crearPartida')" >Crear</v-btn>
       </div>
     </div>
-  </div>
 </template>
 <!-- CENTRAR FONDO https://es.godaddy.com/blog/imagen-responsive-en-css3-para-el-fondo-de-tu-web/ -->
-<style>
-  * {
-    padding: 0;
-    margin: 0;
-  }
-
-  body {
-    background-image: url("../assets/background-general.png");
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-color: #464646;
-  }
-
+<style scoped>
   .title-landing {
     font-family: "Battle Beasts";
     font-size: 10rem !important;
@@ -70,7 +54,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    left: 30vh;
+    left: 12vw;
   }
 
   .card__items {
@@ -122,28 +106,30 @@
     align-items: center;
     display: grid;
     position: relative;
-    right: 20vh;
+    right: 5vw;
   }
 
   .btn__entrar, .btn__crear {
     font-size: 3rem !important;
   }
 
-  @media screen and (max-width: 1350px) {
+  @media screen and (max-width: 1100px) {
     
     .container {
       width: 100vw;
       height: 50vh;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      justify-content: center;
+      grid-template-columns: 1fr;
     }
 
     .container__card {
-      left: 10vh;
+      left: 0;
     }
 
     .container__buttons {
-      right: 10vw;
+      margin-top: 3vh;
+      right: 0;
     }
   }
 

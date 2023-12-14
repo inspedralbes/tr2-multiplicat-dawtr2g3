@@ -15,17 +15,7 @@
     <div class="container-imagen"></div>
   </div>
 </template>
-<style>
-
-* {
-  padding: 0;
-  margin: 0;
-}
-
-body {
-  background-color: blueviolet;
-}
-
+<style scoped>
 .container {
   width: 100vw;
   height: 50vh;
@@ -73,7 +63,6 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
-
 </style>
 
 <script>
