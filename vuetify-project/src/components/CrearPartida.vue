@@ -27,7 +27,6 @@
         align-items: center;
         justify-content: center;
     }
-
     .configuration-board {
         /* fons del container */
         border-radius: 12px;
@@ -47,14 +46,12 @@
         align-items: center;
         justify-content: space-evenly;
     }
-
     .configuration-title-background {
         width: 65vw;
         height: 10vh;
         border-radius: 50px;
         background-color: rgb(226, 65, 4);
     }
-
     .title {
         font-size: 5rem !important;
         font-weight: 300;
@@ -63,17 +60,24 @@
         color: #ffc00a;
         margin-left: 2%;
     }
-
     .configuration-buttons {
         background-color: gray;
         width: 80%;
         height: 60%;
-
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr;
     }
-
+    .configuration-name-room {
+        color: #eb213c;
+        background-color: gray;
+        width: 80%;
+        height: 20%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+    }
 </style>
 
 <script>
