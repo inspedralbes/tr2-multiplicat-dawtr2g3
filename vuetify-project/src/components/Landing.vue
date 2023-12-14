@@ -143,7 +143,7 @@
     }
 
     .container__buttons {
-      right: 10vh;
+      right: 10vw;
     }
   }
 
