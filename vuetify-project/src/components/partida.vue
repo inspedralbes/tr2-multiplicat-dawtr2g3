@@ -135,13 +135,7 @@ export default {
         skip() {
             socket.emit('skip');
         },
-        fallar() {
-            var fallar = document.getElementById("fallar");
-            fallar.classList.remove("hidden");
-            setTimeout(() => {
-                fallar.classList.add("hidden");
-            }, 1000);
-        },
+        
         /**
          * respon a la pregunta
          * @param {int} index index de la resposta
@@ -180,7 +174,6 @@ export default {
 
             }else if (store.getAnswer()  == false){
                 console.log("   :(");
-                this.fallar();
             }
             store.setAnswer(null);
         });
