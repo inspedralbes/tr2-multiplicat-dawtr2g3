@@ -58,13 +58,34 @@
 }
 </style>
 <script>
+import  CommunicationManager from '../communicationManager.js';
+import { useAppStore } from '../store/app';
+import router from '@/router';
 export default {
   data: () => ({
     first: null,
     last: null,
     email: null,
     password: null,
+    password_confirmation: null,
     terms: false,
+    manager: new CommunicationManager(),
+
   }),
+  methods: {
+    async submit() {
+      const store = useAppStore();
+      console.log(this.nom,this.email,this.password,this.password_confirmation);
+      let response = await this.manager.register(this.nom,this.email,this.password,this.password_confirmation);
+      console.log(response);
+      if(response.status == 201){
+        store.setLoginInfo(true,response.user.nom,response.token);
+        router.push('/partides');
+      }
+      else{
+        alert(response.missatge);
+      }
+    },
+  },
 }
 </script>

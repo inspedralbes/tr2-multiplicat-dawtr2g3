@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Usuari;
+use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class AuthController extends Controller
+class ControllerUsuari extends Controller
 {
     public function register(Request $request)
     {
-
+        if ($request->nom == 'undefined' || $request->mail == 'undefined' || $request->password == 'undefined' || $request->tutor == 'undefined') {
+            $response = [
+                'status' => 399,
+                'missatge' => 'Falten camps per omplir'
+            ];
+            return response($response,399);
+        }
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|unique:users,nom',
             'password' => 'required|string|confirmed'
@@ -20,39 +26,40 @@ class AuthController extends Controller
         //La contrasenya i la confirmació no coincideixen
         if ($validator->fails()) {
             $response = [
-                'error' => 1,
+                'status' => 399,
                 'missatge' => 'Comprova que la contrasenya i la confirmació siguin la mateixa'
             ];
-            return (json_encode($response));
+            return response($response,399);
         }
 
         $validator = Validator::make($request->all(), [
-            'mail' => 'required|string|unique:usuaris,mail',
+            'mail' => 'required|string|unique:users,mail',
         ]);
         //El mail ja està en ús
         if ($validator->fails()) {
             $response = [
-                'error' => 2,
+                'status' => 340,
+
                 'missatge' => 'Email ja esta en ús'
             ];
-            return (json_encode($response));
+            return response($response,340);
         }
 
         $validator = Validator::make($request->all(), [
-            'nom' => 'required|string|unique:usuaris,nom',
+            'nom' => 'required|string|unique:users,nom',
         ]);
         //El nom ja està en ús
         if ($validator->fails()) {
             $response = [
-                'error' => 3,
+                'error' => 340,
                 'missatge' => 'Nom ja esta en ús'
             ];
-            return (json_encode($response));
+            return response($response,340);
         }
 
-        $user = Usuari::create([
-            'nom' => $request->name,
-            'email' => $request->mail,
+        $user = User::create([
+            'nom' => $request->nom,
+            'mail' => $request->mail,
             'password' => bcrypt($request->password),
             'tutor' => $request->tutor,
         ]);
@@ -60,8 +67,9 @@ class AuthController extends Controller
         $token = $user->createToken('myapptoken')->plainTextToken;
 
         $response = [
-            'usuari' => $user,
-            'token' => $token
+            'user' => $user,
+            'token' => $token,
+            'status' => 201,
         ];
         return response($response, 201);
     }
@@ -69,21 +77,29 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $fields = $request->validate([
-            'mail' => 'required|string',
+            'nom' => 'required|string',
             'password' => 'required|string'
+
         ]);
 
-        $user = Usuari::where('mail', $fields['mail'])->first();
+        $user = User::where('nom', $fields['nom'])->first();
 
         if (!$user || !Hash::check($fields['password'], $user->password)) {
-            return response('Credencials no valides', 401);
+
+            $response = [
+                'missatge' => 'El nom o la contrasenya no són correctes',
+                'status' => 401,
+            ];
+            return response($response, 401);
         }
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
         $response = [
             'user' => $user,
-            'token' => $token
+            'token' => $token,
+            'status' => 201,
+
         ];
         return response($response, 201);
     }

@@ -1,13 +1,13 @@
 <template>
-  <h1>MATH ROYALE</h1>
+  <h1 class="title-login">MATH ROYALE</h1>
   <div class="container">
     <div class="container__login">
-      <v-form v-model="form" @submit.prevent="onSubmit" class="login">
+      <v-form v-model="form" @submit="submit()" class="login">
         <div class="container__form">
-          <v-text-field v-model="user" :readonly="loading" :rules="[required]" clearable label="User" class="input__text"></v-text-field>
-          <v-text-field v-model="password" :readonly="loading" :rules="[required]" clearable label="Password"
+          <v-text-field v-model="nick" variant="solo"  :rules="[required]"  label="User" class="input__text"></v-text-field>
+          <v-text-field type="password" v-model="password" variant="solo" :readonly="loading" :rules="[required]" label="Password"
           placeholder="Enter your password" class="input__text"></v-text-field>
-          <v-btn class="sign">Entrar</v-btn>
+          <v-btn @click="submit()" class="sign">Entrar</v-btn>
         </div>
         
       </v-form>
@@ -15,17 +15,7 @@
     <div class="container-imagen"></div>
   </div>
 </template>
-<style>
-
-* {
-  padding: 0;
-  margin: 0;
-}
-
-body {
-  background-color: blueviolet;
-}
-
+<style scoped>
 .container {
   width: 100vw;
   height: 50vh;
@@ -60,43 +50,61 @@ body {
   color: aliceblue;
 }
 
-h1{
+.title-login{
   color: #ffa502;
   font-family: 'Battle Beasts';
   display: flex;
   position: absolute;
-
 }
 
 .container__form{
   width: 40vh;
-  position: absolute;
-  top: 33vh;
-  left:17vh;
+  position: relative;
+  top: 13vh;
+  margin-left: auto;
+  margin-right: auto;
 }
-
 </style>
 
 <script>
-/*export default {
+import store from '@/store';
+import  CommunicationManager from '../communicationManager.js';
+import router from '@/router'
+import { useAppStore } from '@/store/app';
+export default {
   data: () => ({
     form: false,
-    email: null,
+    nick: null,
     password: null,
     loading: false,
+    manager: new CommunicationManager(),
   }),
 
   methods: {
+    async submit() {
+      const store = useAppStore();
+      let response = await this.manager.login(this.nick,this.password);
+
+      if(response.status == 201){
+        store.setLoginInfo(true,response.user.nom,response.token);
+        router.push('/partides');
+      }
+      else{
+        alert("Usuario o contraseña incorrectos");
+      }
+    },
     onSubmit() {
       if (!this.form) return
 
       this.loading = true
-
+      
       setTimeout(() => (this.loading = false), 2000)
     },
     required(v) {
       return !!v || 'Field is required'
     },
   },
-}*/
+  mounted() {
+  },
+}
 </script>
