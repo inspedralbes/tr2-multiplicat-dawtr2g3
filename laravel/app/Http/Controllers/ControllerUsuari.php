@@ -20,10 +20,10 @@ class ControllerUsuari extends Controller
         //La contrasenya i la confirmació no coincideixen
         if ($validator->fails()) {
             $response = [
-                'error' => 1,
+                'status' => 399,
                 'missatge' => 'Comprova que la contrasenya i la confirmació siguin la mateixa'
             ];
-            return (json_encode($response));
+            return response($response,399);
         }
 
         $validator = Validator::make($request->all(), [
@@ -32,10 +32,11 @@ class ControllerUsuari extends Controller
         //El mail ja està en ús
         if ($validator->fails()) {
             $response = [
-                'error' => 2,
+                'status' => 340,
+
                 'missatge' => 'Email ja esta en ús'
             ];
-            return (json_encode($response));
+            return response($response,340);
         }
 
         $validator = Validator::make($request->all(), [
@@ -44,10 +45,10 @@ class ControllerUsuari extends Controller
         //El nom ja està en ús
         if ($validator->fails()) {
             $response = [
-                'error' => 3,
+                'error' => 340,
                 'missatge' => 'Nom ja esta en ús'
             ];
-            return (json_encode($response));
+            return response($response,340);
         }
 
         $user = User::create([
@@ -60,8 +61,9 @@ class ControllerUsuari extends Controller
         $token = $user->createToken('myapptoken')->plainTextToken;
 
         $response = [
-            'usuari' => $user,
-            'token' => $token
+            'user' => $user,
+            'token' => $token,
+            'status' => 201,
         ];
         return response($response, 201);
     }
