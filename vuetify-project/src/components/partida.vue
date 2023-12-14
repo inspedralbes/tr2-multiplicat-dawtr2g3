@@ -29,17 +29,17 @@
                 <Drag :respostes="game.question.respostes" @comprovar="(index) => answer(index)" />
             </div>
 
-            <vue-countdown ref="foo" :time="game.question.temps * timer.baseMilliseconds" :auto-start="false" :interval="100"
-                :transform="transformSlotProps" v-slot="{ seconds, milliseconds }" @end="() => console.log('hola')"
-                @abort="() => { game.question.temps = timer.tempsRestant / 1000 }">
-                Temps restant: {{ seconds }}.{{ Math.floor(milliseconds/100) }} seconds.
+            <!-- <vue-countdown ref="timer" :time="getTemps()" :auto-start="false" :interval="100"
+                :transform="transformSlotProps" v-slot="{ seconds, milliseconds }" 
+                @end="() => {timer.temps = timer.tempsRestant; console.log('startBleed'); startBleed()}"
+                @abort="() => { timer.temps = timer.tempsRestant }">
+                Temps restant: {{ seconds }}.{{ Math.floor(milliseconds / 100) }} seconds.
+            </vue-countdown> -->
+            <vue-countdown ref="bleed" :time="2*24*60*60*2000" :auto-start="false" :interval="1000"
+                :transform="sendBleed" v-slot="{ seconds }">
+                Bleed: {{ seconds }} seconds.
             </vue-countdown>
-
-            <button @click="startTimer">Start timer</button>
-
-            <button @click="stopTimer">Stop timer</button>
-
-
+            <!--  -->
             <div class="chat">
                 <div class="missatge" v-for="missatge in game.chat">
                     <span>{{ missatge.nick }}</span>:<span> {{ missatge.msg }}</span>
@@ -67,10 +67,11 @@ export default {
 
         return {
 
-            timer: {
-                tempsRestant: 0,
-                baseMilliseconds: 1000,
-            },
+            // timer: {
+            //     tempsRestant: 0,
+            //     temps: 20000,
+            //     baseMilliseconds: 1000,
+            // },
 
             state: {
 
@@ -85,6 +86,7 @@ export default {
                 ownPlayer: computed(() => store.ownPlayer),
                 question: computed(() => store.question),
                 answer: computed(() => store.answer),
+                notFirstQuestion: false,
             },
 
         };
@@ -92,21 +94,42 @@ export default {
     components: { Drag, Poder },
 
     methods: {
-        startTimer() {
-            this.$refs.foo.start();
+        // getTemps() {
+        //     console.log(this.timer.temps);
+        //     return this.timer.temps!=NaN?this.timer.temps:20000;
+        // },
+        // startTimer() {
+        //     this.$refs.timer.start();
+        // },
+        // stopTimer() {
+        //     this.$refs.timer.abort();
+        // },
+
+        startBleed() {
+            this.$refs.bleed.start();
         },
-        stopTimer() {
-            this.$refs.foo.abort();
+        stopBleed() {
+            this.$refs.bleed.abort();
         },
 
-        transformSlotProps(props) {
-            const formattedProps = {};
+        // transformSlotProps(props) {
+        //     const formattedProps = {};
+
+        //     Object.entries(props).forEach(([key, value]) => {
+        //         formattedProps[key] = value < 10 ? `0${value}` : String(value);
+        //     });
+        //     this.timer.tempsRestant = parseInt(formattedProps.totalMilliseconds);
+        //     return formattedProps;
+        // },
+
+        sendBleed(props) {
+            const formattedProps2 = {};
 
             Object.entries(props).forEach(([key, value]) => {
-                formattedProps[key] = value < 10 ? `0${value}` : String(value);
+                formattedProps2[key] = value < 10 ? `0${value}` : String(value);
             });
-            this.timer.tempsRestant = parseInt(formattedProps.totalMilliseconds);
-            return formattedProps;
+            socket.emit('sagnar vida');
+            return formattedProps2;
         },
 
         skip() {
@@ -118,10 +141,12 @@ export default {
          * @param {int} index index de la resposta
          */
         answer(index) {
-            this.stopTimer();
-            this.timer.temps += 3;
+            this.game.notFirstQuestion = true;
+            // this.stopTimer();
+            this.stopBleed();
+            // this.timer.temps += 3000;
             socket.emit('answer', this.game.question.idPregunta, index);
-            
+
         },
 
         /**
@@ -138,19 +163,25 @@ export default {
 
     mounted() {
         this.state.loading = false;
-        setTimeout(() => {
-            this.startTimer();
-        }, 1000);
         const store = useAppStore();
+        // setTimeout(() => {
+        //     this.startTimer();
+        // }, 1000);
         store.$subscribe((answer) => {
             if (answer == true) {
                 console.log("YIPPIE");
 
             } else if (answer == false) {
                 console.log(":(")
-                this.startTimer();
+                // this.startTimer();
             }
             store.setAnswer(null);
+        });
+        store.$subscribe((question) => {
+            if (question.idPregunta != this.game.question.idPregunta && this.game.notFirstQuestion) {
+                // this.timer.temps = question.temps * this.timer.baseMilliseconds;
+                // this.startTimer();
+            }
         });
 
     },

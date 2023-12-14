@@ -19,6 +19,8 @@ const io = new Server(server, {
 });
 const respuestaCorrecta = 0
 
+let restarVidaSagnar = 1;
+
 let arrayRoom = [];
 let arrayRoomMinim = [];
 async function iniciarLobby(roomID) {
@@ -293,7 +295,6 @@ io.on('connection', (socket) => {
                         user.preguntaActual++;
                         user.falladesConsecutives = 0;
                         socket.emit('new question', arrayPreg[user.preguntaActual]);
-
                     }
                 }
             });
@@ -430,6 +431,27 @@ io.on('connection', (socket) => {
                 break;
         }
         user.poder = "";
+        let llistatUsuarisMinim = [];
+        llistatUsuaris.forEach((user) => {
+
+            let userMinim = createUserMinim(user);
+
+            llistatUsuarisMinim.push(userMinim);
+        })
+        io.to(roomID).emit("update players", llistatUsuarisMinim)
+    })
+
+    socket.on('sagnar vida', () => {
+        let rooms = socket.rooms;
+        let roomID;
+        rooms.forEach((room) => {
+            roomID = room;
+        });
+        let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        let user = llistatUsuaris.find((usuari) => {
+            return usuari.idSocket == socket.id;
+        });
+        user.vida -= restarVidaSagnar;
         let llistatUsuarisMinim = [];
         llistatUsuaris.forEach((user) => {
 
