@@ -43,6 +43,7 @@
 .container-imagen {
   background-image: url('../assets/backgrounds/background-login.png');
   height: 100vh;
+  background-size: cover;
 }
 
 .input__text{
