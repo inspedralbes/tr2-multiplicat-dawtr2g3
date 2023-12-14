@@ -174,14 +174,10 @@ export default {
         //     this.startTimer();
         // }, 1000);
         store.$subscribe((answer) => {
-            if (answer == true) {
-                console.log("YIPPIE");
             if (store.getAnswer() == true){
                 console.log("YIPPIEe");
 
-            } else if (answer == false) {
-                console.log(":(")
-                // this.startTimer();
+
             }else if (store.getAnswer()  == false){
                 console.log("   :(");
                 this.fallar();
