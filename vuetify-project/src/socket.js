@@ -63,7 +63,9 @@ socket.on("new question", (question) => {
 socket.on("check", (correcte, acabat) => {
   const store = useAppStore();
   store.setAnswer(correcte);
-
+  console.log("correcte", correcte);
+  console.log("acabat", acabat);
+  store.setAnswer(correcte);
   if (!acabat && correcte) {
     socket.emit("send");
   }

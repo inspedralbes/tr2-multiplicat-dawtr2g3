@@ -135,7 +135,13 @@ export default {
         skip() {
             socket.emit('skip');
         },
-
+        fallar() {
+            var fallar = document.getElementById("fallar");
+            fallar.classList.remove("hidden");
+            setTimeout(() => {
+                fallar.classList.add("hidden");
+            }, 1000);
+        },
         /**
          * respon a la pregunta
          * @param {int} index index de la resposta
@@ -170,10 +176,15 @@ export default {
         store.$subscribe((answer) => {
             if (answer == true) {
                 console.log("YIPPIE");
+            if (store.getAnswer() == true){
+                console.log("YIPPIEe");
 
             } else if (answer == false) {
                 console.log(":(")
                 // this.startTimer();
+            }else if (store.getAnswer()  == false){
+                console.log("   :(");
+                this.fallar();
             }
             store.setAnswer(null);
         });
@@ -184,6 +195,7 @@ export default {
             }
         });
 
+        
     },
 
 }

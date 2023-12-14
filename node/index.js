@@ -251,6 +251,7 @@ io.on('connection', (socket) => {
             llistatUsuaris.map((user) => {
                 if (user.idSocket == socket.id) {
                     user.encertades++;
+                    user.falladesConsecutives = 0;
                     user.preguntaActual++;
                     user.falladesConsecutives = 0;
                 }
@@ -294,6 +295,7 @@ io.on('connection', (socket) => {
                     if (user.falladesConsecutives == 3) {
                         user.preguntaActual++;
                         user.falladesConsecutives = 0;
+                        socket.emit('tres fallades');
                         socket.emit('new question', arrayPreg[user.preguntaActual]);
                     }
                 }
@@ -362,8 +364,8 @@ io.on('connection', (socket) => {
                     user.skip--;
                 } else {
                     user.vida -= -10 * user.falladesConsecutives + 30;
-                    user.falladesConsecutives = 0;
                 }
+                user.falladesConsecutives = 0;
             }
         });
         let user = llistatUsuaris.find((usuari) => {

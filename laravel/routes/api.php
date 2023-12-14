@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ControllerPregunta;
+use App\Http\Controllers\ControllerUsuari;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+Route::post('/login',[ControllerUsuari::class, 'login']); 
+Route::post('/register',[ControllerUsuari::class, 'register']); 
 
 Route::get('/preguntes',[ControllerPregunta::class, 'index']); 
 Route::get('/preguntes/{id}',[ControllerPregunta::class, 'show']); 
