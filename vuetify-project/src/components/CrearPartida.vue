@@ -4,9 +4,11 @@
             <div class="configuration-title-background">
                 <h1 class="title"> Configura la teva partida</h1>
             </div>
-            <div class="configuration-buttons">
+            <div class="configuration-name-room">
                 <v-label for="nom">Nom de la partida</v-label>
                 <v-text-field type="text" v-model="nom" name="nom"></v-text-field>
+            </div>
+            <div class="configuration-buttons">
                 <v-label for="maxJugadors">Màxim de jugadors</v-label>
                 <div class="slidecontainer">
                     <v-text-field type="range" min="2" max="40" value="20" class="slider" name="maxJugadors" v-model="maxJugadors" id="myRange"></v-text-field>
@@ -63,7 +65,13 @@
     }
 
     .configuration-buttons {
-        
+        background-color: gray;
+        width: 80%;
+        height: 60%;
+
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
     }
 
 </style>

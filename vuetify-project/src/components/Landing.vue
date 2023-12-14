@@ -26,7 +26,7 @@
       </div>
       <div class="container__buttons buttons">
         <v-btn rounded="xl" class="btn__entrar" color="#f5a23d" size="x-large" @click="empezar">Entrar</v-btn>
-        <v-btn rounded="xl" class="btn__crear" color="#f5a23d" size="x-large">Crear</v-btn>
+        <v-btn rounded="xl" class="btn__crear" color="#f5a23d" size="x-large" @click="$router.push('/crearPartida')">Crear</v-btn>
       </div>
     </div>
   </div>
