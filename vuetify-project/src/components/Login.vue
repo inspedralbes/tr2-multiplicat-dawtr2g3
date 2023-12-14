@@ -2,12 +2,12 @@
   <h1 class="title-login">MATH ROYALE</h1>
   <div class="container">
     <div class="container__login">
-      <v-form v-model="form" class="login">
+      <v-form v-model="form" @submit="submit()" class="login">
         <div class="container__form">
-          <v-text-field v-model="user" variant="solo"  :rules="[required]"  label="User" class="input__text"></v-text-field>
+          <v-text-field v-model="nick" variant="solo"  :rules="[required]"  label="User" class="input__text"></v-text-field>
           <v-text-field type="password" v-model="password" variant="solo" :readonly="loading" :rules="[required]" label="Password"
           placeholder="Enter your password" class="input__text"></v-text-field>
-          <v-btn class="sign">Entrar</v-btn>
+          <v-btn @click="submit()" class="sign">Entrar</v-btn>
         </div>
         
       </v-form>
@@ -77,25 +77,45 @@ body {
 </style>
 
 <script>
+import store from '@/store';
+import  CommunicationManager from '../communicationManager.js';
+import router from '@/router'
+import { useAppStore } from '@/store/app';
 export default {
   data: () => ({
     form: false,
-    email: null,
+    nick: null,
     password: null,
     loading: false,
+    manager: new CommunicationManager(),
   }),
 
   methods: {
+    async submit() {
+      console.log(this.manager.fetchLink);
+      const store = useAppStore();
+      let response = await this.manager.login(this.nick,this.password);
+
+      if(response.status == 201){
+        store.setLoginInfo(true,response.user.nom,response.token);
+        router.push('/partides');
+      }
+      else{
+        alert("Usuario o contraseña incorrectos");
+      }
+    },
     onSubmit() {
       if (!this.form) return
 
       this.loading = true
-
+      
       setTimeout(() => (this.loading = false), 2000)
     },
     required(v) {
       return !!v || 'Field is required'
     },
+  },
+  mounted() {
   },
 }
 </script>

@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Usuari;
+use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class AuthController extends Controller
+class ControllerUsuari extends Controller
 {
     public function register(Request $request)
     {
@@ -27,7 +27,7 @@ class AuthController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'mail' => 'required|string|unique:usuaris,mail',
+            'mail' => 'required|string|unique:users,mail',
         ]);
         //El mail ja està en ús
         if ($validator->fails()) {
@@ -39,7 +39,7 @@ class AuthController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'nom' => 'required|string|unique:usuaris,nom',
+            'nom' => 'required|string|unique:users,nom',
         ]);
         //El nom ja està en ús
         if ($validator->fails()) {
@@ -50,9 +50,9 @@ class AuthController extends Controller
             return (json_encode($response));
         }
 
-        $user = Usuari::create([
-            'nom' => $request->name,
-            'email' => $request->mail,
+        $user = User::create([
+            'nom' => $request->nom,
+            'mail' => $request->mail,
             'password' => bcrypt($request->password),
             'tutor' => $request->tutor,
         ]);
@@ -69,21 +69,29 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $fields = $request->validate([
-            'mail' => 'required|string',
+            'nom' => 'required|string',
             'password' => 'required|string'
+
         ]);
 
-        $user = Usuari::where('mail', $fields['mail'])->first();
+        $user = User::where('nom', $fields['nom'])->first();
 
         if (!$user || !Hash::check($fields['password'], $user->password)) {
-            return response('Credencials no valides', 401);
+
+            $response = [
+                'missatge' => 'El nom o la contrasenya no són correctes',
+                'status' => 401,
+            ];
+            return response($response, 401);
         }
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
         $response = [
             'user' => $user,
-            'token' => $token
+            'token' => $token,
+            'status' => 201,
+
         ];
         return response($response, 201);
     }
