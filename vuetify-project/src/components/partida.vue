@@ -163,6 +163,8 @@ export default {
         });
         store.$subscribe((canvi) => {
             if (store.canvi ==  true) {
+                store.canvi = false;
+
                 console.log("AAAAAAA");
                 this.stopBleed();
                 this.stopTimer();
@@ -170,7 +172,6 @@ export default {
                 setTimeout(() => {
                     this.startTimer();
                 }, 1000);
-                store.canvi == false;
             }
         });
 
