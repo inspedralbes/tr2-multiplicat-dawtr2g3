@@ -157,11 +157,15 @@
 
 .button-crearPartida{
     color: rgba(70, 23, 143, 1);
-    font-family: 'Battle Beasts';
-    font-style: normal;
-    font-size: 65px;
-    font-weight: 400;
-    line-height: 1.2;
+    font-size: 5vh;
+    background: none;
+    border: none;
+    box-shadow: none;
+
+}
+
+@media screen and (max-width: 1350px) {
+    
 }
 </style>
 
