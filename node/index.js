@@ -254,15 +254,25 @@ io.on('connection', (socket) => {
                     user.falladesConsecutives = 0;
                     user.preguntaActual++;
                     user.falladesConsecutives = 0;
+
+                    if (user.infoPoders.robarVida > 0) {
+                        user.vida += 10;
+                        if (user.vida > 100) {
+                            user.vida = 100;
+                        }
+                        user.infoPoders.robarVida--;
+                    }
+
+                    if (user.encertades == 3) {
+                        user.encertades = 0;
+
+                        let poder = getRandomPoder(user);
+                        user.poder = poder;
+
+                    }
                 }
 
-                if (user.encertades == 3) {
-                    user.encertades = 0;
 
-                    let poder = getRandomPoder(user);
-                    user.poder = poder;
-
-                }
             });
 
             llistatUsuaris.forEach((user) => {
@@ -291,6 +301,16 @@ io.on('connection', (socket) => {
                         user.temps = Date.now() - start;
                         mort = true;
                     }
+
+                    if (user.infoPoders.escut) {
+                        user.infoPoders.escut = false;
+                        user.vida += 10;
+                    }
+
+                    if (user.infoPoders.robarVida > 0) {
+                        user.infoPoders.robarVida = 0;
+                    }
+
                     user.falladesConsecutives++;
                     if (user.falladesConsecutives == 3) {
                         user.preguntaActual++;
@@ -429,6 +449,12 @@ io.on('connection', (socket) => {
             case "escut":
                 utilitzarPoderEscut(user, userObjectiu, roomID);
                 break;
+            case "robarVida":
+                utilitzarPoderRobarVida(user, userObjectiu, roomID);
+                break;
+            case "pararTemps":
+                utilitzarPoderPararTemps(user, socket);
+                break;
             default:
                 break;
         }
@@ -473,7 +499,7 @@ io.on('connection', (socket) => {
  * @returns el poder que li ha tocat
  */
 function getRandomPoder(user) {
-    let random = Math.floor(Math.random() * 3) + 1;
+    let random = Math.floor(Math.random() * 4) + 1;
     let poder = "";
     switch (random) {
         case 1:
@@ -485,10 +511,24 @@ function getRandomPoder(user) {
         case 3:
             poder = "escut";
             break;
+        case 4:
+            poder = "robarVida";
+            break;
+        case 5:
+            poder = "pararTemps";
+            break;
         default:
             break;
     }
     return poder;
+}
+
+function utilitzarPoderPararTemps (user, userObjectiu, roomID){
+    socket.emit('parar temps');
+}
+
+function utilitzarPoderRobarVida (user, userObjectiu, roomID){
+    user.infoPoders.robarVida = 3;
 }
 
 /**
@@ -524,7 +564,7 @@ function utilizarPoderVida(user, userObjectiu, roomID) {
  */
 
 function utilitzarPoderEscut(user, userObjectiu, roomID) {
-    userObjectiu.escut = true;
+    userObjectiu.infoPoders.escut = true;
 }
 
 /**
@@ -546,7 +586,7 @@ function createNewUser(idSocket, nick) {
         "poder": "",
         "infoPoders": {
             "escut": false,
-            "robarVida": false,
+            "robarVida": 0,
 
         }
     }
@@ -628,53 +668,6 @@ function jugadorsVius(arrayJugadors) {
     });
     return jugadorsVius;
 }
-// fetch no funcional
-
-// const conect = 'http://jsonestatic.daw.inspedralbes.cat/data.json'
-// let preguntas = getPreguntes();
-// function  getPreguntes() {
-//     fetch(conect)
-//     .then((response) => response.json())
-//     .then((jsonData) => {
-//         return jsonData;
-//     });
-// }
-
-
-//coneccio a la base de dades
-/*function conectarBBDD() {
-    var con = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "",
-        database: 'probanode'
-    });
-
-    return con
-}
-
-
-function tancarBBDD(con) {
-    con.end();
-    return 1;
-}
-
-function mostrarPreguntas() {
-    
-}
-//Veura la informacio de la base de dades
-app.get('/', (req, res) => {
-    connexio = conectarBBDD();
-    
-    connexio.connect(function (err) {
-        if (err) throw err;
-        connexio.query("SELECT * FROM probanode", function (err, result, fields) {
-            if (err) throw err;
-            res.send(result);
-            tancarBBDD(connexio);
-          });
-    });
-});*/
 
 
 server.listen(port, () => {

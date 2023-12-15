@@ -2,7 +2,7 @@
 - Duelo: quadrants 2/3, comences un 1v1 contra una altra persona que tu escullis, només és pot atacar a la gent que estigui a la meitat amb més vida i si perd el defensor perd vida plana i percentatge de vida actual, si perd l'atacant només vida plana
 *- +Salt: quadrants 1/2/3, obtens un salt de pregunta sense perdre vida, saltar una pregunta no ajuda a obtenir un altre poder
 *- Escut: quadrants 1/2, et protegeix del següent atac enemic o fallada de pregunta
-- Robar vida: quadrant 3, et dona un augment que durant 5 preguntes, cada encert et suma vida, però si falles perds el poder
+*- Robar vida: quadrant 3, et dona un augment que durant 5 preguntes, cada encert et suma vida, però si falles perds el poder
 - Escollir qualsevol: quadrant 3, et permet escollir qualsevol altre poder
 - -Temps: quadrants 1/2/3, redueix en 5 segons el temps d'una altra persona a la seva següent pregunta
 - Parar temps: quadrants 1/2/3, para el temps 5 segons
