@@ -5,28 +5,31 @@
         </div>
     </div>
     <div v-else>
-        <div>
-            <div class="jugadors">
-                <div class="jugador" v-for="jugador in game.players">
-                    <span>{{ jugador.nick }}</span><span> - {{ jugador.encertades }}</span><span> - {{ jugador.vida
+        <div class="container">
+            <div class="container__jugadors jugadors">
+                <div class="container__jugador jugador" v-for="jugador in game.players">
+                    <span class="nick">{{ jugador.nick }}</span><span> - {{ jugador.encertades }}</span><span> - {{ jugador.vida
                     }}/100</span>
                     <div>{{ jugador.poder }}</div>
                 </div>
             </div>
-            <div v-if="game.question.tipus == 1">
-                <h1>{{ game.question.pregunta }}</h1>
-                <h2>Pregunta:{{ game.questionIndex }}</h2>
-                <div class="respostes">
-                    <div class="resposta" v-for="(resposta, index) in game.question.respostes">
+            <div class="container__preguntas preguntas">
+                <div v-if="game.question.tipus == 1">
+                    <div class="container__pregunta pregunta">
+                        <span>{{ game.questionIndex }}. </span><span> {{ game.question.pregunta }} </span>
+                    </div>
+                    <div class=" container__respostes respostes">
+                        <div v-for="(resposta, index) in game.question.respostes" class="resposta">
 
-                        <button @click="answer(index)">{{ resposta }}</button>
+                            <button class="button__resposta" @click="answer(index)">{{ resposta }}</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div v-else>
-                <h1>{{ game.question.pregunta }}</h1>
-                <h2>Pregunta:{{ game.questionIndex }}</h2>
-                <Drag :respostes="game.question.respostes" @comprovar="(index) => answer(index)" />
+                <div v-else>
+                    <h1>{{ game.question.pregunta }}</h1>
+                    <h2>Pregunta:{{ game.questionIndex }}</h2>
+                    <Drag :respostes="game.question.respostes" @comprovar="(index) => answer(index)" />
+                </div>
             </div>
 
             <!-- <vue-countdown ref="timer" :time="getTemps()" :auto-start="false" :interval="100"
@@ -35,25 +38,114 @@
                 @abort="() => { timer.temps = timer.tempsRestant }">
                 Temps restant: {{ seconds }}.{{ Math.floor(milliseconds / 100) }} seconds.
             </vue-countdown> -->
-            <vue-countdown ref="bleed" :time="2*24*60*60*2000" :auto-start="false" :interval="1000"
-                :transform="sendBleed" v-slot="{ seconds }">
-                Bleed: {{ seconds }} seconds.
-            </vue-countdown>
-            <!--  -->
-            <div class="chat">
+            <!--<vue-countdown ref="bleed" :time="2 * 24 * 60 * 60 * 2000" :auto-start="false" :interval="1000"
+                    :transform="sendBleed" v-slot="{ seconds }">
+                    Bleed: {{ seconds }} seconds.
+                </vue-countdown>  -->
+            <div class="container__chat chat">
                 <div class="missatge" v-for="missatge in game.chat">
                     <span>{{ missatge.nick }}</span>:<span> {{ missatge.msg }}</span>
                 </div>
                 <input type="text" id="inputChat">
                 <button @click="enviarMissatge()">Enviar</button>
             </div>
+            <div class="container__poder poder">
+                <button @click="skip">Skip</button>
+                <Poder :poder="game.ownPlayer.poder" />
+            </div>
+            <div class="container__usuario usuario">
+                <p>Vida: {{ game.ownPlayer.vida }}</p>
+            </div>
         </div>
-        <button @click="skip">Skip</button>
-        <Poder :poder="game.ownPlayer.poder" />
-        <p>Vida: {{ game.ownPlayer.vida }}</p>
+
     </div>
 </template>
+<style lang="scss" scoped>
+.container {
+    display: grid;
+    grid-template-areas:
+        "jugadors preguntas preguntas"
+        "jugadors  preguntas preguntas"
+        "chat usuario poder";
+    grid-template-columns: 1fr 2fr 0.5fr;
+    grid-template-rows: 2fr 0.5fr 1.5fr;
+    margin-left: 15vh;
+}
 
+.container__jugador {
+    color: aliceblue;
+}
+
+.container__jugadors {
+    height: 40vh;
+    width: 50vh;
+    background-color: rgb(37, 7, 107, 0.8);
+    grid-area: jugadors;
+    margin-top: 5vh;
+}
+
+.container__preguntas {
+    background-color: aliceblue;
+    text-align: center;
+    grid-area: preguntas;
+    width: 95vh;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5vh;
+    height: 55vh;
+}
+
+.container__pregunta {
+    position: relative;
+    background-color: rgb(134, 76, 191);
+    text-align: center;
+    height: 7vw;
+    width: 56vh;
+    border-radius: 21px;
+    margin-top: 2vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.container__chat {
+    background-color: rgb(37, 7, 107, 0.8);
+    color: aliceblue;
+    width: 50vh;
+    grid-area: chat;
+    margin-top: auto;
+}
+
+.container__usuario {
+    grid-area: usuario;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.container__poder {
+    grid-area: poder;
+    margin-top: auto;
+}
+
+.container__respostes{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    top: 18vh;
+}
+
+.button__resposta{
+    background-color: aqua;
+    padding: 1vh;
+    width: 30vh;
+    margin: 2vh;
+    border-radius: 6px;
+}
+.pregunta{
+    
+}
+</style>
 <script>
 import { socket } from '../socket';
 import { computed } from 'vue';
@@ -135,7 +227,7 @@ export default {
         skip() {
             socket.emit('skip');
         },
-        
+
         /**
          * respon a la pregunta
          * @param {int} index index de la resposta
@@ -168,11 +260,11 @@ export default {
         //     this.startTimer();
         // }, 1000);
         store.$subscribe((answer) => {
-            if (store.getAnswer() == true){
+            if (store.getAnswer() == true) {
                 console.log("YIPPIEe");
 
 
-            }else if (store.getAnswer()  == false){
+            } else if (store.getAnswer() == false) {
                 console.log("   :(");
             }
             store.setAnswer(null);
@@ -184,10 +276,9 @@ export default {
             }
         });
 
-        
+
     },
 
 }
 </script>
 
-<style lang="scss" scoped></style>
