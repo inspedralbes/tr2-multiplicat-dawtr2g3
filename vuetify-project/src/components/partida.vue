@@ -29,14 +29,9 @@
                 <Drag :respostes="game.question.respostes" @comprovar="(index) => answer(index)" />
             </div>
 
-            <!-- <vue-countdown ref="timer" :time="getTemps()" :auto-start="false" :interval="100"
-                :transform="transformSlotProps" v-slot="{ seconds, milliseconds }" 
-                @end="() => {timer.temps = timer.tempsRestant; console.log('startBleed'); startBleed()}"
-                @abort="() => { timer.temps = timer.tempsRestant }">
-                Temps restant: {{ seconds }}.{{ Math.floor(milliseconds / 100) }} seconds.
-            </vue-countdown> -->
-            <vue-countdown ref="bleed" :time="2*24*60*60*2000" :auto-start="false" :interval="1000"
-                :transform="sendBleed" v-slot="{ seconds }">
+            <h1> {{ game.temps }}</h1>
+            <vue-countdown ref="bleed" :time="2 * 24 * 60 * 60 * 2000" :auto-start="false" :interval="1000" :transform="sendBleed"
+                v-slot="{ seconds }">
                 Bleed: {{ seconds }} seconds.
             </vue-countdown>
             <!--  -->
@@ -60,6 +55,7 @@ import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
 import Drag from "./Drag.vue";
 import Poder from "./Poder.vue";
+import { toHandlers } from 'vue';
 
 export default {
     data() {
@@ -67,11 +63,6 @@ export default {
 
         return {
 
-            // timer: {
-            //     tempsRestant: 0,
-            //     temps: 20000,
-            //     baseMilliseconds: 1000,
-            // },
 
             state: {
 
@@ -87,40 +78,35 @@ export default {
                 question: computed(() => store.question),
                 answer: computed(() => store.answer),
                 notFirstQuestion: false,
+                temps: 0,
+                bleeding: false,
             },
+            timerInterval: null,
 
         };
     },
     components: { Drag, Poder },
 
     methods: {
-        // getTemps() {
-        //     console.log(this.timer.temps);
-        //     return this.timer.temps!=NaN?this.timer.temps:20000;
-        // },
-        // startTimer() {
-        //     this.$refs.timer.start();
-        // },
-        // stopTimer() {
-        //     this.$refs.timer.abort();
-        // },
 
+        startTimer() {
+            this.timerInterval = setInterval(() => {
+                this.game.temps--;
+                if (this.game.temps <= 0) {
+                    this.startBleed();
+                    this.stopTimer();
+                }
+            }, 1000);
+        },
+        stopTimer() {
+            clearInterval(this.timerInterval);
+        },
         startBleed() {
             this.$refs.bleed.start();
         },
         stopBleed() {
             this.$refs.bleed.abort();
         },
-
-        // transformSlotProps(props) {
-        //     const formattedProps = {};
-
-        //     Object.entries(props).forEach(([key, value]) => {
-        //         formattedProps[key] = value < 10 ? `0${value}` : String(value);
-        //     });
-        //     this.timer.tempsRestant = parseInt(formattedProps.totalMilliseconds);
-        //     return formattedProps;
-        // },
 
         sendBleed(props) {
             const formattedProps2 = {};
@@ -135,16 +121,14 @@ export default {
         skip() {
             socket.emit('skip');
         },
-        
+
         /**
          * respon a la pregunta
          * @param {int} index index de la resposta
          */
         answer(index) {
             this.game.notFirstQuestion = true;
-            // this.stopTimer();
             this.stopBleed();
-            // this.timer.temps += 3000;
             socket.emit('answer', this.game.question.idPregunta, index);
 
         },
@@ -164,27 +148,34 @@ export default {
     mounted() {
         this.state.loading = false;
         const store = useAppStore();
-        // setTimeout(() => {
-        //     this.startTimer();
-        // }, 1000);
+        this.game.temps = store.timer;
+        setTimeout(() => {
+            this.startTimer();
+        }, 1000);
+
         store.$subscribe((answer) => {
-            if (store.getAnswer() == true){
+            if (store.getAnswer() == true) {
                 console.log("YIPPIEe");
-
-
-            }else if (store.getAnswer()  == false){
+            } else if (store.getAnswer() == false) {
                 console.log("   :(");
             }
             store.setAnswer(null);
         });
-        store.$subscribe((question) => {
-            if (question.idPregunta != this.game.question.idPregunta && this.game.notFirstQuestion) {
-                // this.timer.temps = question.temps * this.timer.baseMilliseconds;
-                // this.startTimer();
+        store.$subscribe((canvi) => {
+            if (store.canvi ==  true) {
+                store.canvi = false;
+
+                console.log("AAAAAAA");
+                this.stopBleed();
+                this.stopTimer();
+                this.game.temps = store.timer;
+                setTimeout(() => {
+                    this.startTimer();
+                }, 1000);
             }
         });
 
-        
+
     },
 
 }
