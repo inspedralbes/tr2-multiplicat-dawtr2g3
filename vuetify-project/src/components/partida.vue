@@ -68,6 +68,8 @@
     </div>
 </template>
 <style lang="scss" scoped>
+
+//container de la partida
 .container {
     display: grid;
     grid-template-areas:
@@ -79,10 +81,12 @@
     margin-left: 15vh;
 }
 
+//container de los jugador
 .container__jugador {
     color: aliceblue;
 }
 
+//container de los jugadores
 .container__jugadors {
     height: 40vh;
     width: 50vh;
@@ -91,6 +95,7 @@
     margin-top: 5vh;
 }
 
+//container de las preguntas
 .container__preguntas {
     border-radius: 2vh;
     background-color: aliceblue;
@@ -103,6 +108,7 @@
     height: 55vh;
 }
 
+//container de las pregunta
 .container__pregunta {
     position: relative;
     background-color: rgb(134, 76, 191);
@@ -115,7 +121,7 @@
     margin-right: auto;
 }
 
-
+//container del chat
 .container__chat {
     background-color: rgb(37, 7, 107, 0.8);
     position: relative;
@@ -128,6 +134,7 @@
     border-radius: 6px;
 }
 
+//container del usuario
 .container__usuario {
     grid-area: usuario;
     margin-top: auto;
@@ -135,18 +142,20 @@
     margin-right: auto;
 }
 
+//container del poder
 .container__poder {
     grid-area: poder;
     margin-top: auto;
 }
 
+//container de las respuestas
 .container__respostes {
     display: grid;
     grid-template-columns: 1fr 1fr;
     position: relative;
     top: 18vh;
 }
-
+//boton de las respuestas
 .button__resposta {
     background-color: aqua;
     padding: 1vh;
@@ -155,6 +164,7 @@
     border-radius: 6px;
 }
 
+//container del chat
 .enviar {
     height: 3vh;
     width: 3vh;
@@ -163,12 +173,14 @@
     top: 7px;
 }
 
+//impunt del chat
 #inputChat {
     background-color: aliceblue;
     width: 44vh;
     border-radius: 5px;
 }
 
+//los mensajes del chat
 .missatge {
     position: relative;
     color: aliceblue;
@@ -176,6 +188,7 @@
     left: 1vh;
 }
 
+//container del mensaje
 .container__missatge {
     overflow-y: scroll;
     position: relative;
@@ -183,20 +196,24 @@
     bottom: 4vh;
 }
 
+//hancho del scroll
 .container__missatge::-webkit-scrollbar{
     width: 1vh;
 }
 
+//color del scroll y forma
 .container__missatge::-webkit-scrollbar-thumb{
     background-color: rgb(134, 76, 191);
     border-radius: 5px;
 }
+//container del boton del chat
 .container__imputButtom {
     display: flex;
     position: relative;
     bottom: 4vh;
     left: 1vh;
 }
+//container del chat
 .chat{
     position: relative;
     top: 6vh;
