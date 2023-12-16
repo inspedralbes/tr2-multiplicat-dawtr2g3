@@ -17,11 +17,14 @@
             <div class="container__preguntas preguntas">
                 <div v-if="game.question.tipus == 1">
                     <div class="container__pregunta pregunta">
-                        <span>{{ game.questionIndex }}. </span><span> {{ game.question.pregunta }} </span>
-                    </div>
-                    <div class="respostes container__respostes">
-                        <div class="resposta" v-for="(resposta, index) in game.question.respostes">
-                            <button @click="answer(index)" class="button__resposta">{{ resposta }}</button>
+                        <div class="pregunta__texto">
+                            <span>{{ game.questionIndex }}. </span><span> {{
+                            game.question.pregunta }} </span>
+                        </div>
+                        <div class="respostes container__respostes">
+                            <div class="resposta" v-for="(resposta, index) in game.question.respostes">
+                                <button @click="answer(index)" class="button__resposta">{{ resposta }}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -68,7 +71,6 @@
     </div>
 </template>
 <style lang="scss" scoped>
-
 //container de la partida
 .container {
     display: grid;
@@ -117,9 +119,14 @@
     width: 56vh;
     border-radius: 21px;
     margin-top: 2vw;
+}
+.pregunta{
     margin-left: auto;
     margin-right: auto;
+    justify-content: center;
+    align-items: center;
 }
+
 
 //container del chat
 .container__chat {
@@ -137,9 +144,18 @@
 //container del usuario
 .container__usuario {
     grid-area: usuario;
+    background-color: rgb(37, 7, 107, 0.8);
     margin-top: auto;
     margin-left: auto;
     margin-right: auto;
+    width: 65vh;
+    height: 20vh;
+    border-radius: 6px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 6vh;
 }
 
 //container del poder
@@ -151,10 +167,12 @@
 //container de las respuestas
 .container__respostes {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     position: relative;
-    top: 18vh;
+    top: 25vh;
+    grid-template-columns: 1fr 1fr;
+    right: 6vh;
 }
+
 //boton de las respuestas
 .button__resposta {
     background-color: aqua;
@@ -197,15 +215,16 @@
 }
 
 //hancho del scroll
-.container__missatge::-webkit-scrollbar{
+.container__missatge::-webkit-scrollbar {
     width: 1vh;
 }
 
 //color del scroll y forma
-.container__missatge::-webkit-scrollbar-thumb{
+.container__missatge::-webkit-scrollbar-thumb {
     background-color: rgb(134, 76, 191);
     border-radius: 5px;
 }
+
 //container del boton del chat
 .container__imputButtom {
     display: flex;
@@ -213,10 +232,19 @@
     bottom: 4vh;
     left: 1vh;
 }
+
 //container del chat
-.chat{
+.chat {
     position: relative;
     top: 6vh;
+}
+
+.pregunta__texto {
+    position: relative;
+    font-size: 2vh;
+    font-weight: bold;
+    position: relative;
+    top: 5vh;
 }
 </style>
 <script>
