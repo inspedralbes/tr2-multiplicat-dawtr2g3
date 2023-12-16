@@ -8,7 +8,8 @@
         <div class="container">
             <div class="container__jugadors jugadors">
                 <div class="container__jugador jugador" v-for="jugador in game.players">
-                    <span class="nick">{{ jugador.nick }}</span><span> - {{ jugador.encertades }}</span><span> - {{ jugador.vida
+                    <span class="nick">{{ jugador.nick }}</span><span> - {{ jugador.encertades }}</span><span> - {{
+                        jugador.vida
                     }}/100</span>
                     <div>{{ jugador.poder }}</div>
                 </div>
@@ -18,10 +19,9 @@
                     <div class="container__pregunta pregunta">
                         <span>{{ game.questionIndex }}. </span><span> {{ game.question.pregunta }} </span>
                     </div>
-                    <div class=" container__respostes respostes">
-                        <div v-for="(resposta, index) in game.question.respostes" class="resposta">
-
-                            <button class="button__resposta" @click="answer(index)">{{ resposta }}</button>
+                    <div class="respostes container__respostes">
+                        <div class="resposta" v-for="(resposta, index) in game.question.respostes">
+                            <button @click="answer(index)" class="button__resposta">{{ resposta }}</button>
                         </div>
                     </div>
                 </div>
@@ -42,12 +42,19 @@
                     :transform="sendBleed" v-slot="{ seconds }">
                     Bleed: {{ seconds }} seconds.
                 </vue-countdown>  -->
-            <div class="container__chat chat">
-                <div class="missatge" v-for="missatge in game.chat">
-                    <span>{{ missatge.nick }}</span>:<span> {{ missatge.msg }}</span>
+            <div class="container__chat">
+                <div class="chat">
+                    <div class="container__missatge">
+                        <div class="missatge" v-for="missatge in game.chat">
+                            <span>{{ missatge.nick }}</span>:<span> {{ missatge.msg }}</span>
+                        </div>
+                    </div>
+                    <div class="container__imputButtom">
+                        <input type="text" id="inputChat">
+                        <button @click="enviarMissatge()" class="button__chat"><img src="../assets/icono/enviar.png" alt=""
+                                class="enviar"></button>
+                    </div>
                 </div>
-                <input type="text" id="inputChat">
-                <button @click="enviarMissatge()">Enviar</button>
             </div>
             <div class="container__poder poder">
                 <button @click="skip">Skip</button>
@@ -85,6 +92,7 @@
 }
 
 .container__preguntas {
+    border-radius: 2vh;
     background-color: aliceblue;
     text-align: center;
     grid-area: preguntas;
@@ -110,10 +118,14 @@
 
 .container__chat {
     background-color: rgb(37, 7, 107, 0.8);
+    position: relative;
     color: aliceblue;
-    width: 50vh;
+    width: 49vh;
     grid-area: chat;
     margin-top: auto;
+    height: 33vh;
+    top: 1vh;
+    border-radius: 6px;
 }
 
 .container__usuario {
@@ -128,22 +140,66 @@
     margin-top: auto;
 }
 
-.container__respostes{
+.container__respostes {
     display: grid;
     grid-template-columns: 1fr 1fr;
     position: relative;
     top: 18vh;
 }
 
-.button__resposta{
+.button__resposta {
     background-color: aqua;
     padding: 1vh;
     width: 30vh;
     margin: 2vh;
     border-radius: 6px;
 }
-.pregunta{
-    
+
+.enviar {
+    height: 3vh;
+    width: 3vh;
+    display: flex;
+    position: relative;
+    top: 7px;
+}
+
+#inputChat {
+    background-color: aliceblue;
+    width: 44vh;
+    border-radius: 5px;
+}
+
+.missatge {
+    position: relative;
+    color: aliceblue;
+    width: 40vh;
+    left: 1vh;
+}
+
+.container__missatge {
+    overflow-y: scroll;
+    position: relative;
+    height: 27vh;
+    bottom: 4vh;
+}
+
+.container__missatge::-webkit-scrollbar{
+    width: 1vh;
+}
+
+.container__missatge::-webkit-scrollbar-thumb{
+    background-color: rgb(134, 76, 191);
+    border-radius: 5px;
+}
+.container__imputButtom {
+    display: flex;
+    position: relative;
+    bottom: 4vh;
+    left: 1vh;
+}
+.chat{
+    position: relative;
+    top: 6vh;
 }
 </style>
 <script>
