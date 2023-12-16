@@ -13,80 +13,97 @@ export const useAppStore = defineStore('app', {
     partides: [],
     chat: [],
     players: [],
-    ownPlayer:[],
+    ownPlayer: [],
     question: null,
     answer: null,
-    timer: 0,
+    timer: 20,
     questionIndex: -1,
     canvi: false,
+    timerInterval: null,
+
   }),
   actions: {
-    setPerdedors( perdedors ) {
+    startTimer() {
+      setTimeout(() => {
+        this.timerInterval = setInterval(() => {
+          if (this.timer <= 0) {
+            socket.emit('sagnar vida');
+          } else {
+            this.timer--;
+          }
+        }, 1000);
+      }, 1000);
+    },
+
+    stopTimer() {
+      clearInterval(this.timerInterval);
+    },
+    setPerdedors(perdedors) {
       this.perdedors = perdedors;
     },
-    setGuanyador( guanyador ) {
+    setGuanyador(guanyador) {
       this.guanyador = guanyador;
     },
-    setPartides( arrayRoom ) {
+    setPartides(arrayRoom) {
       this.partides = arrayRoom;
     },
-    setLoginInfo( loggedIn, username, token ) {
+    setLoginInfo(loggedIn, username, token) {
       this.loginInfo.loggedIn = loggedIn;
       this.loginInfo.username = username;
       this.loginInfo.token = token;
     },
-    pushChat( msg ) {  
+    pushChat(msg) {
       this.chat.push(msg);
     },
-    logout(){
+    logout() {
       this.loginInfo.loggedIn = false;
       this.loginInfo.username = '';
     },
-    setPlayers( playerArray ) {
+    setPlayers(playerArray) {
       this.players = playerArray;
       playerArray.forEach(player => {
-        if(player.idSocket == socket.id){
+        if (player.idSocket == socket.id) {
           this.ownPlayer = player;
         }
       });
     },
-    aumentar(){
+    aumentar() {
       this.questionIndex++;
     },
-    getQuestionIndex(){
+    getQuestionIndex() {
       return this.questionIndex;
     },
-    setQuestion( question ) {
+    setQuestion(question) {
       this.question = question;
       this.timer = question.temps;
       this.questionIndex++;
     },
-    setQuestionIndex( index ) {
+    setQuestionIndex(index) {
       this.questionIndex = index;
 
     },
-    getQuestionIndex(){
+    getQuestionIndex() {
       return this.questionIndex;
     },
-    getQuestion(){
+    getQuestion() {
       return this.question;
     },
-    setNick( nick ) {
+    setNick(nick) {
       this.loginInfo.username = nick;
     },
-    getPlayers(){
+    getPlayers() {
       return this.players;
     },
-    setAnswer( newAnswer ) {
+    setAnswer(newAnswer) {
       this.answer = newAnswer;
     },
-    getAnswer(){
+    getAnswer() {
       return this.answer;
     },
-    isLoggedIn(){
+    isLoggedIn() {
       return this.loginInfo.loggedIn;
     },
-    getLoginInfo(){
+    getLoginInfo() {
       return this.loginInfo;
     }
   },

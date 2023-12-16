@@ -30,10 +30,7 @@
             </div>
 
             <h1> {{ game.temps }}</h1>
-            <vue-countdown ref="bleed" :time="2 * 24 * 60 * 60 * 2000" :auto-start="false" :interval="1000" :transform="sendBleed"
-                v-slot="{ seconds }">
-                Bleed: {{ seconds }} seconds.
-            </vue-countdown>
+
             <!--  -->
             <div class="chat">
                 <div class="missatge" v-for="missatge in game.chat">
@@ -79,7 +76,6 @@ export default {
                 answer: computed(() => store.answer),
                 notFirstQuestion: false,
                 temps: 0,
-                bleeding: false,
             },
             timerInterval: null,
 
@@ -91,33 +87,19 @@ export default {
 
         startTimer() {
             this.timerInterval = setInterval(() => {
-                this.game.temps--;
                 if (this.game.temps <= 0) {
-                    this.startBleed();
-                    this.stopTimer();
+                    socket.emit('sagnar vida');
+                } else {
+                    this.game.temps--;
                 }
             }, 1000);
         },
         stopTimer() {
             clearInterval(this.timerInterval);
         },
-        startBleed() {
-            this.$refs.bleed.start();
-        },
-        stopBleed() {
-            this.$refs.bleed.abort();
-        },
 
-        sendBleed(props) {
-            const formattedProps2 = {};
 
-            Object.entries(props).forEach(([key, value]) => {
-                formattedProps2[key] = value < 10 ? `0${value}` : String(value);
-            });
-            socket.emit('sagnar vida');
-            return formattedProps2;
-        },
-
+        
         skip() {
             socket.emit('skip');
         },
@@ -128,7 +110,7 @@ export default {
          */
         answer(index) {
             this.game.notFirstQuestion = true;
-            this.stopBleed();
+            this.stopTimer();
             socket.emit('answer', this.game.question.idPregunta, index);
 
         },
@@ -156,17 +138,17 @@ export default {
         store.$subscribe((answer) => {
             if (store.getAnswer() == true) {
                 console.log("YIPPIEe");
+
             } else if (store.getAnswer() == false) {
                 console.log("   :(");
             }
             store.setAnswer(null);
         });
         store.$subscribe((canvi) => {
-            if (store.canvi ==  true) {
+            if (store.canvi == true) {
                 store.canvi = false;
 
                 console.log("AAAAAAA");
-                this.stopBleed();
                 this.stopTimer();
                 this.game.temps = store.timer;
                 setTimeout(() => {

@@ -476,18 +476,24 @@ io.on('connection', (socket) => {
             roomID = room;
         });
         let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-        let user = llistatUsuaris.find((usuari) => {
-            return usuari.idSocket == socket.id;
-        });
-        user.vida -= restarVidaSagnar;
-        let llistatUsuarisMinim = [];
-        llistatUsuaris.forEach((user) => {
+        if (llistatUsuaris != undefined) {
+            let user = llistatUsuaris.find((usuari) => {
+                return usuari.idSocket == socket.id;
+            });
+            user.vida -= restarVidaSagnar;
+            let llistatUsuarisMinim = [];
+            if(comprovarMort(user)){
+                socket.emit('morir');
+                
+            }
+            llistatUsuaris.forEach((user) => {
 
-            let userMinim = createUserMinim(user);
+                let userMinim = createUserMinim(user);
 
-            llistatUsuarisMinim.push(userMinim);
-        })
-        io.to(roomID).emit("update players", llistatUsuarisMinim)
+                llistatUsuarisMinim.push(userMinim);
+            })
+            io.to(roomID).emit("update players", llistatUsuarisMinim)
+        }
     })
 
 
@@ -523,11 +529,11 @@ function getRandomPoder(user) {
     return poder;
 }
 
-function utilitzarPoderPararTemps (user, userObjectiu, roomID){
+function utilitzarPoderPararTemps(user, userObjectiu, roomID) {
     socket.emit('parar temps');
 }
 
-function utilitzarPoderRobarVida (user, userObjectiu, roomID){
+function utilitzarPoderRobarVida(user, userObjectiu, roomID) {
     user.infoPoders.robarVida = 3;
 }
 
@@ -566,6 +572,15 @@ function utilizarPoderVida(user, userObjectiu, roomID) {
 function utilitzarPoderEscut(user, userObjectiu, roomID) {
     userObjectiu.infoPoders.escut = true;
 }
+
+function comprovarMort(user, roomID) {
+    if (user.vida <= 0) {
+        return true;
+    }else{
+        return false;
+    }
+}
+
 
 /**
  * Crea un usuari

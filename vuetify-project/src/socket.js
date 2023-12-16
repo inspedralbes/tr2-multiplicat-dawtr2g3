@@ -46,6 +46,7 @@ socket.on("update chat", (msg) => {
 socket.on("lobby tencada", () => {
   const store = useAppStore();
   router.push('/partides');
+  store.stopTimer();
 });
 
 /**
@@ -54,7 +55,10 @@ socket.on("lobby tencada", () => {
 socket.on("new question", (question) => {
   console.log(question);
   const store = useAppStore();
+  store.stopTimer();
   store.setQuestion(question);
+  store.timer = question.temps;
+  store.startTimer();
   store.canvi = true;
 });
 
@@ -80,6 +84,8 @@ socket.on("check", (correcte, acabat) => {
  */
 socket.on("end", (guanyador, perdedors) => {
   const store = useAppStore();
+  store.stopTimer();
+  store.timer=20;
   console.log("guanyador", guanyador);
   console.log("perdedors", perdedors);
   store.setQuestionIndex(-1);
@@ -95,7 +101,10 @@ socket.on("play", (question) => {
   const store = useAppStore();
   store.setQuestion(question);
   store.setAnswer(null);
+  store.timer= question.temps;
   router.push('/partida');
+  store.startTimer();
+
 
 });
 
