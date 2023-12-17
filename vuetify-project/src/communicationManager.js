@@ -19,13 +19,25 @@ export class CommunicationManager {
             },
             body: formData
         });
-        console.log(response)
-        let jsonResponse = await response.json();
-        console.log(jsonResponse);
-        
+        let jsonResponse = await response.json();        
         return jsonResponse;
     }
-
+    async register(username, email, password, password_confirmation) {
+        let formData = new FormData();
+        formData.append('nom', username);
+        formData.append('password', password);
+        formData.append('mail', email);
+        formData.append('password_confirmation', password_confirmation);
+        let response = await fetch(this.fetchLink + 'register', {
+            method: 'POST',
+            headers: {
+                    "Access-Control-Allow-Origin": "*",
+            },
+            body: formData
+        });
+        let jsonResponse = await response.json();
+        return jsonResponse;
+    }
     logout() {
     }
 

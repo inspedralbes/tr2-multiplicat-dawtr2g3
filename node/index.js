@@ -19,6 +19,8 @@ const io = new Server(server, {
 });
 const respuestaCorrecta = 0
 
+let restarVidaSagnar = 1;
+
 let arrayRoom = [];
 let arrayRoomMinim = [];
 async function iniciarLobby(roomID) {
@@ -58,7 +60,18 @@ let llistatUsuaris = [];
 
 
 io.on('connection', (socket) => {
+
+    /**
+     * Envia la llista de partides
+     * @param {Array} arrayRoomMinim Array que conté la informació de les partides
+     */
     socket.emit('llista partides', arrayRoomMinim);
+
+    /**
+     * Entra a una partida
+     * @param {string} roomID Identificador de la partida
+     * @param {string} nom Nom de l'usuari que entra a la partida
+     */
     socket.on('join', (roomID, nom) => {
         socket.join(roomID);
         let user = createNewUser(socket.id, nom)
@@ -80,6 +93,13 @@ io.on('connection', (socket) => {
         io.to(roomID).emit('update players', jugadorsMinim);
         io.emit('llista partides', arrayRoomMinim);
     })
+
+    /**
+     * Crea una nova partida
+     * @param {string} nom Nom de la partida
+     * @param {int} maxJugadors Màxim de jugadors de la partida
+     * @param {string} nick Nom de l'usuari que crea la partida
+     */
 
     socket.on('crearPartida', (nom, maxJugadors, nick) => {
         socket.join(socket.id);
@@ -105,6 +125,9 @@ io.on('connection', (socket) => {
         io.emit('llista partides', arrayRoomMinim);
     })
 
+    /**
+     * Elimina el jugador de la partida i de la llista de jugadors, si és l'últim jugador de la partida o el creador, la tanca
+     */
     socket.on('disconnecting', () => {
         let rooms = socket.rooms;
         let roomID;
@@ -164,6 +187,10 @@ io.on('connection', (socket) => {
         }
     });
 
+    /**
+     * Inicia la partida
+     */
+
     socket.on('start', () => {
         let arrayPreg = arrayRoom.find((room) => room.id == socket.id).arrayPreg;
         if (arrayRoom.find(room => room.id == socket.id).jugadors.length >= 2) {
@@ -174,6 +201,12 @@ io.on('connection', (socket) => {
         }
 
     });
+
+    /**
+     * Envia el missatge a tots els usuaris de la sala
+     * @param {string} missatge Missatge a enviar
+     * @param {string} nick Nom de l'usuari que envia el missatge
+     */
 
     socket.on('enviar missatge', (missatge, nick) => {
         let rooms = socket.rooms;
@@ -188,6 +221,12 @@ io.on('connection', (socket) => {
         }
         io.to(roomID).emit('update chat', obj);
     });
+
+    /**
+     * Comprova si la resposta és correcta o no, i si és la última pregunta
+     * @param {int} idPreg Identificador de la pregunta
+     * @param {int} posResp Posició de la resposta
+     */
     socket.on('answer', (idPreg, posResp) => {
 
         let correcte = false;
@@ -206,6 +245,7 @@ io.on('connection', (socket) => {
         let start = arrayRoom.find((room) => room.id == roomID).start;
         let llistatUsuarisMinim = [];
 
+        // encerta la pregunta
         if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
             correcte = true;
             llistatUsuaris.map((user) => {
@@ -213,12 +253,27 @@ io.on('connection', (socket) => {
                     user.encertades++;
                     user.falladesConsecutives = 0;
                     user.preguntaActual++;
+                    user.falladesConsecutives = 0;
+
+                    if (user.infoPoders.robarVida > 0) {
+                        user.vida += 10;
+                        if (user.vida > 100) {
+                            user.vida = 100;
+                        }
+                        user.infoPoders.robarVida--;
+                    }
+
+                    if (user.encertades == 3) {
+                        user.encertades = 0;
+
+                        let poder = getRandomPoder(user);
+                        user.poder = poder;
+
+                    }
                 }
+
+
             });
-
-
-
-            // llistatUsuaris.sort((a, b) => { return b.preguntaActual - a.preguntaActual });
 
             llistatUsuaris.forEach((user) => {
 
@@ -246,13 +301,22 @@ io.on('connection', (socket) => {
                         user.temps = Date.now() - start;
                         mort = true;
                     }
+
+                    if (user.infoPoders.escut) {
+                        user.infoPoders.escut = false;
+                        user.vida += 10;
+                    }
+
+                    if (user.infoPoders.robarVida > 0) {
+                        user.infoPoders.robarVida = 0;
+                    }
+
                     user.falladesConsecutives++;
                     if (user.falladesConsecutives == 3) {
                         user.preguntaActual++;
                         user.falladesConsecutives = 0;
                         socket.emit('tres fallades');
                         socket.emit('new question', arrayPreg[user.preguntaActual]);
-
                     }
                 }
             });
@@ -279,7 +343,6 @@ io.on('connection', (socket) => {
 
             io.to(roomID).emit("update players", llistatUsuarisMinim)
         }
-        // let obj = {"correcte": correcte,"acabat":acabat}
         socket.emit('check', correcte, acabat);
 
         if (acabat) {
@@ -302,6 +365,10 @@ io.on('connection', (socket) => {
             socket.id = idOrig;
         }
     })
+
+    /**
+     * Salta la pregunta actual si l'usuari té skips disponibles, si no, li resta vida
+     */
     socket.on('skip', () => {
         let rooms = socket.rooms;
         let roomID;
@@ -337,9 +404,12 @@ io.on('connection', (socket) => {
             llistatUsuarisMinim.push(userMinim);
         })
         io.to(roomID).emit("update players", llistatUsuarisMinim)
-        console.log(user);
         socket.emit('new question', arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual]);
     });
+
+    /**
+     * Envia la pregunta actual a l'usuari
+     */
     socket.on('send', () => {
         let rooms = socket.rooms;
         let roomID;
@@ -355,8 +425,147 @@ io.on('connection', (socket) => {
         socket.emit('new question', arrayPreg[user.preguntaActual]);
     })
 
+    socket.on('utilitzar poder', (poder, objectiu) => {
+        let rooms = socket.rooms;
+        let roomID;
+        rooms.forEach((room) => {
+            roomID = room;
+        });
+        let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        let user = llistatUsuaris.find((usuari) => {
+            return usuari.idSocket == socket.id;
+        });
+        let userObjectiu = llistatUsuaris.find((usuari) => {
+            return usuari.idSocket == objectiu;
+        });
+        switch (poder) {
+            case "salt":
+                utilitzarPoderSalt(user, userObjectiu, roomID);
+
+                break;
+            case "vida":
+                utilizarPoderVida(user, userObjectiu, roomID);
+                break;
+            case "escut":
+                utilitzarPoderEscut(user, userObjectiu, roomID);
+                break;
+            case "robarVida":
+                utilitzarPoderRobarVida(user, userObjectiu, roomID);
+                break;
+            case "pararTemps":
+                utilitzarPoderPararTemps(user, socket);
+                break;
+            default:
+                break;
+        }
+        user.poder = "";
+        let llistatUsuarisMinim = [];
+        llistatUsuaris.forEach((user) => {
+
+            let userMinim = createUserMinim(user);
+
+            llistatUsuarisMinim.push(userMinim);
+        })
+        io.to(roomID).emit("update players", llistatUsuarisMinim)
+    })
+
+    socket.on('sagnar vida', () => {
+        let rooms = socket.rooms;
+        let roomID;
+        rooms.forEach((room) => {
+            roomID = room;
+        });
+        let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        let user = llistatUsuaris.find((usuari) => {
+            return usuari.idSocket == socket.id;
+        });
+        user.vida -= restarVidaSagnar;
+        let llistatUsuarisMinim = [];
+        llistatUsuaris.forEach((user) => {
+
+            let userMinim = createUserMinim(user);
+
+            llistatUsuarisMinim.push(userMinim);
+        })
+        io.to(roomID).emit("update players", llistatUsuarisMinim)
+    })
+
 
 })
+
+/**
+ * et dona un poder aleatori
+ * @param {obj} user l'usuari i per conseqüencia el quadrant al qual es troba, per saber quin poder donar-li
+ * @returns el poder que li ha tocat
+ */
+function getRandomPoder(user) {
+    let random = Math.floor(Math.random() * 4) + 1;
+    let poder = "";
+    switch (random) {
+        case 1:
+            poder = "salt";
+            break;
+        case 2:
+            poder = "vida";
+            break;
+        case 3:
+            poder = "escut";
+            break;
+        case 4:
+            poder = "robarVida";
+            break;
+        case 5:
+            poder = "pararTemps";
+            break;
+        default:
+            break;
+    }
+    return poder;
+}
+
+function utilitzarPoderPararTemps (user, userObjectiu, roomID){
+    socket.emit('parar temps');
+}
+
+function utilitzarPoderRobarVida (user, userObjectiu, roomID){
+    user.infoPoders.robarVida = 3;
+}
+
+/**
+ * Utilitza el poder d'aconseguir un salt
+ * @param {obj} user l'usuari que utilitza el poder
+ * @param {obj} userObjectiu l'usuari que rep el poder
+ * @param {int} roomID identificador de la sala
+ */
+
+function utilitzarPoderSalt(user, userObjectiu, roomID) {
+    user.skip++;
+}
+
+/**
+ * Utilitza el poder de recuperar vida
+ * @param {obj} user l'usuari que utilitza el poder
+ * @param {obj} userObjectiu l'usuari que rep el poder
+ * @param {int} roomID identificador de la sala
+ */
+
+function utilizarPoderVida(user, userObjectiu, roomID) {
+    userObjectiu.vida += 20;
+    if (userObjectiu.vida > 100) {
+        userObjectiu.vida = 100;
+    }
+}
+
+/**
+ * Utilitza el poder escut
+ * @param {obj} user l'usuari que utilitza el poder
+ * @param {obj} userObjectiu l'usuari que rep el poder
+ * @param {int} roomID identificador de la sala
+ */
+
+function utilitzarPoderEscut(user, userObjectiu, roomID) {
+    userObjectiu.infoPoders.escut = true;
+}
 
 /**
  * Crea un usuari
@@ -374,6 +583,12 @@ function createNewUser(idSocket, nick) {
         "skip": 1,
         "temps": 0, //Es posa el temps quan mor el jugador, de base sera 0
         "falladesConsecutives": 0,
+        "poder": "",
+        "infoPoders": {
+            "escut": false,
+            "robarVida": 0,
+
+        }
     }
     return user;
 }
@@ -391,6 +606,11 @@ function createUserMinim(user) {
         "vida": user.vida,
         "skip": user.skip,
         "falladesConsecutives": user.falladesConsecutives,
+        "poder": user.poder,
+        "infoPoders": {
+            "escut": user.infoPoders.escut,
+            "robarVida": user.infoPoders.robarVida,
+        }
 
     }
     return userMinim;
@@ -410,6 +630,7 @@ function tipusTest(preguntaaModificar, index) {
         "categoria": preguntaaModificar.categoria,
         "tipus": preguntaaModificar.tipus,
         "respostes": JSON.parse('[' + preguntaaModificar.respostes + ']'),
+        "temps": preguntaaModificar.temps,
         "unitats": {
             "valorInicial": 0,
             "unitatInicial": "",
@@ -447,53 +668,6 @@ function jugadorsVius(arrayJugadors) {
     });
     return jugadorsVius;
 }
-// fetch no funcional
-
-// const conect = 'http://jsonestatic.daw.inspedralbes.cat/data.json'
-// let preguntas = getPreguntes();
-// function  getPreguntes() {
-//     fetch(conect)
-//     .then((response) => response.json())
-//     .then((jsonData) => {
-//         return jsonData;
-//     });
-// }
-
-
-//coneccio a la base de dades
-/*function conectarBBDD() {
-    var con = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "",
-        database: 'probanode'
-    });
-
-    return con
-}
-
-
-function tancarBBDD(con) {
-    con.end();
-    return 1;
-}
-
-function mostrarPreguntas() {
-    
-}
-//Veura la informacio de la base de dades
-app.get('/', (req, res) => {
-    connexio = conectarBBDD();
-    
-    connexio.connect(function (err) {
-        if (err) throw err;
-        connexio.query("SELECT * FROM probanode", function (err, result, fields) {
-            if (err) throw err;
-            res.send(result);
-            tancarBBDD(connexio);
-          });
-    });
-});*/
 
 
 server.listen(port, () => {

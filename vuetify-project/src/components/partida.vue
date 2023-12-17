@@ -1,15 +1,16 @@
 <template>
-    <div>
+    <div v-if="state.loading">
         <div class="spinner-grow text-primary" role="status">
             <span class="sr-only">Loading...</span>
         </div>
     </div>
-    <div>
+    <div v-else>
         <div>
-            <img id="fallar" src="https://w7.pngwing.com/pngs/591/346/png-transparent-error-cross-red-cross-error.png" class="hidden" alt="">
             <div class="jugadors">
                 <div class="jugador" v-for="jugador in game.players">
-                    <span>{{ jugador.nick }}</span><span>-{{ jugador.encertades }}</span><span>-{{ jugador.vida }}/100</span>
+                    <span>{{ jugador.nick }}</span><span> - {{ jugador.encertades }}</span><span> - {{ jugador.vida
+                    }}/100</span>
+                    <div>{{ jugador.poder }}</div>
                 </div>
             </div>
             <div v-if="game.question.tipus == 1">
@@ -28,6 +29,12 @@
                 <Drag :respostes="game.question.respostes" @comprovar="(index) => answer(index)" />
             </div>
 
+            <h1> {{ game.temps }}</h1>
+            <vue-countdown ref="bleed" :time="2 * 24 * 60 * 60 * 2000" :auto-start="false" :interval="1000" :transform="sendBleed"
+                v-slot="{ seconds }">
+                Bleed: {{ seconds }} seconds.
+            </vue-countdown>
+            <!--  -->
             <div class="chat">
                 <div class="missatge" v-for="missatge in game.chat">
                     <span>{{ missatge.nick }}</span>:<span> {{ missatge.msg }}</span>
@@ -37,43 +44,28 @@
             </div>
         </div>
         <button @click="skip">Skip</button>
+        <Poder :poder="game.ownPlayer.poder" />
         <p>Vida: {{ game.ownPlayer.vida }}</p>
     </div>
 </template>
-<style>
-.hidden{
-    display: none;
-}
-#fallar{
-    width: 300px;
-    height: 300px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform:  translate(-50%, -50%);
-    animation-name: identifier;
-    animation-duration: 1s;
-   
-}
 
-
-</style>
 <script>
 import { socket } from '../socket';
 import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
 import Drag from "./Drag.vue";
+import Poder from "./Poder.vue";
+import { toHandlers } from 'vue';
 
 export default {
     data() {
         const store = useAppStore();
 
         return {
-            constants: {
-                // API_URL: "https://api.github.com",
-                numRespostesTest: 4,
-            },
+
+
             state: {
+
                 loading: true,
                 error: false,
             },
@@ -85,25 +77,65 @@ export default {
                 ownPlayer: computed(() => store.ownPlayer),
                 question: computed(() => store.question),
                 answer: computed(() => store.answer),
+                notFirstQuestion: false,
+                temps: 0,
+                bleeding: false,
             },
+            timerInterval: null,
 
         };
     },
-    components: { Drag },
+    components: { Drag, Poder },
+
     methods: {
+
+        startTimer() {
+            this.timerInterval = setInterval(() => {
+                this.game.temps--;
+                if (this.game.temps <= 0) {
+                    this.startBleed();
+                    this.stopTimer();
+                }
+            }, 1000);
+        },
+        stopTimer() {
+            clearInterval(this.timerInterval);
+        },
+        startBleed() {
+            this.$refs.bleed.start();
+        },
+        stopBleed() {
+            this.$refs.bleed.abort();
+        },
+
+        sendBleed(props) {
+            const formattedProps2 = {};
+
+            Object.entries(props).forEach(([key, value]) => {
+                formattedProps2[key] = value < 10 ? `0${value}` : String(value);
+            });
+            socket.emit('sagnar vida');
+            return formattedProps2;
+        },
+
         skip() {
             socket.emit('skip');
         },
-        fallar() {
-            var fallar = document.getElementById("fallar");
-            fallar.classList.remove("hidden");
-            setTimeout(() => {
-                fallar.classList.add("hidden");
-            }, 1000);
-        },
+
+        /**
+         * respon a la pregunta
+         * @param {int} index index de la resposta
+         */
         answer(index) {
+            this.game.notFirstQuestion = true;
+            this.stopBleed();
             socket.emit('answer', this.game.question.idPregunta, index);
+
         },
+
+        /**
+         * Envia un missatge al chat
+         */
         enviarMissatge() {
             const store = useAppStore();
 
@@ -114,19 +146,36 @@ export default {
     },
 
     mounted() {
-        this.loading = false;
+        this.state.loading = false;
         const store = useAppStore();
-        store.$subscribe((answer) => {
-            if (store.getAnswer() == true){
-                console.log("YIPPIEe");
+        this.game.temps = store.timer;
+        setTimeout(() => {
+            this.startTimer();
+        }, 1000);
 
-            }else if (store.getAnswer()  == false){
+        store.$subscribe((answer) => {
+            if (store.getAnswer() == true) {
+                console.log("YIPPIEe");
+            } else if (store.getAnswer() == false) {
                 console.log("   :(");
-                this.fallar();
             }
             store.setAnswer(null);
-        })
-        
+        });
+        store.$subscribe((canvi) => {
+            if (store.canvi ==  true) {
+                store.canvi = false;
+
+                console.log("AAAAAAA");
+                this.stopBleed();
+                this.stopTimer();
+                this.game.temps = store.timer;
+                setTimeout(() => {
+                    this.startTimer();
+                }, 1000);
+            }
+        });
+
+
     },
 
 }

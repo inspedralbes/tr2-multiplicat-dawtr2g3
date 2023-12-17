@@ -39,6 +39,7 @@
 </template>
 
 <style scoped>
+
 .page {
     width: 100vw;
     height: 100vh;
@@ -197,7 +198,7 @@
 .input-name:focus, .buttons-size-style:focus{
     outline: none;
 }
-@media screen and (max-width: 1350px) {}
+
 </style>
 
 <script>

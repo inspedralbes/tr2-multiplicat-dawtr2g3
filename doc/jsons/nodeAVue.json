@@ -3,6 +3,7 @@
     "pregunta": "",
     "categoria": "",
     "tipus": "",
+    "temps": 0,
     "parametres": {
         "respostes": [
             "Appear weak when you are strong, and strong when you are weak.",

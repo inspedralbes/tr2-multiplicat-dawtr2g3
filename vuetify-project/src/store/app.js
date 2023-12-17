@@ -16,7 +16,9 @@ export const useAppStore = defineStore('app', {
     ownPlayer:[],
     question: null,
     answer: null,
+    timer: 0,
     questionIndex: -1,
+    canvi: false,
   }),
   actions: {
     setPerdedors( perdedors ) {
@@ -56,6 +58,7 @@ export const useAppStore = defineStore('app', {
     },
     setQuestion( question ) {
       this.question = question;
+      this.timer = question.temps;
       this.questionIndex++;
     },
     setQuestionIndex( index ) {
@@ -74,8 +77,8 @@ export const useAppStore = defineStore('app', {
     getPlayers(){
       return this.players;
     },
-    setAnswer( neWanswer ) {
-      this.answer = neWanswer;
+    setAnswer( newAnswer ) {
+      this.answer = newAnswer;
     },
     getAnswer(){
       return this.answer;

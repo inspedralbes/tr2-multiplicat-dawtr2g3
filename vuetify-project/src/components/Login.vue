@@ -3,7 +3,9 @@
   <div class="container">
     <div class="container__login">
       <v-form v-model="form" @submit="submit()" class="login">
+        
         <div class="container__form">
+          <h2 class="title__loginForm">Login</h2>
           <v-text-field v-model="nick" variant="solo"  :rules="[required]"  label="User" class="input__text"></v-text-field>
           <v-text-field type="password" v-model="password" variant="solo" :readonly="loading" :rules="[required]" label="Password"
           placeholder="Enter your password" class="input__text"></v-text-field>
@@ -15,17 +17,7 @@
     <div class="container-imagen"></div>
   </div>
 </template>
-<style>
-
-* {
-  padding: 0;
-  margin: 0;
-}
-
-body {
-  background-color: blueviolet;
-}
-
+<style scoped>
 .container {
   width: 100vw;
   height: 50vh;
@@ -53,6 +45,7 @@ body {
 .container-imagen {
   background-image: url('../assets/backgrounds/background-login.png');
   height: 100vh;
+  background-size: cover;
 }
 
 .input__text{
@@ -69,11 +62,16 @@ body {
 .container__form{
   width: 40vh;
   position: relative;
-  top: 13vh;
+  top: 8vh;
   margin-left: auto;
   margin-right: auto;
 }
 
+.title__loginForm{
+  color: aliceblue;
+  margin-bottom: 3vh;
+
+}
 </style>
 
 <script>
@@ -92,7 +90,6 @@ export default {
 
   methods: {
     async submit() {
-      console.log(this.manager.fetchLink);
       const store = useAppStore();
       let response = await this.manager.login(this.nick,this.password);
 

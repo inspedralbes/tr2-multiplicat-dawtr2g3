@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Landing from '../components/Landing.vue'
-import Partida from "../components/Partida.vue";
+import Partida from "../components/partida.vue";
 import Final from "../components/Final.vue";
 import Lobby from "../components/Lobby.vue";
 import Rooms from "../components/Rooms.vue";
