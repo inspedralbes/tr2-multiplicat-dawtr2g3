@@ -8,7 +8,8 @@
         <div class="container">
             <div class="container__jugadors jugadors">
                 <div class="container__jugador jugador" v-for="jugador in game.players">
-                    <span class="nick">{{ jugador.nick }}</span><span> - {{ jugador.encertades }}</span><span> - {{
+                    <img :src="jugador.avatar" alt="" class="avatar__jugadors avatar">
+                    <span class="nick">{{ jugador.nick }}</span><span class="jugsdor__encertades encertades"> - {{ jugador.encertades }}</span><span class="vida__jugadors vida"> - {{
                         jugador.vida
                     }}/100</span>
                     <div>{{ jugador.poder }}</div>
@@ -92,11 +93,23 @@
 //container de los jugador
 .container__jugador {
     color: aliceblue;
+    background-color: rgb(134, 76, 191);
+    border-radius: 6px;
+    margin: 1vh;
+    padding: 1vh;
+    text-align: center;
+    font-size: 2vh;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 12ch;
+    width: 50ch;
 }
 
 //container de los jugadores
 .container__jugadors {
-    height: 40vh;
+    height: 50vh;
     width: 50vh;
     background-color: rgb(37, 7, 107, 0.8);
     grid-area: jugadors;
@@ -295,6 +308,17 @@
     font-weight: bold;
     text-align: center;
     color:#ffdd33;
+}
+
+.avatar__jugadors {
+    position: relative;
+    top: 0;
+    left: 0;    
+    height: 10vh;
+    width: 10vh;
+    z-index: 0;
+    border-radius: 50%;
+    background-color: rgb(37, 7, 107, 0.8);
 }
 </style>
 <script>
