@@ -22,7 +22,7 @@
                                 game.question.pregunta }} </span>
                         </div>
                         <div class="respostes container__respostes">
-                            <div class="resposta" v-for="(resposta, index) in game.question.respostes">
+                            <div v-for="(resposta, index) in game.question.respostes" class="resposta">
                                 <button @click="answer(index)" class="button__resposta">{{ resposta }}</button>
                             </div>
                         </div>
@@ -61,10 +61,12 @@
             </div>
             <div class="container__usuario usuario">
                 <div class="container__avatar">
+                    <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
                     <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
+                    <div class="barra__vida">
+                        <img src="../assets/ilustracio vida/full health.png" alt="" class="vida">{{ game.ownPlayer.vida }}
+                    </div>
                 </div>
-                <p>Nick: {{ game.ownPlayer.nick }}</p>
-                <div class="barra__vida"><img src="../assets/ilustracio vida/full health.png" alt="">{{ game.ownPlayer.vida }}</div>
             </div>
             <div class="container__poder poder">
                 <button @click="skip">Skip</button>
@@ -123,14 +125,13 @@
     text-align: center;
     height: 7vw;
     width: 56vh;
-    border-radius: 21px;
+    border-radius: 60ch 60ch;
     top: 2vw;
 }
 
 .pregunta {
     margin-left: auto;
     margin-right: auto;
-    justify-content: center;
     align-items: center;
 }
 
@@ -155,9 +156,9 @@
     margin-top: auto;
     margin-left: auto;
     margin-right: auto;
-    width: 70vh;
+    width: 73vh;
     height: 20vh;
-    border-radius: 6px;
+    border-radius: 60ch;
     position: relative;
     justify-content: center;
     align-items: center;
@@ -169,6 +170,8 @@
 .container__poder {
     grid-area: poder;
     margin-top: auto;
+    margin-bottom: auto;
+    right: 20ch;
 }
 
 //container de las respuestas
@@ -254,7 +257,12 @@
     left: 0;
     right: 0;
 }
-
+.container__avatar{
+    position: absolute;
+    top: 0;
+    left: 7ch;
+    right: 0;
+}
 .avatar {
     position: absolute;
     top: 1vw;
@@ -264,12 +272,29 @@
     z-index: 0;
 }
 
-.barra__vida{
-    position: relative;
-    top: 4vh;
-    left: -9vw;
+.barra__vida {
+    position: absolute;
+    top: 10vh;
+    left: 9vh;
     right: 0;
     z-index: 1;
+    margin-left: -3vw;
+    margin-right: auto;
+}
+
+.vida {
+    height: 8vh;
+}
+
+.nickUsuario{
+    position: absolute;
+    top: 3vh;
+    left: 0;
+    right: 0;
+    font-size: 4vh;
+    font-weight: bold;
+    text-align: center;
+    color:#ffdd33;
 }
 </style>
 <script>
@@ -308,7 +333,7 @@ export default {
 
         };
     },
-    components: { Drag, Poder},
+    components: { Drag, Poder },
 
     methods: {
         // getTemps() {

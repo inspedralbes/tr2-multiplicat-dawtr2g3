@@ -17,7 +17,7 @@ export default {
     },
     data() {
         return {
-            showModal: false
+            
         };
     },
     methods: {
@@ -40,7 +40,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    bottom: 0;
+    bottom: 10ch;
 }
 .power {
     width: 10vw;
