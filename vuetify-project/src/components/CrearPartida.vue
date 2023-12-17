@@ -5,26 +5,36 @@
                 <h1 class="title"> Configura la teva partida</h1>
             </div>
             <div class="configuration-name-room">
-                <v-text-field class="input-name" variant="underlined" label="Nom sala" v-model="nom" name="nom"></v-text-field>
+                <input class="input-name" v-model="nom" name="nom" placeholder="Nom sala">
             </div>
             <div class="configuration-buttons">
-                <!-- <div class="button-categoria buttons b-left">
-                    <v-select class="buttons-size" label="Categoria" variant="underlined" v-model="categoria" :items="['Volums', 'Litres', 'Kg']"></v-select>
+                <!-- <div class="buttons-background b-left">
+                    <select class="buttons-size-style" v-model="categoria">
+                        <option :value="nothing" disabled selected>Categoria</option>
+                        <option v-for="item in ['Volums', 'Litres', 'Kg']" :value="item">{{ item }}</option>
+                    </select>
                 </div>
-                <div class="button-dificultat buttons b-right">
-                    <v-select class="buttons-size" label="Dificultat" variant="underlined" v-model="dificultat" :items="['Fàcil', 'Mitjà', 'Difícil']"></v-select>
+                <div class="buttons-background b-right">
+                    <select class="buttons-size-style" v-model="dificultat">
+                        <option :value="nothing" disabled selected>Dificultat</option>
+                        <option v-for="item in ['Fàcil', 'Mitjà', 'Difícil']" :value="item">{{ item }}</option>
+                    </select>
                 </div> -->
-                <div class="button-nJugadors buttons b-left">
-                    <v-select class="buttons-size" label="nº Jugadors" variant="underlined" v-model="maxJugadors" :items="[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]" name="maxJugadors"></v-select>
+                <div class="buttons-background b-left">
+                    <select class="buttons-size-style" v-model="maxJugadors">
+                        <option :value="0" disabled selected>nº Jugadors</option>
+                        <option v-for="n in 40" :value="n">{{ n }}</option>
+                    </select>
                 </div>
-                <div class="button-limit buttons b-right">
-                    <v-select class="buttons-size" label="Limit de temps" variant="underlined" v-model="limit" :items="['Sense límit', '20 Preguntes', '10 Preguntes', '5 minuts', '10 minuts']"></v-select>
+                <div class="buttons-background b-right">
+                    <select class="buttons-size-style" v-model="limit">
+                        <option :value="nothing" disabled selected>Limit de partida</option>
+                        <option v-for="item in ['Sense límit', '20 Preguntes', '10 Preguntes', '5 minuts', '10 minuts']" :value="item">{{ item }}</option>
+                    </select>
                 </div>
             </div>
         </div>
-        <div class="button-crearPartida-background">
-            <v-btn class="button-crearPartida" @click="crear">Crear partida</v-btn>
-        </div>
+        <button class="button-crearPartida-background button-crearPartida" @click="crear">Crear partida</button>
     </div>
 </template>
 
@@ -91,11 +101,24 @@
 }
 
 .input-name {
+    /* mida */
     margin-top: 1.2vh;
     width: 13vw;
+    /* estils text */
+    color: rgba(235, 33, 60, 1);
+    font-family: 'Battle Beasts';
+    font-size: 2vw;
+    /* aliniació */
+    text-align: center;
 }
 
-.configuration-buttons {    
+.input-name::placeholder {
+    color: rgba(235, 33, 60, 1);
+    font-family: 'Battle Beasts';
+    font-size: 2vw;
+}
+
+.configuration-buttons {
     /* mida */
     width: 55vw;
     height: 35vh;
@@ -109,37 +132,47 @@
 
 .b-left {
     border-radius: 60px 0px 60px 0px;
-    background-color: rgba(51, 204, 204, 1);
-    border: 3px solid rgba(10, 163, 163, 1);
-    box-shadow: inset 4px 4px 4px 0px rgba(0, 0, 0, 0.2);
 }
 
 .b-right {
     border-radius: 0px 60px 0px 60px;
-    background-color: rgba(51, 204, 204, 1);
-    border: 3px solid rgba(10, 163, 163, 1);
-    box-shadow: inset 4px 4px 4px 0px rgba(0, 0, 0, 0.2);
 }
 
-.buttons{
+.buttons-background {
+    /* mida */
     width: 18vw;
     height: 8vh;
+    /* aliniació */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    color: rgba(235, 33, 60, 1);
+    /* estils fons */
+    background-color: rgba(51, 204, 204, 1);
+    border: 3px solid rgba(10, 163, 163, 1);    
+    box-shadow: inset 4px 4px 4px 0px rgba(0, 0, 0, 0.2);
 }
 
-.buttons-size{
+.buttons-size-style {
     /* mida */
     width: 14vw;
     height: 6vh;
     /* aliniació */
-    margin-top: 0.7vh;
+    margin-top: 0.7vh;   
+    /* estils text */
+    color: rgba(235, 33, 60, 1);
+    font-family: 'Battle Beasts';
+    font-size: 2vw; 
 }
 
-.button-crearPartida-background{
+.buttons-size-style > option {
+    /* estils text */
+    color: rgba(235, 33, 60, 1);
+    font-family: 'Battle Beasts';
+    font-size: 1vw; 
+}
+
+.button-crearPartida-background {
     /* fons del container */
     border-radius: 40px;
     background-color: rgba(102, 191, 57, 1);
@@ -155,18 +188,16 @@
     justify-content: center;
 }
 
-.button-crearPartida{
+.button-crearPartida {
     color: rgba(70, 23, 143, 1);
-    font-size: 5vh;
-    background: none;
-    border: none;
-    box-shadow: none;
-
+    font-family: "Battle Beasts";
+    font-size: 5vw;
 }
 
-@media screen and (max-width: 1350px) {
-    
+.input-name:focus, .buttons-size-style:focus{
+    outline: none;
 }
+@media screen and (max-width: 1350px) {}
 </style>
 
 <script>
