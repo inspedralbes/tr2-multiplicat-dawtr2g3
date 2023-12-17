@@ -483,9 +483,7 @@ function acabarPartida(socket,roomID) {
     let guanyador = jugadorsVius(llistatUsuaris);
     perdedors.pop();
 
-    llistatUsuaris.forEach((user) => {
-        user = stopTimer(user);
-    });
+    
 
     io.to(roomID).emit('end', guanyador[0], perdedors);
 

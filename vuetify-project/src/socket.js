@@ -74,11 +74,12 @@ socket.on("check", (correcte, acabat) => {
   if (!acabat && correcte) {
     socket.emit("send");
   }
-  if(acabat)
+  if (acabat) {
     store.stopTimer();
     router.push('/final');
   }
-);
+});
+
 
 /**
  * Mou a la pantalla final
@@ -86,7 +87,7 @@ socket.on("check", (correcte, acabat) => {
 socket.on("end", (guanyador, perdedors) => {
   const store = useAppStore();
   store.stopTimer();
-  store.timer=20;
+  store.timer = 20;
   console.log("guanyador", guanyador);
   console.log("perdedors", perdedors);
   store.setQuestionIndex(-1);
@@ -102,7 +103,7 @@ socket.on("play", (question) => {
   const store = useAppStore();
   store.setQuestion(question);
   store.setAnswer(null);
-  store.timer= question.temps;
+  store.timer = question.temps;
   router.push('/partida');
   store.startTimer();
 });
