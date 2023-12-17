@@ -18,7 +18,6 @@ export const useAppStore = defineStore('app', {
     answer: null,
     timer: 20,
     questionIndex: -1,
-    canvi: false,
     timerInterval: null,
 
   }),

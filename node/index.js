@@ -102,11 +102,12 @@ io.on('connection', (socket) => {
      */
 
     socket.on('crearPartida', (nom, maxJugadors, nick) => {
-        socket.join(socket.id);
+        let roomID = "Partida"+socket.id;
+        socket.join(roomID);
         let user = createNewUser(socket.id, nick)
         let userMinim = createUserMinim(user);
         arrayRoom.push({
-            "id": socket.id,
+            "id": roomID,
             "nom": nom,
             "maxJugadors": maxJugadors,
             "jugadors": [user],
@@ -115,12 +116,12 @@ io.on('connection', (socket) => {
             "start": Date.now()
         });
         arrayRoomMinim.push({
-            "id": socket.id,
+            "id": roomID,
             "nom": nom,
             "maxJugadors": maxJugadors,
             "jugadors": [userMinim],
         })
-        iniciarLobby(socket.id);
+        iniciarLobby(roomID);
         io.to(socket.id).emit('update players', [userMinim]);
         io.emit('llista partides', arrayRoomMinim);
     })
@@ -129,15 +130,12 @@ io.on('connection', (socket) => {
      * Elimina el jugador de la partida i de la llista de jugadors, si és l'últim jugador de la partida o el creador, la tanca
      */
     socket.on('disconnecting', () => {
-        let rooms = socket.rooms;
-        let roomID;
-        rooms.forEach((room) => {
-            roomID = room;
-        });
+        let roomID = trobarRoom(socket);
+        console.log(roomID);
 
         if (roomID != undefined) {
             let index = arrayRoom.findIndex((room) => room.id == roomID);
-            if (roomID == socket.id && index != '-1') {
+            if (roomID == "Partida" + socket.id && index != '-1') {
 
                 io.to(roomID).emit('lobby tencada');
                 let idOrig = socket.id;
@@ -175,12 +173,7 @@ io.on('connection', (socket) => {
                 }
                 let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
                 let llistatUsuarisMinim = [];
-                llistatUsuaris.forEach((user) => {
-
-                    let userMinim = createUserMinim(user);
-
-                    llistatUsuarisMinim.push(userMinim);
-                });
+                llistatUsuarisMinim = llistaMinim(llistatUsuaris);
 
                 io.to(roomID).emit('update players', llistatUsuarisMinim);
             }
@@ -192,10 +185,11 @@ io.on('connection', (socket) => {
      */
 
     socket.on('start', () => {
-        let arrayPreg = arrayRoom.find((room) => room.id == socket.id).arrayPreg;
-        if (arrayRoom.find(room => room.id == socket.id).jugadors.length >= 2) {
-            io.to(socket.id).emit('play', arrayPreg[0]);
-            let index = arrayRoomMinim.findIndex((room) => room.id == socket.id);
+        let roomID = trobarRoom(socket); 
+        let arrayPreg = arrayRoom.find((room) => room.id == roomID).arrayPreg;
+        if (arrayRoom.find(room => room.id == roomID).jugadors.length >= 2) {
+            io.to(roomID).emit('play', arrayPreg[0]);
+            let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
             arrayRoomMinim.splice(index, 1);
             io.emit('llista partides', arrayRoomMinim);
         }
@@ -232,12 +226,7 @@ io.on('connection', (socket) => {
         let correcte = false;
         let acabat = false;
 
-        let rooms = socket.rooms;
-        let roomID;
-
-        rooms.forEach((room) => {
-            roomID = room;
-        });
+        let roomID = trobarRoom(socket);
 
         let arrayPreg = arrayRoom.find((room) => room.id == roomID).arrayPreg;
         let preguntasMal = arrayRoom.find((room) => room.id == roomID).preguntasMal;
@@ -297,21 +286,23 @@ io.on('connection', (socket) => {
             llistatUsuaris.map((user) => {
                 if (user.idSocket == socket.id) {
                     user.vida -= 10;
+                    
+                    if (user.infoPoders.escut) {
+                        user.infoPoders.escut = false;
+                        user.vida += 10;
+                    }
+                    
+                    if (user.infoPoders.robarVida > 0) {
+                        user.infoPoders.robarVida = 0;
+                    }
+                    
+                    user.falladesConsecutives++;
+
                     if (user.vida <= 0) {
                         user.temps = Date.now() - start;
                         mort = true;
                     }
 
-                    if (user.infoPoders.escut) {
-                        user.infoPoders.escut = false;
-                        user.vida += 10;
-                    }
-
-                    if (user.infoPoders.robarVida > 0) {
-                        user.infoPoders.robarVida = 0;
-                    }
-
-                    user.falladesConsecutives++;
                     if (user.falladesConsecutives == 3) {
                         user.preguntaActual++;
                         user.falladesConsecutives = 0;
@@ -346,23 +337,7 @@ io.on('connection', (socket) => {
         socket.emit('check', correcte, acabat);
 
         if (acabat) {
-            let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-            let perdedors = llistatUsuaris.sort((a, b) => { return b.temps - a.temps });
-            let guanyador = jugadorsVius(llistatUsuaris);
-
-            perdedors.pop();
-
-            io.to(roomID).emit('end', guanyador[0], perdedors);
-
-            let idOrig = socket.id;
-            llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-            let index = arrayRoom.findIndex((room) => room.id == roomID);
-            arrayRoom.splice(index, 1);
-            llistatUsuaris.forEach((user) => {
-                socket.id = user.idSocket;
-                socket.leave(roomID);
-            });
-            socket.id = idOrig;
+            acabarPartida(socket,roomID);
         }
     })
 
@@ -370,11 +345,7 @@ io.on('connection', (socket) => {
      * Salta la pregunta actual si l'usuari té skips disponibles, si no, li resta vida
      */
     socket.on('skip', () => {
-        let rooms = socket.rooms;
-        let roomID;
-        rooms.forEach((room) => {
-            roomID = room;
-        });
+        let roomID = trobarRoom(socket);
         let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
 
         llistatUsuaris.map((user) => {
@@ -411,11 +382,7 @@ io.on('connection', (socket) => {
      * Envia la pregunta actual a l'usuari
      */
     socket.on('send', () => {
-        let rooms = socket.rooms;
-        let roomID;
-        rooms.forEach((room) => {
-            roomID = room;
-        });
+        let roomID = trobarRoom(socket);
         let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
         let arrayPreg = arrayRoom.find((room) => room.id == roomID).arrayPreg;
         let user = llistatUsuaris.find((usuari) => {
@@ -470,21 +437,24 @@ io.on('connection', (socket) => {
     })
 
     socket.on('sagnar vida', () => {
-        let rooms = socket.rooms;
-        let roomID;
-        rooms.forEach((room) => {
-            roomID = room;
-        });
-        let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        let roomID = trobarRoom(socket);
+        let room = arrayRoom.find((room) => room.id == roomID);
+        let llistatUsuaris = undefined;
+        if(room!=undefined){
+            llistatUsuaris = room.jugadors;
+        }
         if (llistatUsuaris != undefined) {
             let user = llistatUsuaris.find((usuari) => {
                 return usuari.idSocket == socket.id;
             });
             user.vida -= restarVidaSagnar;
             let llistatUsuarisMinim = [];
-            if(comprovarMort(user)){
+            if (comprovarMort(user)) {
+                user.vida=0;
                 socket.emit('morir');
-                
+            }
+            if (jugadorsVius(llistatUsuaris).length == 1) {
+                acabarPartida(socket,roomID);
             }
             llistatUsuaris.forEach((user) => {
 
@@ -498,6 +468,37 @@ io.on('connection', (socket) => {
 
 
 })
+function trobarRoom(socket){
+    let rooms = socket.rooms;
+    let roomID;
+    rooms.forEach((room) => {
+        roomID = room;
+    });
+    return roomID;
+
+}
+function acabarPartida(socket,roomID) {
+    let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+    let perdedors = llistatUsuaris.sort((a, b) => { return b.temps - a.temps });
+    let guanyador = jugadorsVius(llistatUsuaris);
+    perdedors.pop();
+
+    llistatUsuaris.forEach((user) => {
+        user = stopTimer(user);
+    });
+
+    io.to(roomID).emit('end', guanyador[0], perdedors);
+
+    let idOrig = socket.id;
+    llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+    let index = arrayRoom.findIndex((room) => room.id == roomID);
+    arrayRoom.splice(index, 1);
+    llistatUsuaris.forEach((user) => {
+        socket.id = user.idSocket;
+        socket.leave(roomID);
+    });
+    socket.id = idOrig;
+}
 
 /**
  * et dona un poder aleatori
@@ -576,7 +577,7 @@ function utilitzarPoderEscut(user, userObjectiu, roomID) {
 function comprovarMort(user, roomID) {
     if (user.vida <= 0) {
         return true;
-    }else{
+    } else {
         return false;
     }
 }

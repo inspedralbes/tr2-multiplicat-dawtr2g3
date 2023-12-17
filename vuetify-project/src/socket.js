@@ -74,10 +74,11 @@ socket.on("check", (correcte, acabat) => {
   if (!acabat && correcte) {
     socket.emit("send");
   }
-  if(acabat){
+  if(acabat)
+    store.stopTimer();
     router.push('/final');
   }
-});
+);
 
 /**
  * Mou a la pantalla final
@@ -104,8 +105,6 @@ socket.on("play", (question) => {
   store.timer= question.temps;
   router.push('/partida');
   store.startTimer();
-
-
 });
 
 // socket.on("get power", (poder) => {

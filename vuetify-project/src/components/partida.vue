@@ -75,7 +75,7 @@ export default {
                 question: computed(() => store.question),
                 answer: computed(() => store.answer),
                 notFirstQuestion: false,
-                temps: 0,
+                temps: computed(() => store.timer),
             },
             timerInterval: null,
 
@@ -85,21 +85,6 @@ export default {
 
     methods: {
 
-        startTimer() {
-            this.timerInterval = setInterval(() => {
-                if (this.game.temps <= 0) {
-                    socket.emit('sagnar vida');
-                } else {
-                    this.game.temps--;
-                }
-            }, 1000);
-        },
-        stopTimer() {
-            clearInterval(this.timerInterval);
-        },
-
-
-        
         skip() {
             socket.emit('skip');
         },
@@ -110,7 +95,6 @@ export default {
          */
         answer(index) {
             this.game.notFirstQuestion = true;
-            this.stopTimer();
             socket.emit('answer', this.game.question.idPregunta, index);
 
         },
@@ -130,10 +114,8 @@ export default {
     mounted() {
         this.state.loading = false;
         const store = useAppStore();
-        this.game.temps = store.timer;
-        setTimeout(() => {
-            this.startTimer();
-        }, 1000);
+
+
 
         store.$subscribe((answer) => {
             if (store.getAnswer() == true) {
@@ -144,18 +126,7 @@ export default {
             }
             store.setAnswer(null);
         });
-        store.$subscribe((canvi) => {
-            if (store.canvi == true) {
-                store.canvi = false;
-
-                console.log("AAAAAAA");
-                this.stopTimer();
-                this.game.temps = store.timer;
-                setTimeout(() => {
-                    this.startTimer();
-                }, 1000);
-            }
-        });
+       
 
 
     },
