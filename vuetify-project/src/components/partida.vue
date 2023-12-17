@@ -19,7 +19,7 @@
                     <div class="container__pregunta pregunta">
                         <div class="pregunta__texto">
                             <span>{{ game.questionIndex }}. </span><span> {{
-                            game.question.pregunta }} </span>
+                                game.question.pregunta }} </span>
                         </div>
                         <div class="respostes container__respostes">
                             <div class="resposta" v-for="(resposta, index) in game.question.respostes">
@@ -59,12 +59,16 @@
                     </div>
                 </div>
             </div>
+            <div class="container__usuario usuario">
+                <div class="container__avatar">
+                    <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
+                </div>
+                <p>Nick: {{ game.ownPlayer.nick }}</p>
+                <div class="barra__vida"><img src="../assets/ilustracio vida/full health.png" alt="">{{ game.ownPlayer.vida }}</div>
+            </div>
             <div class="container__poder poder">
                 <button @click="skip">Skip</button>
                 <Poder :poder="game.ownPlayer.poder" />
-            </div>
-            <div class="container__usuario usuario">
-                <p>Vida: {{ game.ownPlayer.vida }}</p>
             </div>
         </div>
 
@@ -95,10 +99,12 @@
     background-color: rgb(37, 7, 107, 0.8);
     grid-area: jugadors;
     margin-top: 5vh;
+    position: absolute;
 }
 
 //container de las preguntas
 .container__preguntas {
+    position: relative;
     border-radius: 2vh;
     background-color: aliceblue;
     text-align: center;
@@ -106,8 +112,8 @@
     width: 95vh;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 5vh;
-    height: 55vh;
+    height: 60vh;
+    top: 5vh;
 }
 
 //container de las pregunta
@@ -118,9 +124,10 @@
     height: 7vw;
     width: 56vh;
     border-radius: 21px;
-    margin-top: 2vw;
+    top: 2vw;
 }
-.pregunta{
+
+.pregunta {
     margin-left: auto;
     margin-right: auto;
     justify-content: center;
@@ -148,14 +155,14 @@
     margin-top: auto;
     margin-left: auto;
     margin-right: auto;
-    width: 65vh;
+    width: 70vh;
     height: 20vh;
     border-radius: 6px;
     position: relative;
-    display: flex;
     justify-content: center;
     align-items: center;
     bottom: 6vh;
+    display: flex;
 }
 
 //container del poder
@@ -168,7 +175,7 @@
 .container__respostes {
     display: grid;
     position: relative;
-    top: 25vh;
+    top: 33vh;
     grid-template-columns: 1fr 1fr;
     right: 6vh;
 }
@@ -228,8 +235,8 @@
 //container del boton del chat
 .container__imputButtom {
     display: flex;
-    position: relative;
-    bottom: 4vh;
+    position: absolute;
+    bottom: 1vh;
     left: 1vh;
 }
 
@@ -240,11 +247,29 @@
 }
 
 .pregunta__texto {
-    position: relative;
+    position: absolute;
     font-size: 2vh;
     font-weight: bold;
-    position: relative;
     top: 5vh;
+    left: 0;
+    right: 0;
+}
+
+.avatar {
+    position: absolute;
+    top: 1vw;
+    left: 0;
+    height: 15vh;
+    width: 15vh;
+    z-index: 0;
+}
+
+.barra__vida{
+    position: relative;
+    top: 4vh;
+    left: -9vw;
+    right: 0;
+    z-index: 1;
 }
 </style>
 <script>
@@ -253,7 +278,6 @@ import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
 import Drag from "./Drag.vue";
 import Poder from "./Poder.vue";
-
 export default {
     data() {
         const store = useAppStore();
@@ -284,7 +308,7 @@ export default {
 
         };
     },
-    components: { Drag, Poder },
+    components: { Drag, Poder},
 
     methods: {
         // getTemps() {
