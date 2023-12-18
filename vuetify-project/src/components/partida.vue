@@ -8,11 +8,7 @@
         <div class="container">
             <div class="container__jugadors jugadors">
                 <div class="container__jugador jugador" v-for="jugador in game.players">
-                    <img :src="jugador.avatar" alt="" class="avatar__jugadors avatar">
-                    <span class="nick">{{ jugador.nick }}</span><span class="jugsdor__encertades encertades"> - {{ jugador.encertades }}</span><span class="vida__jugadors vida"> - {{
-                        jugador.vida
-                    }}/100</span>
-                    <div>{{ jugador.poder }}</div>
+                    <JugadorPartida :jugador="jugador" />
                 </div>
             </div>
             <div class="container__preguntas preguntas">
@@ -65,7 +61,7 @@
                     <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
                     <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
                     <div class="barra__vida">
-                        <img src="../assets/ilustracio vida/full health.png" alt="" class="vida">{{ game.ownPlayer.vida }}
+                        <img src="../assets/ilustracio-vida/full-health.png" alt="" class="vida">{{ game.ownPlayer.vida }}
                     </div>
                 </div>
             </div>
@@ -90,22 +86,6 @@
     margin-left: 15vh;
 }
 
-//container de los jugador
-.container__jugador {
-    color: aliceblue;
-    background-color: rgb(134, 76, 191);
-    border-radius: 6px;
-    margin: 1vh;
-    padding: 1vh;
-    text-align: center;
-    font-size: 2vh;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height: 12ch;
-    width: 50ch;
-}
 
 //container de los jugadores
 .container__jugadors {
@@ -116,6 +96,7 @@
     margin-top: 5vh;
     position: absolute;
 }
+
 
 //container de las preguntas
 .container__preguntas {
@@ -203,6 +184,7 @@
     width: 30vh;
     margin: 2vh;
     border-radius: 6px;
+    font-size: 2em;
 }
 
 //container del chat
@@ -270,12 +252,14 @@
     left: 0;
     right: 0;
 }
-.container__avatar{
+
+.container__avatar {
     position: absolute;
     top: 0;
     left: 7ch;
     right: 0;
 }
+
 .avatar {
     position: absolute;
     top: 1vw;
@@ -299,7 +283,7 @@
     height: 8vh;
 }
 
-.nickUsuario{
+.nickUsuario {
     position: absolute;
     top: 3vh;
     left: 0;
@@ -307,19 +291,9 @@
     font-size: 4vh;
     font-weight: bold;
     text-align: center;
-    color:#ffdd33;
+    color: #ffdd33;
 }
 
-.avatar__jugadors {
-    position: relative;
-    top: 0;
-    left: 0;    
-    height: 10vh;
-    width: 10vh;
-    z-index: 0;
-    border-radius: 50%;
-    background-color: rgb(37, 7, 107, 0.8);
-}
 </style>
 <script>
 import { socket } from '../socket';
@@ -327,6 +301,7 @@ import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
 import Drag from "./Drag.vue";
 import Poder from "./Poder.vue";
+import JugadorPartida from './JugadorPartida.vue';
 export default {
     data() {
         const store = useAppStore();
@@ -357,7 +332,7 @@ export default {
 
         };
     },
-    components: { Drag, Poder },
+    components: { Drag, Poder, JugadorPartida },
 
     methods: {
         // getTemps() {
