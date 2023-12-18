@@ -2,6 +2,7 @@ import { io } from "socket.io-client";
 import { useAppStore } from '@/store/app';
 
 import router from '@/router'; // Import the router from your project
+import { set } from "core-js/core/dict";
 // "undefined" means the URL will be computed from the `window.location` object
 /**
  * Si estas treballant en local ferem  url =localhost:3000
@@ -95,6 +96,12 @@ socket.on("end", (guanyador, perdedors) => {
   store.setGuanyador(guanyador);
   store.setPerdedors(perdedors);
   console.log("end");
+});
+socket.on('parar temps',() =>{
+  const store = useAppStore();
+  setTimeout(() => {
+    store.stopTimer();
+  }, 5000);
 });
 
 socket.on('morir',() => {
