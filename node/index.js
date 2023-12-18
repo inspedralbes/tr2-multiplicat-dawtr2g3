@@ -278,7 +278,7 @@ io.on('connection', (socket) => {
                 }
             });
 
-
+            llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
 
             io.to(roomID).emit("update players", llistatUsuarisMinim)
 
@@ -341,7 +341,6 @@ io.on('connection', (socket) => {
         socket.emit('check', correcte, acabat);
 
         if (acabat) {
-
             acabarPartida(socket, roomID);
         }
     })
@@ -369,6 +368,7 @@ io.on('connection', (socket) => {
                             socket.emit('morir');
                         }
                     }
+                    llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
                 }
                 user.falladesConsecutives = 0;
             }
@@ -443,7 +443,7 @@ io.on('connection', (socket) => {
 
                     break;
                 case "vida":
-                    utilizarPoderVida(user, userObjectiu, roomID);
+                    utilizarPoderVida(user, llistatUsuaris);
                     break;
                 case "escut":
                     utilitzarPoderEscut(user, userObjectiu, roomID);
@@ -487,6 +487,7 @@ io.on('connection', (socket) => {
             if (jugadorsVius(llistatUsuaris).length == 1) {
                 acabarPartida(socket, roomID);
             }
+            llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
             llistatUsuarisMinim = llistaMinim(llistatUsuaris);
             io.to(roomID).emit("update players", llistatUsuarisMinim)
         }
@@ -602,26 +603,24 @@ function utilitzarPoderRobarVida(user, userObjectiu, roomID) {
 /**
  * Utilitza el poder d'aconseguir un salt
  * @param {obj} user l'usuari que utilitza el poder
- * @param {obj} userObjectiu l'usuari que rep el poder
- * @param {int} roomID identificador de la sala
  */
 
-function utilitzarPoderSalt(user, userObjectiu, roomID) {
+function utilitzarPoderSalt(user) {
     user.skip++;
 }
 
 /**
  * Utilitza el poder de recuperar vida
  * @param {obj} user l'usuari que utilitza el poder
- * @param {obj} userObjectiu l'usuari que rep el poder
- * @param {int} roomID identificador de la sala
+ * @param {Array} llistatUsuaris llista de tots els usuaris de la partida
  */
 
-function utilizarPoderVida(user, userObjectiu, roomID) {
-    userObjectiu.vida += 15;
-    if (userObjectiu.vida > 100) {
-        userObjectiu.vida = 100;
+function utilizarPoderVida(user, llistatUsuaris) {
+    user.vida += 15;
+    if (user.vida > 100) {
+        user.vida = 100;
     }
+    llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
 }
 
 /**
