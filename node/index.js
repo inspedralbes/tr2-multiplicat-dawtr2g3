@@ -315,8 +315,15 @@ io.on('connection', (socket) => {
                     if (user.falladesConsecutives == 3) {
                         user.preguntaActual++;
                         user.falladesConsecutives = 0;
+                        let preguntaEnviar = arrayPreg[user.preguntaActual];
+                        if (user.infoPoders.tempspregunta > 0) {
+                            preguntaEnviar.temps -= user.infoPoders.tempspregunta;
+                            user.infoPoders.tempspregunta = 0;
+                            socket.emit('menys temps');
+                        }
+
                         socket.emit('tres fallades');
-                        socket.emit('new question', arrayPreg[user.preguntaActual]);
+                        socket.emit('new question', preguntaEnviar);
                     }
                 }
             });
@@ -403,8 +410,17 @@ io.on('connection', (socket) => {
 
             llistatUsuarisMinim.push(userMinim);
         })
-        io.to(roomID).emit("update players", llistatUsuarisMinim)
-        socket.emit('new question', arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual]);
+        io.to(roomID).emit("update players", llistatUsuarisMinim);
+
+        let preguntaEnviar = arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual];
+        if (user.infoPoders.tempspregunta > 0) {
+            preguntaEnviar.temps -= user.infoPoders.tempspregunta;
+            user.infoPoders.tempspregunta = 0;
+            socket.emit('menys temps');
+        }
+
+        socket.emit('new question', preguntaEnviar);
+        //arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual]
     });
 
     /**
@@ -422,9 +438,20 @@ io.on('connection', (socket) => {
             return usuari.idSocket == socket.id;
         });
 
-        socket.emit('new question', arrayPreg[user.preguntaActual]);
+        let preguntaEnviar = arrayPreg[user.preguntaActual];
+        
+        if (user.infoPoders.tempspregunta > 0) {
+            preguntaEnviar.temps -= user.infoPoders.tempspregunta;
+            user.infoPoders.tempspregunta = 0;
+            socket.emit('menys temps');
+        }
+
+        socket.emit('new question', preguntaEnviar);
     })
 
+    /**
+     * utilitza el poder que té l'usuari
+     */
     socket.on('utilitzar poder', (poder, objectiu) => {
         let rooms = socket.rooms;
         let roomID;
@@ -438,35 +465,41 @@ io.on('connection', (socket) => {
         let userObjectiu = llistatUsuaris.find((usuari) => {
             return usuari.idSocket == objectiu;
         });
-        switch (poder) {
-            case "salt":
-                utilitzarPoderSalt(user, userObjectiu, roomID);
+        if (user.poder == poder) {
+            switch (poder) {
+                case "salt":
+                    utilitzarPoderSalt(user, userObjectiu, roomID);
 
-                break;
-            case "vida":
-                utilizarPoderVida(user, userObjectiu, roomID);
-                break;
-            case "escut":
-                utilitzarPoderEscut(user, userObjectiu, roomID);
-                break;
-            case "robarVida":
-                utilitzarPoderRobarVida(user, userObjectiu, roomID);
-                break;
-            case "pararTemps":
-                utilitzarPoderPararTemps(user, socket);
-                break;
-            default:
-                break;
+                    break;
+                case "vida":
+                    utilizarPoderVida(user, userObjectiu, roomID);
+                    break;
+                case "escut":
+                    utilitzarPoderEscut(user, userObjectiu, roomID);
+                    break;
+                case "robarVida":
+                    utilitzarPoderRobarVida(user, userObjectiu, roomID);
+                    break;
+                case "pararTemps":
+                    utilitzarPoderPararTemps(socket);
+                    break;
+                case "menysTemps":
+                    utilitzarPoderMenysTemps(user, userObjectiu, roomID);
+                    break;
+                default:
+                    break;
+            }
+            user.poder = "";
+            let llistatUsuarisMinim = [];
+            llistatUsuaris.forEach((user) => {
+
+                let userMinim = createUserMinim(user);
+
+                llistatUsuarisMinim.push(userMinim);
+            })
+            io.to(roomID).emit("update players", llistatUsuarisMinim)
         }
-        user.poder = "";
-        let llistatUsuarisMinim = [];
-        llistatUsuaris.forEach((user) => {
 
-            let userMinim = createUserMinim(user);
-
-            llistatUsuarisMinim.push(userMinim);
-        })
-        io.to(roomID).emit("update players", llistatUsuarisMinim)
     })
 
     socket.on('sagnar vida', () => {
@@ -499,7 +532,7 @@ io.on('connection', (socket) => {
  * @returns el poder que li ha tocat
  */
 function getRandomPoder(user) {
-    let random = Math.floor(Math.random() * 4) + 1;
+    let random = Math.floor(Math.random() * 6) + 1;
     let poder = "";
     switch (random) {
         case 1:
@@ -517,17 +550,43 @@ function getRandomPoder(user) {
         case 5:
             poder = "pararTemps";
             break;
+        case 6:
+            poder = "menysTemps";
+            break;
         default:
             break;
     }
     return poder;
 }
 
-function utilitzarPoderPararTemps (user, userObjectiu, roomID){
+/**
+ * utilitza el poder de redüir el temps d'una pregunta a un enemic
+ * @param {obj} user  l'usuari que utilitza el poder
+ * @param {obj} userObjectiu  l'usuari que rep el poder
+ * @param {*} roomID  identificador de la sala
+ */
+
+function utilitzarPoderMenysTemps(user, userObjectiu, roomID) {
+
+    userObjectiu.infoPoders.tempspregunta += 5;
+}
+/**
+ * Utilitza el poder de parar temps
+ * @param {obj} user l'usuari que utilitza el poder
+ * @param {obj} userObjectiu l'usuari que rep el poder
+ * @param {int} roomID identificador de la sala
+*/
+function utilitzarPoderPararTemps(socket) {
     socket.emit('parar temps');
 }
 
-function utilitzarPoderRobarVida (user, userObjectiu, roomID){
+/**
+ * Utilitza el poder de robar vida
+ * @param {obj} user l'usuari que utilitza el poder
+ * @param {obj} userObjectiu l'usuari que rep el poder
+ * @param {int} roomID identificador de la sala
+*/
+function utilitzarPoderRobarVida(user, userObjectiu, roomID) {
     user.infoPoders.robarVida = 3;
 }
 
@@ -550,7 +609,7 @@ function utilitzarPoderSalt(user, userObjectiu, roomID) {
  */
 
 function utilizarPoderVida(user, userObjectiu, roomID) {
-    userObjectiu.vida += 20;
+    userObjectiu.vida += 15;
     if (userObjectiu.vida > 100) {
         userObjectiu.vida = 100;
     }
@@ -587,7 +646,7 @@ function createNewUser(idSocket, nick) {
         "infoPoders": {
             "escut": false,
             "robarVida": 0,
-
+            "tempspregunta": 0,
         }
     }
     return user;
@@ -610,6 +669,7 @@ function createUserMinim(user) {
         "infoPoders": {
             "escut": user.infoPoders.escut,
             "robarVida": user.infoPoders.robarVida,
+            "tempspregunta": user.infoPoders.tempspregunta,
         }
 
     }

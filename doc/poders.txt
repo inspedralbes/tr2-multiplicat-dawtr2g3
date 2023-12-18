@@ -4,7 +4,7 @@
 *- Escut: quadrants 1/2, et protegeix del següent atac enemic o fallada de pregunta
 *- Robar vida: quadrant 3, et dona un augment que durant 5 preguntes, cada encert et suma vida, però si falles perds el poder
 - Escollir qualsevol: quadrant 3, et permet escollir qualsevol altre poder
-- -Temps: quadrants 1/2/3, redueix en 5 segons el temps d'una altra persona a la seva següent pregunta
-- Parar temps: quadrants 1/2/3, para el temps 5 segons
+*- -Temps: quadrants 1/2/3, redueix en 5 segons el temps d'una altra persona a la seva següent pregunta
+*- Parar temps: quadrants 1/2/3, para el temps 5 segons
 
 * = fet
