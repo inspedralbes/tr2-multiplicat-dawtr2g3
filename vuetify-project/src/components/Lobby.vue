@@ -7,6 +7,38 @@
                     <span class="sala-name">Sala 344</span>
                     <p class="sala-jugadors">13/30 Jugadors</p>
                 </div>
+                <div class="container-llista-jugadors">
+                    <ul class="llista-jugadors">
+                        <li class="jugador" id="0">
+                            <span class="name-jugador">UserRandom312</span>
+                            <button class="btn-eliminar">Eliminar</button>
+                        </li>
+                        <li class="jugador" id="1">
+                            <span class="name-jugador">UserRandom312</span>
+                            <button class="btn-eliminar">Eliminar</button>
+                        </li>
+                        <li class="jugador" id="2">
+                            <span class="name-jugador">UserRandom312</span>
+                            <button class="btn-eliminar">Eliminar</button>
+                        </li>
+                        <li class="jugador" id="3">
+                            <span class="name-jugador">UserRandom312</span>
+                            <button class="btn-eliminar">Eliminar</button>
+                        </li>
+                        <li class="jugador" id="4">
+                            <span class="name-jugador">UserRandom312</span>
+                            <button class="btn-eliminar">Eliminar</button>
+                        </li>
+                        <li class="jugador" id="5">
+                            <span class="name-jugador">UserRandom312</span>
+                            <button class="btn-eliminar">Eliminar</button>
+                        </li>
+                        <li class="jugador" id="6">
+                            <span class="name-jugador">UserRandom312</span>
+                            <button class="btn-eliminar">Eliminar</button>
+                        </li>
+                    </ul>
+                </div>
                 <!-- <div class="jugador" v-for="jugador in players">
                     {{ jugador.nick }}
                 </div> -->
@@ -72,6 +104,70 @@
 .sala-jugadors {
     color: rgba(102, 191, 57, 1);
     display: inline-block;
+}
+
+.container-llista-jugadors {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25vw;
+    height: 52vh;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    margin: auto;
+    margin-top: 3vh;
+}
+
+.container-llista-jugadors::-webkit-scrollbar {
+    width: 0vw;
+}
+
+.llista-jugadors {
+    list-style: none;
+}
+
+.jugador {
+    width: 20vw;
+    height: 7vh;
+    margin-bottom: 1vh;
+    display: flex;
+    align-items: center;
+    border: 1px 0px 0px 0px solid rgb(255, 255, 255);
+}
+
+.name-jugador {
+    /* estils */
+    color: rgb(255, 255, 255);
+    font-size: 1.5vw;
+    /* alineació */
+    text-align: left;
+    margin-left: 0.7vw;
+    margin-right: 2vw;
+}
+
+.sala-categoria {
+    /* estils */
+    color: rgb(99, 99, 99);
+    font-size: 1vw;
+    /* alineació */
+    text-align: center;
+    display: inline;
+    margin-right: 0.7vw;
+}
+
+.sala-jugadors {
+    /* estils */
+    color: rgb(99, 99, 99);
+    font-size: 1vw;
+    /* alineació */
+    text-align: right;
+    display: inline;
+}
+
+.sala:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 60px;
+    cursor: pointer;
 }
 </style>
 <script>
