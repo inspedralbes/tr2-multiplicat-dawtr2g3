@@ -46,6 +46,7 @@ socket.on("update chat", (msg) => {
 socket.on("lobby tencada", () => {
   const store = useAppStore();
   router.push('/partides');
+  store.stopTimer();
 });
 
 /**
@@ -54,7 +55,11 @@ socket.on("lobby tencada", () => {
 socket.on("new question", (question) => {
   console.log(question);
   const store = useAppStore();
+  store.stopTimer();
   store.setQuestion(question);
+  store.timer = question.temps;
+  store.startTimer();
+  store.canvi = true;
 });
 
 /**
@@ -69,22 +74,42 @@ socket.on("check", (correcte, acabat) => {
   if (!acabat && correcte) {
     socket.emit("send");
   }
-  if(acabat){
+  if (acabat) {
+    store.stopTimer();
     router.push('/final');
   }
 });
+
 
 /**
  * Mou a la pantalla final
  */
 socket.on("end", (guanyador, perdedors) => {
+  router.push('/final');
   const store = useAppStore();
+  store.stopTimer();
+  store.timer = 20;
   console.log("guanyador", guanyador);
   console.log("perdedors", perdedors);
   store.setQuestionIndex(-1);
   store.setGuanyador(guanyador);
   store.setPerdedors(perdedors);
-  router.push('/final');
+  console.log("end");
+});
+
+socket.on('parar temps', () => {
+  const store = useAppStore();
+  store.stopTimer();
+  setTimeout(() => {
+    store.startTimer();
+  }, 4000);
+});
+
+socket.on('morir', () => {
+  const store = useAppStore();
+  store.stopTimer();
+  store.timer = 20;
+  alert("Has mort");
 });
 
 /**
@@ -92,10 +117,12 @@ socket.on("end", (guanyador, perdedors) => {
  */
 socket.on("play", (question) => {
   const store = useAppStore();
+  store.stopTimer();
   store.setQuestion(question);
   store.setAnswer(null);
+  store.timer = question.temps;
   router.push('/partida');
-
+  store.startTimer();
 });
 
 // socket.on("get power", (poder) => {

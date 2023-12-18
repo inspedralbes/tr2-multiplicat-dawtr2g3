@@ -21,6 +21,11 @@ return new class extends Migration
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+        DB::table('tipus')->insert([
+            'nom' => 'drag',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     /**

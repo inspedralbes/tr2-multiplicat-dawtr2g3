@@ -301,6 +301,7 @@ import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
 import Drag from "./Drag.vue";
 import Poder from "./Poder.vue";
+import { toHandlers } from 'vue';
 import JugadorPartida from './JugadorPartida.vue';
 export default {
     data() {
@@ -308,11 +309,6 @@ export default {
 
         return {
 
-            // timer: {
-            //     tempsRestant: 0,
-            //     temps: 20000,
-            //     baseMilliseconds: 1000,
-            // },
 
             state: {
 
@@ -328,54 +324,20 @@ export default {
                 question: computed(() => store.question),
                 answer: computed(() => store.answer),
                 notFirstQuestion: false,
+                temps: computed(() => store.timer),
             },
+            timerInterval: null,
 
         };
     },
     components: { Drag, Poder, JugadorPartida },
 
     methods: {
-        // getTemps() {
-        //     console.log(this.timer.temps);
-        //     return this.timer.temps!=NaN?this.timer.temps:20000;
-        // },
-        // startTimer() {
-        //     this.$refs.timer.start();
-        // },
-        // stopTimer() {
-        //     this.$refs.timer.abort();
-        // },
-
-        startBleed() {
-            this.$refs.bleed.start();
-        },
-        stopBleed() {
-            this.$refs.bleed.abort();
-        },
-
-        // transformSlotProps(props) {
-        //     const formattedProps = {};
-
-        //     Object.entries(props).forEach(([key, value]) => {
-        //         formattedProps[key] = value < 10 ? `0${value}` : String(value);
-        //     });
-        //     this.timer.tempsRestant = parseInt(formattedProps.totalMilliseconds);
-        //     return formattedProps;
-        // },
-
-        sendBleed(props) {
-            const formattedProps2 = {};
-
-            Object.entries(props).forEach(([key, value]) => {
-                formattedProps2[key] = value < 10 ? `0${value}` : String(value);
-            });
-            socket.emit('sagnar vida');
-            return formattedProps2;
-        },
 
         skip() {
             socket.emit('skip');
         },
+
 
         /**
          * respon a la pregunta
@@ -383,9 +345,6 @@ export default {
          */
         answer(index) {
             this.game.notFirstQuestion = true;
-            // this.stopTimer();
-            this.stopBleed();
-            // this.timer.temps += 3000;
             socket.emit('answer', this.game.question.idPregunta, index);
 
         },
@@ -405,9 +364,9 @@ export default {
     mounted() {
         this.state.loading = false;
         const store = useAppStore();
-        // setTimeout(() => {
-        //     this.startTimer();
-        // }, 1000);
+
+
+
         store.$subscribe((answer) => {
             if (store.getAnswer() == true) {
                 console.log("YIPPIEe");
@@ -418,12 +377,8 @@ export default {
             }
             store.setAnswer(null);
         });
-        store.$subscribe((question) => {
-            if (question.idPregunta != this.game.question.idPregunta && this.game.notFirstQuestion) {
-                // this.timer.temps = question.temps * this.timer.baseMilliseconds;
-                // this.startTimer();
-            }
-        });
+       
+
 
 
     },
