@@ -1,59 +1,178 @@
 <template>
     <div class="page-buscarPrtida">
         <div class="configuration-board-background">
-            <div class="distribucio-board">
-                <div class="board-llista-salas">
-                    <h1 class="llista-salas-title">Escull una sala per jugar</h1>
-                    <div class="partida" v-for="partida in partides">
+            <div class="board-llista-salas">
+                <h1 class="llista-salas-title">Escull Una Sala per Jugar...</h1>
+                <div class="container-llista-salas">
+                    <ul class="llista-salas">
+                        <li class="sala" id="0">
+                            <span class="sala-name">Sala 346</span>
+                            <!-- <p class="sala-categoria">Multiplicacions</p> -->
+                            <p class="sala-jugadors">2/4 Jugadors</p>
+                        </li>
+                        <li class="sala" id="1">
+                            <span class="sala-name">Sala 346</span>
+                            <p class="sala-categoria">Multiplicacions</p>
+                            <p class="sala-jugadors">2/4 Jugadors</p>
+                        </li>
+                        <li class="sala" id="2">
+                            <span class="sala-name">Sala 346</span>
+                            <p class="sala-categoria">Multiplicacions</p>
+                            <p class="sala-jugadors">2/4 Jugadors</p>
+                        </li>
+                        <li class="sala" id="3">
+                            <span class="sala-name">Sala 346</span>
+                            <p class="sala-categoria">Multiplicacions</p>
+                            <p class="sala-jugadors">2/4 Jugadors</p>
+                        </li>
+                        <li class="sala" id="4">
+                            <span class="sala-name">Sala 346</span>
+                            <p class="sala-categoria">Multiplicacions</p>
+                            <p class="sala-jugadors">2/4 Jugadors</p>
+                        </li>
+                        <li class="sala" id="5">
+                            <span class="sala-name">Sala 346</span>
+                            <p class="sala-categoria">Multiplicacions</p>
+                            <p class="sala-jugadors">2/4 Jugadors</p>
+                        </li>
+                        <li class="sala" id="6">
+                            <span class="sala-name">Sala 346</span>
+                            <p class="sala-categoria">Multiplicacions</p>
+                            <p class="sala-jugadors">2/4 Jugadors</p>
+                        </li>
+                    </ul>
+                </div>
+                <!-- <div class="partida" v-for="partida in partides">
                         <h2 class="partida__nom">{{ partida.nom }}</h2>
                         <p class="partida__jugadors">{{ partida.jugadors.length }} / {{ partida.maxJugadors }}</p>
                         <button @click="join(partida.id)">Entrar</button>
-                    </div>
-                </div>
+                    </div> -->
             </div>
-        </div>        
+            <button class="button-jugarPartida-background button-jugarPartida" @click="join(id)">Jugar</button>
+        </div>
     </div>
 </template>
 <style scoped>
-    .page-buscarPrtida{
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+.page-buscarPrtida {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+}
 
-    .configuration-board-background {
-        /* fons del container */
-        background-color: rgba(70, 23, 143, 0.7);
-        padding: 2vh;
-        box-shadow: inset 4px 4px 4px 0px rgba(0, 0, 0, 0.2), inset 4px 4px 4px 0px rgba(0, 0, 0, 0.2);
-        /* mida del container */
-        width: 70vw;
-        height: 70vh;
-    }
+.configuration-board-background {
+    /* fons del container */
+    background-color: rgba(70, 23, 143, 0.7);
+    padding: 2vh;
+    box-shadow: inset 4px 4px 4px 0px rgba(0, 0, 0, 0.2), inset 4px 4px 4px 0px rgba(0, 0, 0, 0.2);
+    /* mida del container */
+    width: 40vw;
+    height: 70vh;
+}
 
-    .distribucio-board{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
+.board-llista-salas {
+    width: 33vw;
+    height: 66vh;
+    background-color: rgba(255, 255, 255, 0.7);
+    margin: auto;
+}
 
-    .board-llista-salas{
-        width: 30vw;
-        height: 66vh;
-        background-color: rgba(255, 255, 255, 0.7);    
-    }
+.llista-salas-title {
+    /* alineació del text */
+    margin-top: 1vh;
+    text-align: center;
+    /* estils */
+    color: rgba(255, 166, 2, 1);
+    font-size: 2.5vw;
+}
 
-    .llista-salas-title{
-        color: rgba(255, 166, 2, 1);
-        font-family: 'Share Tech';
-        font-style: normal;
-        font-size: 4vw;
-        font-weight: 400;
-        line-height: 1.2;
-        letter-spacing: 0.01px;
-    }
+.container-llista-salas {
+    grid-area: llista-salas;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25vw;
+    height: 52vh;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    margin: auto;
+    margin-top: 3vh;
+}
+
+.container-llista-salas::-webkit-scrollbar {
+    width: 0vw;
+}
+
+.llista-salas {
+    list-style: none;
+}
+
+.sala {
+    width: 20vw;
+    height: 7vh;
+    margin-bottom: 1vh;
+    display: flex;
+    align-items: center;
+}
+
+.sala-name {
+    /* estils */
+    color: rgb(12, 12, 12);
+    font-size: 1.5vw;
+    /* alineació */
+    text-align: left;
+    margin-left: 0.7vw;
+    margin-right: 2vw;
+}
+
+.sala-categoria {
+    /* estils */
+    color: rgb(99, 99, 99);
+    font-size: 1vw;
+    /* alineació */
+    text-align: center;
+    display: inline;
+    margin-right: 0.7vw;
+}
+
+.sala-jugadors {
+    /* estils */
+    color: rgb(99, 99, 99);
+    font-size: 1vw;
+    /* alineació */
+    text-align: right;
+    display: inline;
+}
+
+.sala:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 60px;
+    cursor: pointer;
+}
+
+.button-jugarPartida {
+    color: rgba(70, 23, 143, 1);
+    font-family: "Battle Beasts";
+    font-size: 3vw;
+}
+
+.button-jugarPartida-background {
+    border-radius: 40px;
+    background-color: rgba(102, 191, 57, 1);
+    border: 4px solid rgba(16, 107, 3, 1);
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.2);
+    width: 18vw;
+    height: 7vh;
+    margin: auto;
+    margin-top: -1.2vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
 </style>
 <script>
 // import { useAppStore } from "../stores/app.js";
