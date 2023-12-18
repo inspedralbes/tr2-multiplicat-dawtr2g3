@@ -13,7 +13,7 @@
             variant="solo"></v-text-field>
 
           <div class="button-box">
-            <v-btn color="#33cccc">Registrar-se</v-btn>
+            <v-btn color="#33cccc" @click="submit()">Registrar-se</v-btn>
           </div>
         </v-container>
       </v-card>
@@ -77,7 +77,6 @@ export default {
       const store = useAppStore();
       console.log(this.nom,this.email,this.password,this.password_confirmation);
       let response = await this.manager.register(this.nom,this.email,this.password,this.password_confirmation);
-      console.log(response);
       if(response.status == 201){
         store.setLoginInfo(true,response.user.nom,response.token);
         router.push('/partides');
