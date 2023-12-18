@@ -97,7 +97,15 @@ socket.on("end", (guanyador, perdedors) => {
   console.log("end");
 });
 
-socket.on('morir',() => {
+socket.on('parar temps', () => {
+  const store = useAppStore();
+  store.stopTimer();
+  setTimeout(() => {
+    store.startTimer();
+  }, 4000);
+});
+
+socket.on('morir', () => {
   const store = useAppStore();
   store.stopTimer();
   store.timer = 20;
