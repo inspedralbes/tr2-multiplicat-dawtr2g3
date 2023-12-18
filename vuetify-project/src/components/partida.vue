@@ -12,24 +12,8 @@
                 </div>
             </div>
             <div class="container__preguntas preguntas">
-                <div v-if="game.question.tipus == 1">
-                    <div class="container__pregunta pregunta">
-                        <div class="pregunta__texto">
-                            <span>{{ game.questionIndex }}. </span><span> {{
-                                game.question.pregunta }} </span>
-                        </div>
-                        <div class="respostes container__respostes">
-                            <div v-for="(resposta, index) in game.question.respostes" class="resposta">
-                                <button @click="answer(index)" class="button__resposta">{{ resposta }}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div v-else>
-                    <h1>{{ game.question.pregunta }}</h1>
-                    <h2>Pregunta:{{ game.questionIndex }}</h2>
-                    <Drag :respostes="game.question.respostes" @comprovar="(index) => answer(index)" />
-                </div>
+                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta" @comprovar="(index) => answer(index)" />
+                
             </div>
 
             <!-- <vue-countdown ref="timer" :time="getTemps()" :auto-start="false" :interval="100"
@@ -61,7 +45,7 @@
                     <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
                     <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
                     <div class="barra__vida">
-                        <img src="../assets/ilustracio-vida/full-health.png" alt="" class="vida">{{ game.ownPlayer.vida }}
+                        <img :src="getHP()" alt="">{{ game.ownPlayer.vida }}
                     </div>
                 </div>
             </div>
@@ -293,7 +277,6 @@
     text-align: center;
     color: #ffdd33;
 }
-
 </style>
 <script>
 import { socket } from '../socket';
@@ -358,6 +341,19 @@ export default {
             var input = document.getElementById("inputChat");
             socket.emit('enviar missatge', input.value, store.loginInfo.username);
             input.value = "";
+        },
+        getHP() {
+            if (this.game.ownPlayer.vida > 75) {
+                return "/src/assets/ilustracio-vida/full-health.png";
+            } else if (this.game.ownPlayer.vida > 50) {
+                return "/src/assets/ilustracio-vida/75_health.png";
+            } else if (this.game.ownPlayer.vida > 25) {
+                return "/src/assets/ilustracio-vida/50_health.png";
+            } else if (this.game.ownPlayer.vida > 0) {
+                return "/src/assets/ilustracio-vida/25_health.png";
+            } else {
+                return "/src/assets/ilustracio-vida/0_health.png";
+            }
         }
     },
 
@@ -377,7 +373,7 @@ export default {
             }
             store.setAnswer(null);
         });
-       
+
 
 
 

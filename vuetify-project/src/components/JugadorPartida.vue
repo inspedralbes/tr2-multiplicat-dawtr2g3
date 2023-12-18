@@ -1,9 +1,8 @@
 <template>
     <div class="container__jugador jugador">
-        <img :src="jugador.avatar" alt="" class="avatar__jugadors avatar">
-        <span class="nick">{{ jugador.nick }}</span>      
+        <span class="nick">{{ jugador.nick }}</span>
         <div class="container__vidaJugadors">
-            <span class="vida__jugadors"> - {{
+            <span class="vida__jugadors">  {{
                 jugador.vida
             }}/100 <img :src="getHP()" alt=""></span>
         </div>
@@ -39,24 +38,22 @@ export default {
 
 <style lang="scss" scoped>
 .container__jugador {
-    display: grid;
-    height: 12ch;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
     width: 50ch;
-    grid-template-areas:
-        "avatar  nick nick"
-        "avatar vida__jugadors";
-    grid-template-columns: 0.7fr 2fr 0.2fr;
-    grid-template-rows: 1fr 1fr;
+    border-radius: 60ch;
+    margin: 1vh;
+    padding: 1vh;
+    text-align: center;
+    font-size: 2vh;
+    font-weight: bold;
 }
 
-.avatar__jugadors {
-    grid-area: avatar;
-    height: 100%;
-    width: 100%;
-}
+
 
 .nick {
-    grid-area: nick;
     font-size: 1.5em;
     font-weight: bold;
     color: #ffa502;
@@ -66,25 +63,19 @@ export default {
 .jugador {
     color: aliceblue;
     background-color: rgb(134, 76, 191);
-    border-radius: 6px;
+    border-radius: 60ch;
     margin: 1vh;
     padding: 1vh;
     text-align: center;
     font-size: 2vh;
     font-weight: bold;
-    justify-content: space-around;
-    align-items: center;
 }
- 
-.avatar__jugadors {
-    grid-area: avatar__jugadors;
-    position: relative;
-    top: 0;
-    left: 0;
-    height: 10vh;
-    width: 10vh;
-    z-index: 0;
-    border-radius: 50%;
-    background-color: rgb(37, 7, 107, 0.8);
+
+.vida__jugadors {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ffa502;
+    align-self: center;
 }
+
 </style>

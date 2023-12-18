@@ -3,7 +3,7 @@
         <span v-for="(resposta, index) in respostes" class="dragable" :draggable="true"
             @dragstart="handleDragStart(index)">{{ resposta }}</span>
 
-        <div class="dragEnd" @dragover="handleDragOver($event)" @drop="handleDrop($event)">drop</div>
+        <div class="dragEnd" @dragover="handleDragOver($event)" @drop="handleDrop($event)">{{pregunta}}</div>
     </div>
 
 </template>
@@ -14,6 +14,10 @@ export default {
     props: {
         respostes: {
             type: Array,
+            required: true
+        },
+        pregunta: {
+            type: String,
             required: true
         }
     },
