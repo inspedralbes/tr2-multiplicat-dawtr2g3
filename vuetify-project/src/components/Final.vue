@@ -3,7 +3,7 @@
   <h1>Guanyador: {{ guanyador.nick }}</h1>
   <h2>Perdedors</h2>
   <div class="jugador" v-for="(jugador, index) in perdedors">
-    <span>Jugador: {{ jugador.nick }}</span><span>  Puntuació: {{ jugador.encertades }}</span>
+    <span>Jugador: {{ jugador.nick }}</span> <div>Temps aguantat: {{ jugador.temps % 1000 / 10 }}s</div>
   </div>
 <button @click="$router.push('/');">Tornar a jugar</button>
 </template>

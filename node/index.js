@@ -113,7 +113,7 @@ io.on('connection', (socket) => {
             "jugadors": [user],
             "arrayPreg": [],
             "preguntasMal": [],
-            "start": Date.now()
+            "start": 0
         });
         arrayRoomMinim.push({
             "id": roomID,
@@ -187,6 +187,7 @@ io.on('connection', (socket) => {
     socket.on('start', () => {
         let roomID = trobarRoom(socket);
         let arrayPreg = arrayRoom.find((room) => room.id == roomID).arrayPreg;
+        arrayRoom.start = Date.now();
         if (arrayRoom.find(room => room.id == roomID).jugadors.length >= 2) {
             io.to(roomID).emit('play', arrayPreg[0]);
             let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
@@ -236,6 +237,7 @@ io.on('connection', (socket) => {
 
         // encerta la pregunta
         if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
+            console.log("hola")
             correcte = true;
             llistatUsuaris.map((user) => {
                 if (user.idSocket == socket.id) {
@@ -255,15 +257,20 @@ io.on('connection', (socket) => {
                     }
 
                     if (!comprovarMort(user)) {
-                        if (user.encertades == 3) {
-                            user.encertades = 0;
+                        if (user.encertades % 3 == 0) {
+
                             let poder = getRandomPoder(user);
                             user.poder = poder;
                         }
+                    } else {
+                        if (user.encertades % 5 == 0) {
+
+                            let poder = getRandomPoderMort(user);
+                            user.poder = poder;
+                        }
                     }
+
                 }
-
-
             });
 
             llistatUsuaris.forEach((user) => {
@@ -541,7 +548,7 @@ function acabarPartida(socket, roomID) {
  * @param {obj} user l'usuari i per conseqüencia el quadrant al qual es troba, per saber quin poder donar-li
  * @returns el poder que li ha tocat
  */
-function getRandomPoder(user) {
+function getRandomPoder() {
     let random = Math.floor(Math.random() * 6) + 1;
     let poder = "";
     switch (random) {
@@ -561,6 +568,22 @@ function getRandomPoder(user) {
             poder = "pararTemps";
             break;
         case 6:
+            poder = "menysTemps";
+            break;
+        default:
+            break;
+    }
+    return poder;
+}
+
+function getRandomPoderMort() {
+    let random = Math.floor(Math.random() * 2) + 1;
+    let poder = "";
+    switch (random) {
+        case 1:
+            poder = "vida";
+            break;
+        case 2:
             poder = "menysTemps";
             break;
         default:
@@ -634,7 +657,7 @@ function utilitzarPoderEscut(user, userObjectiu, roomID) {
     userObjectiu.infoPoders.escut = true;
 }
 
-function comprovarMort(user, roomID) {
+function comprovarMort(user) {
     if (user.vida <= 0) {
         return true;
     } else {
