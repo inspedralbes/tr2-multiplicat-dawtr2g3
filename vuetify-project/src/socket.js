@@ -96,14 +96,16 @@ socket.on("end", (guanyador, perdedors) => {
   store.setPerdedors(perdedors);
   console.log("end");
 });
-socket.on('parar temps',() =>{
+
+socket.on('parar temps', () => {
   const store = useAppStore();
+  store.stopTimer();
   setTimeout(() => {
-    store.stopTimer();
-  }, 5000);
+    store.startTimer();
+  }, 4000);
 });
 
-socket.on('morir',() => {
+socket.on('morir', () => {
   const store = useAppStore();
   store.stopTimer();
   store.timer = 20;
