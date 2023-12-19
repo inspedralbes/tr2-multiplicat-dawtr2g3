@@ -368,9 +368,12 @@ io.on('connection', (socket) => {
                         console.log(roomID);
                         acabarPartida(socket, roomID);
                     } else {
-                        if (comprovarMort(user)) {
+                        if (comprovarMort(user) && !user.mort) {
+                            user.mort = true;
                             user.vida = 0;
-                            socket.emit('morir');
+                            socket.emit('die');
+                            user.poder = "";
+                            user.infoPoders.robarVida = 0;
                         }
                     }
                     llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
@@ -489,7 +492,8 @@ io.on('connection', (socket) => {
             });
             user.vida -= restarVidaSagnar;
             let llistatUsuarisMinim = [];
-            if (comprovarMort(user)) {
+            if (comprovarMort(user) && !user.mort) {
+                user.mort = true;
                 user.vida = 0;
                 socket.emit('die');
                 user.poder = "";
@@ -687,6 +691,7 @@ function createNewUser(idSocket, nick) {
         "temps": 0, //Es posa el temps quan mor el jugador, de base sera 0
         "falladesConsecutives": 0,
         "poder": "",
+        "mort": false,
         "infoPoders": {
             "escut": false,
             "robarVida": 0,
@@ -710,6 +715,7 @@ function createUserMinim(user) {
         "skip": user.skip,
         "falladesConsecutives": user.falladesConsecutives,
         "poder": user.poder,
+        "mort": user.mort,
         "infoPoders": {
             "escut": user.infoPoders.escut,
             "robarVida": user.infoPoders.robarVida,

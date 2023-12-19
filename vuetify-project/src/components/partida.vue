@@ -123,7 +123,8 @@ export default {
                     if (this.game.ownPlayer.poder == "menysTemps") {
                         this.game.dialog = true;
                     } else {
-                        socket.emit("use power", this.poder, objectiu);
+                        socket.emit("use power", this.game.ownPlayer.poder, objectiu);
+                        console.log("poder utilitzat");
                     }
                 }
 
