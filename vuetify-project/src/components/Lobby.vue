@@ -5,36 +5,12 @@
                 <h1 class="title-jugadors">Jugadors</h1>
                 <div class="info-sala">
                     <span class="sala-name">Sala 344</span>
-                    <p class="sala-jugadors">13/30 Jugadors</p>
+                    <p class="sala-numJugadors">13/30 Jugadors</p>
                 </div>
                 <div class="container-llista-jugadors">
                     <ul class="llista-jugadors">
-                        <li class="jugador" id="0">
-                            <span class="name-jugador">UserRandom312</span>
-                            <button class="btn-eliminar">Eliminar</button>
-                        </li>
-                        <li class="jugador" id="1">
-                            <span class="name-jugador">UserRandom312</span>
-                            <button class="btn-eliminar">Eliminar</button>
-                        </li>
-                        <li class="jugador" id="2">
-                            <span class="name-jugador">UserRandom312</span>
-                            <button class="btn-eliminar">Eliminar</button>
-                        </li>
-                        <li class="jugador" id="3">
-                            <span class="name-jugador">UserRandom312</span>
-                            <button class="btn-eliminar">Eliminar</button>
-                        </li>
-                        <li class="jugador" id="4">
-                            <span class="name-jugador">UserRandom312</span>
-                            <button class="btn-eliminar">Eliminar</button>
-                        </li>
-                        <li class="jugador" id="5">
-                            <span class="name-jugador">UserRandom312</span>
-                            <button class="btn-eliminar">Eliminar</button>
-                        </li>
-                        <li class="jugador" id="6">
-                            <span class="name-jugador">UserRandom312</span>
+                        <li class="jugador" v-for="jugador in players">
+                            <span class="name-jugador">{{ jugador.nick }}</span>
                             <button class="btn-eliminar">Eliminar</button>
                         </li>
                     </ul>
@@ -50,7 +26,8 @@
                     <input type="text" id="inputChat">
                     <button @click="enviarMissatge()">Enviar</button>
             </div> -->
-            <button v-if="$router.options.history.state.back == '/crearPartida'" @click="start">Començar partida</button>
+            <button v-if="$router.options.history.state.back == '/crearPartida'" class="btn-comencarPartida" @click="start">Iniciar partida</button>
+            <h2 v-else class="subtitle-wait">Esperant Jugadors...</h2>
         </div>
     </div>
 </template>
@@ -72,6 +49,10 @@
     /* mida del container */
     width: 40vw;
     height: 70vh;
+    /* alineació del container */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .board-llista-jugadors {
@@ -87,33 +68,41 @@
     font-family: 'Battle Beasts';
     text-align: center;
     font-size: 5vw;
+    text-shadow: -1px -1px rgb(255, 255, 255);
 }
 
 .info-sala {
     border-radius: 28px;
     background-color: rgba(232, 222, 248, 0.7);
     margin: auto;
-    width: 30vw;
+    width: 27vw;
     height: 7vh;
+
+    text-align: center;
+    text-shadow: 0.1em 0.1em 0.4em rgb(0, 0, 0);
+    color: rgba(102, 191, 57, 1);
 }
 .sala-name {
-    color: rgba(102, 191, 57, 1);
+    font-size: 1.5vw;
     display: inline-block;
+    margin-right: 3vw;
+    margin-top: 1vh;
 }
 
-.sala-jugadors {
-    color: rgba(102, 191, 57, 1);
+.sala-numJugadors {
+    font-size: 1vw;
     display: inline-block;
+    margin-left: 3vw;
+    margin-top: 1vh;
 }
 
 .container-llista-jugadors {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 25vw;
-    height: 52vh;
+    width: 27vw;
+    height: 40vh;
     overflow-y: scroll;
-    scroll-behavior: smooth;
     margin: auto;
     margin-top: 3vh;
 }
@@ -141,33 +130,45 @@
     font-size: 1.5vw;
     /* alineació */
     text-align: left;
-    margin-left: 0.7vw;
-    margin-right: 2vw;
+    margin-left: 1.2vw;
+    margin-right: 1.8vw;
 }
 
-.sala-categoria {
+.btn-eliminar {
     /* estils */
-    color: rgb(99, 99, 99);
+    color: rgba(255, 172, 0, 1);
     font-size: 1vw;
     /* alineació */
-    text-align: center;
     display: inline;
-    margin-right: 0.7vw;
+    border-radius: 50px;
+    background-color: rgba(198, 9, 41, 1);
+    padding-left: 0.5vw;
+    padding-right: 0.5vw;
+    margin-left: 2vw;
 }
 
-.sala-jugadors {
-    /* estils */
-    color: rgb(99, 99, 99);
-    font-size: 1vw;
-    /* alineació */
-    text-align: right;
-    display: inline;
-}
-
-.sala:hover {
+.jugador:hover {
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 60px;
-    cursor: pointer;
+}
+
+.btn-comencarPartida{
+    color: rgba(70, 23, 143, 1);
+    font-family: 'Battle Beasts';
+    font-size: 2vw;
+    background-color: rgba(102, 191, 57, 1);
+    border: 4px solid rgba(16, 107, 3, 1);
+    border-radius: 50px;
+    padding-left: 0.5vw;
+    padding-right: 0.5vw;
+    margin-top: 1vh;
+}
+
+.subtitle-wait{
+    color: rgba(255, 51, 85, 1);
+    font-family: 'Battle Beasts';
+    font-size: 4vw;
+    margin-top: 5vh;
 }
 </style>
 <script>
