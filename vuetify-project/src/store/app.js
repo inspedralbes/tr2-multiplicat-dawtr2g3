@@ -7,6 +7,7 @@ export const useAppStore = defineStore('app', {
       loggedIn: false,
       username: '',
       token: '',
+      verificat: false,
     },
     guanyador: {},
     perdedors: [],
@@ -46,10 +47,11 @@ export const useAppStore = defineStore('app', {
     setPartides(arrayRoom) {
       this.partides = arrayRoom;
     },
-    setLoginInfo(loggedIn, username, token) {
+    setLoginInfo(loggedIn, username, token,verificat) {
       this.loginInfo.loggedIn = loggedIn;
       this.loginInfo.username = username;
       this.loginInfo.token = token;
+      this.loginInfo.verificat = verificat;
     },
     pushChat(msg) {
       this.chat.push(msg);

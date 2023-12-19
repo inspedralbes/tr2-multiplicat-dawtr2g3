@@ -69,7 +69,7 @@ class ControllerUsuari extends Controller
         Mail::to('admin@mathroyale.daw.inspedralbes.cat')->send($mail);
 
 
-
+        unset($user->password);
         $response = [
             'user' => $user,
             'token' => $token,
