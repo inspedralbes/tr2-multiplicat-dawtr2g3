@@ -23,15 +23,15 @@ export const useAppStore = defineStore('app', {
   }),
   actions: {
     startTimer() {
-      setTimeout(() => {
-        this.timerInterval = setInterval(() => {
-          if (this.timer <= 0) {
-            socket.emit('sagnar vida');
-          } else {
-            this.timer--;
-          }
-        }, 1000);
-      }, 1000);
+      // setTimeout(() => {
+      //   this.timerInterval = setInterval(() => {
+      //     if (this.timer <= 0) {
+      //       socket.emit('sagnar vida');
+      //     } else {
+      //       this.timer--;
+      //     }
+      //   }, 1000);
+      // }, 1000);
     },
 
     stopTimer() {

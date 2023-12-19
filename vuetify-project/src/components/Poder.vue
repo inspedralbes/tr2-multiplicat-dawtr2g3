@@ -36,11 +36,9 @@ export default {
 
 <style lang="scss" scoped>
 .container__power {
-    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    bottom: 10ch;
 }
 .power {
     width: 10vw;

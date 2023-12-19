@@ -5,6 +5,7 @@
         </div>
     </div>
     <div v-else>
+        <div style="position: absolute; top: 0; left: 0;" @click="pararTemps()">stop timer</div>
         <div class="container">
             <div class="container__jugadors jugadors">
                 <div class="container__jugador jugador" v-for="jugador in game.players">
@@ -12,8 +13,9 @@
                 </div>
             </div>
             <div class="container__preguntas preguntas">
-                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta" @comprovar="(index) => answer(index)" />
-                
+                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
+                    @comprovar="(index) => answer(index)" />
+
             </div>
 
             <!-- <vue-countdown ref="timer" :time="getTemps()" :auto-start="false" :interval="100"
@@ -40,18 +42,23 @@
                     </div>
                 </div>
             </div>
-            <div class="container__usuario usuario">
-                <div class="container__avatar">
-                    <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
-                    <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
-                    <div class="barra__vida">
-                        <img :src="getHP()" alt="">{{ game.ownPlayer.vida }}
+            <div class="container__info info">
+                <div class="container__usuario usuario">
+                    <div class="container__avatar">
+                        <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
+                        <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
+                        <div class="barra__vida">
+                            <img :src="getHP()" alt="">
+                            <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="container__poder poder">
-                <button @click="skip">Skip</button>
-                <Poder :poder="game.ownPlayer.poder" />
+                <div class="container__skip">
+                    <button @click="skip">Skip</button>
+                </div>
+                <div class="container__poder poder">
+                    <Poder :poder="game.ownPlayer.poder" />
+                </div>
             </div>
         </div>
 
@@ -62,12 +69,13 @@
 .container {
     display: grid;
     grid-template-areas:
-        "jugadors preguntas preguntas"
-        "jugadors  preguntas preguntas"
-        "chat usuario poder";
-    grid-template-columns: 1fr 2fr 0.5fr;
-    grid-template-rows: 2fr 0.5fr 1.5fr;
+        "jugadors preguntas"
+
+        "chat info";
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 3fr 1.5fr;
     margin-left: 15vh;
+    width: 85vw;
 }
 
 
@@ -78,9 +86,13 @@
     background-color: rgb(37, 7, 107, 0.8);
     grid-area: jugadors;
     margin-top: 5vh;
+    border-radius: 6px;
     position: absolute;
 }
 
+
+
+//color del scroll y forma
 
 //container de las preguntas
 .container__preguntas {
@@ -119,34 +131,28 @@
     background-color: rgb(37, 7, 107, 0.8);
     position: relative;
     color: aliceblue;
-    width: 49vh;
+    width: 50vh;
     grid-area: chat;
-    margin-top: auto;
     height: 33vh;
-    top: 1vh;
     border-radius: 6px;
 }
 
 //container del usuario
 .container__usuario {
-    grid-area: usuario;
+
     background-color: rgb(37, 7, 107, 0.8);
-    margin-top: auto;
-    margin-left: auto;
-    margin-right: auto;
-    width: 73vh;
+
+    width: 62vh;
     height: 20vh;
     border-radius: 60ch;
     position: relative;
     justify-content: center;
     align-items: center;
-    bottom: 6vh;
     display: flex;
 }
 
 //container del poder
 .container__poder {
-    grid-area: poder;
     margin-top: auto;
     margin-bottom: auto;
     right: 20ch;
@@ -240,26 +246,40 @@
 .container__avatar {
     position: absolute;
     top: 0;
-    left: 7ch;
+    left: 3ch;
     right: 0;
 }
 
 .avatar {
     position: absolute;
-    top: 1vw;
+    top: 0;
     left: 0;
-    height: 15vh;
-    width: 15vh;
+    height: 19vh;
+    width: 19vh;
     z-index: 0;
 }
 
 .barra__vida {
     position: absolute;
-    top: 10vh;
-    left: 9vh;
+    top: 11vh;
+    left: 13vh;
     right: 0;
     z-index: 1;
     margin-left: -3vw;
+    margin-right: auto;
+}
+
+.numero__vida {
+    position: absolute;
+    top: 0;
+    left: 25vh;
+    right: 0;
+    font-size: 4vh;
+    font-weight: bold;
+    text-align: center;
+    color: #ffdd33;
+    z-index: 2;
+    margin-left: 3.5vw;
     margin-right: auto;
 }
 
@@ -267,11 +287,18 @@
     height: 8vh;
 }
 
+.container__info {
+    grid-area: info;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+}
+
 .nickUsuario {
     position: absolute;
     top: 3vh;
     left: 0;
-    right: 0;
+    right: 3vh;
     font-size: 4vh;
     font-weight: bold;
     text-align: center;
@@ -286,6 +313,7 @@ import Drag from "./Drag.vue";
 import Poder from "./Poder.vue";
 import { toHandlers } from 'vue';
 import JugadorPartida from './JugadorPartida.vue';
+import store from '@/store';
 export default {
     data() {
         const store = useAppStore();
@@ -321,6 +349,13 @@ export default {
             socket.emit('skip');
         },
 
+        /**
+         * Para el temps
+         */
+        pararTemps() {
+            store.stopTImer();
+
+        },
 
         /**
          * respon a la pregunta

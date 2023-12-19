@@ -1,12 +1,11 @@
 <template>
     <div class="container__jugador jugador">
         <span class="nick">{{ jugador.nick }}</span>
-        <div class="container__vidaJugadors">
-            <span class="vida__jugadors">  {{
-                jugador.vida
-            }}/100 <img :src="getHP()" alt=""></span>
+        <span class="vida__jugadors">{{ jugador.vida }}/100</span>
+        <div class="container__vida-jugadors">
+             <img :src="getHP()" alt="" class="imagen__vida">
         </div>
-        <div>{{ jugador.poder }}</div>
+        <div class="poder">{{ jugador.poder }}</div>
     </div>
 </template>
 
@@ -38,22 +37,20 @@ export default {
 
 <style lang="scss" scoped>
 .container__jugador {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    width: 50ch;
-    border-radius: 60ch;
-    margin: 1vh;
-    padding: 1vh;
-    text-align: center;
-    font-size: 2vh;
-    font-weight: bold;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 
+                "nom nom poder"
+                "vidaImg vidaImg vidaText";
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 
 
 .nick {
+    grid-area: nom;
     font-size: 1.5em;
     font-weight: bold;
     color: #ffa502;
@@ -69,13 +66,30 @@ export default {
     text-align: center;
     font-size: 2vh;
     font-weight: bold;
+    height: 12vh;
 }
 
 .vida__jugadors {
+    grid-area: vidaText;
     font-size: 1.5em;
     font-weight: bold;
     color: #ffa502;
     align-self: center;
 }
+.imagen__vida {
+    position: relative;
+    height: 6vh;
+    right: 6vh;
+}
+.container__vida-jugadors {
+    grid-area: vidaImg;
+}
 
+.poder {
+    grid-area: poder;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ffa502;
+    align-self: center;
+}
 </style>
