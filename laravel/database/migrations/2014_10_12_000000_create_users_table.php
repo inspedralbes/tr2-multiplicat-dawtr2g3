@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('mail')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('verificat')->default(false);
             $table->unsignedBigInteger('tutor')->nullable();
             $table->foreign('tutor')->references('id')->on('users')->onDelete('set null');
 

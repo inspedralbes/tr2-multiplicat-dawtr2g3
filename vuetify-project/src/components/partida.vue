@@ -62,8 +62,31 @@
                 </div>
             </div>
         </div>
-
+        <button :disabled="disabled" @click="skip">Skip</button>
+        <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
+        <p>Vida: {{ game.ownPlayer.vida }}</p>
     </div>
+    <v-row justify="center">
+        <v-dialog v-model="game.dialog" scrollable width="auto">
+            
+            <v-card>
+                <v-card-title>Escull objectiu</v-card-title>
+                <v-divider></v-divider>
+                <v-card-text style="height: 300px;">
+                    <div v-for="jugador in game.players">
+                        <v-btn v-if="jugador.idSocket != game.ownPlayer.idSocket" color="primary"
+                            @click="escollirObjectiu(jugador.idSocket)">{{ jugador.nick }}</v-btn>
+                    </div>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-btn color="blue-darken-1" variant="text" @click="game.dialog = false">
+                        Close
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </v-row>
 </template>
 <style lang="scss" scoped>
 //container de la partida
@@ -361,10 +384,14 @@ export default {
                 ownPlayer: computed(() => store.ownPlayer),
                 question: computed(() => store.question),
                 answer: computed(() => store.answer),
-                notFirstQuestion: false,
                 temps: computed(() => store.timer),
+                mort: computed(() => store.dead),
+
+                notFirstQuestion: false,
+                dialog: false,
             },
             timerInterval: null,
+            disabled: false,
 
         };
     },
@@ -374,6 +401,32 @@ export default {
 
         skip() {
             socket.emit('skip');
+            this.disabled = true;
+            setTimeout(() => {
+                this.disabled = false;
+            }, 1000);
+        },
+
+        utilitzarPoder() {
+            if (this.game.ownPlayer.poder.length > 0) {
+                let objectiu = socket.id;
+
+                if (this.game.mort) {
+                    this.game.dialog = true;
+                } else {
+                    if (this.game.ownPlayer.poder == "menysTemps") {
+                        this.game.dialog = true;
+                    } else {
+                        socket.emit("use power", this.game.ownPlayer.poder, objectiu);
+                    }
+                }
+
+            }
+        },
+
+        escollirObjectiu(id) {
+            socket.emit("use power", this.game.ownPlayer.poder, id);
+            this.game.dialog = false;
         },
 
         /**
@@ -401,7 +454,7 @@ export default {
             const store = useAppStore();
 
             var input = document.getElementById("inputChat");
-            socket.emit('enviar missatge', input.value, store.loginInfo.username);
+            socket.emit('send message', input.value, store.loginInfo.username);
             input.value = "";
         },
         getHP() {
@@ -427,11 +480,9 @@ export default {
 
         store.$subscribe((answer) => {
             if (store.getAnswer() == true) {
-                console.log("YIPPIEe");
 
 
             } else if (store.getAnswer() == false) {
-                console.log("   :(");
             }
             store.setAnswer(null);
         });

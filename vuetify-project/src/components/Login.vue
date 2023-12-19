@@ -93,8 +93,8 @@ export default {
       let response = await this.manager.login(this.nick,this.password);
 
       if(response.status == 201){
-        store.setLoginInfo(true,response.user.nom,response.token);
-        router.push('/partides');
+        store.setLoginInfo(true,response.user.nom,response.token,response.user.verificat);
+        router.push('/');
       }
       else{
         alert("Usuario o contraseña incorrectos");

@@ -65,7 +65,7 @@ io.on('connection', (socket) => {
      * Envia la llista de partides
      * @param {Array} arrayRoomMinim Array que conté la informació de les partides
      */
-    socket.emit('llista partides', arrayRoomMinim);
+    socket.emit('games list', arrayRoomMinim);
 
     /**
      * Entra a una partida
@@ -88,10 +88,10 @@ io.on('connection', (socket) => {
                 room.jugadors.push(userMinim);
             }
         });
-
+        socket.emit('info partida', arrayRoom.find((room) => room.id == roomID).nom, arrayRoom.find((room) => room.id == roomID).maxJugadors);
         let jugadorsMinim = arrayRoomMinim.find((room) => room.id == roomID).jugadors;
         io.to(roomID).emit('update players', jugadorsMinim);
-        io.emit('llista partides', arrayRoomMinim);
+        io.emit('games list', arrayRoomMinim);
     })
 
     /**
@@ -101,7 +101,7 @@ io.on('connection', (socket) => {
      * @param {string} nick Nom de l'usuari que crea la partida
      */
 
-    socket.on('crearPartida', (nom, maxJugadors, nick) => {
+    socket.on('create game', (nom, maxJugadors, nick) => {
         let roomID = "Partida" + socket.id;
         socket.join(roomID);
         let user = createNewUser(socket.id, nick)
@@ -113,7 +113,7 @@ io.on('connection', (socket) => {
             "jugadors": [user],
             "arrayPreg": [],
             "preguntasMal": [],
-            "start": Date.now()
+            "start": 0
         });
         arrayRoomMinim.push({
             "id": roomID,
@@ -123,7 +123,8 @@ io.on('connection', (socket) => {
         })
         iniciarLobby(roomID);
         io.to(socket.id).emit('update players', [userMinim]);
-        io.emit('llista partides', arrayRoomMinim);
+        socket.emit('info partida', arrayRoom.find((room) => room.id == roomID).nom, arrayRoom.find((room) => room.id == roomID).maxJugadors);
+        io.emit('games list', arrayRoomMinim);
     })
 
     /**
@@ -131,13 +132,12 @@ io.on('connection', (socket) => {
      */
     socket.on('disconnecting', () => {
         let roomID = trobarRoom(socket);
-        console.log(roomID);
 
         if (roomID != undefined) {
             let index = arrayRoom.findIndex((room) => room.id == roomID);
             if (roomID == "Partida" + socket.id && index != '-1') {
 
-                io.to(roomID).emit('lobby tencada');
+                io.to(roomID).emit('closed lobby');
                 let idOrig = socket.id;
                 let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
                 arrayRoom.splice(index, 1);
@@ -150,7 +150,7 @@ io.on('connection', (socket) => {
 
                 if (arrayRoomMinim.findIndex((room) => room.id == roomID) != undefined) {
                     arrayRoomMinim.splice(index, 1);
-                    io.emit('llista partides', arrayRoomMinim);
+                    io.emit('games list', arrayRoomMinim);
                 }
 
             } else if (index != '-1') {
@@ -169,7 +169,7 @@ io.on('connection', (socket) => {
                             room.jugadors.splice(index, 1);
                         }
                     });
-                    io.emit('llista partides', arrayRoomMinim);
+                    io.emit('games list', arrayRoomMinim);
                 }
                 let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
                 let llistatUsuarisMinim = [];
@@ -187,11 +187,12 @@ io.on('connection', (socket) => {
     socket.on('start', () => {
         let roomID = trobarRoom(socket);
         let arrayPreg = arrayRoom.find((room) => room.id == roomID).arrayPreg;
+        arrayRoom.start = Date.now();
         if (arrayRoom.find(room => room.id == roomID).jugadors.length >= 2) {
             io.to(roomID).emit('play', arrayPreg[0]);
             let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
             arrayRoomMinim.splice(index, 1);
-            io.emit('llista partides', arrayRoomMinim);
+            io.emit('games list', arrayRoomMinim);
         }
 
     });
@@ -202,7 +203,7 @@ io.on('connection', (socket) => {
      * @param {string} nick Nom de l'usuari que envia el missatge
      */
 
-    socket.on('enviar missatge', (missatge, nick) => {
+    socket.on('send message', (missatge, nick) => {
         let rooms = socket.rooms;
         let roomID;
         rooms.forEach((room) => {
@@ -255,15 +256,20 @@ io.on('connection', (socket) => {
                     }
 
                     if (!comprovarMort(user)) {
-                        if (user.encertades == 3) {
-                            user.encertades = 0;
+                        if (user.encertades % 3 == 0) {
+
                             let poder = getRandomPoder(user);
                             user.poder = poder;
                         }
+                    } else {
+                        if (user.encertades % 5 == 0) {
+
+                            let poder = getRandomPoderMort(user);
+                            user.poder = poder;
+                        }
                     }
+
                 }
-
-
             });
 
             llistatUsuaris.forEach((user) => {
@@ -278,7 +284,7 @@ io.on('connection', (socket) => {
                 }
             });
 
-
+            llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
 
             io.to(roomID).emit("update players", llistatUsuarisMinim)
 
@@ -309,8 +315,14 @@ io.on('connection', (socket) => {
                     if (user.falladesConsecutives == 3) {
                         user.preguntaActual++;
                         user.falladesConsecutives = 0;
-                        socket.emit('tres fallades');
-                        socket.emit('new question', arrayPreg[user.preguntaActual]);
+                        let preguntaEnviar = arrayPreg[user.preguntaActual];
+                        if (user.infoPoders.tempspregunta > 0) {
+                            preguntaEnviar.temps -= user.infoPoders.tempspregunta;
+                            user.infoPoders.tempspregunta = 0;
+                            socket.emit('less time');
+                            //!!!! aquest encara s'ha de fer
+                        }
+                        socket.emit('new question', preguntaEnviar);
                     }
                 }
             });
@@ -334,7 +346,6 @@ io.on('connection', (socket) => {
         socket.emit('check', correcte, acabat);
 
         if (acabat) {
-
             acabarPartida(socket, roomID);
         }
     })
@@ -354,14 +365,17 @@ io.on('connection', (socket) => {
                 } else {
                     user.vida -= -10 * user.falladesConsecutives + 30;
                     if (jugadorsVius(llistatUsuaris).length == 1) {
-                        console.log(roomID);
                         acabarPartida(socket, roomID);
                     } else {
-                        if (comprovarMort(user)) {
+                        if (comprovarMort(user) && !user.mort) {
+                            user.mort = true;
                             user.vida = 0;
-                            socket.emit('morir');
+                            socket.emit('die');
+                            user.poder = "";
+                            user.infoPoders.robarVida = 0;
                         }
                     }
+                    llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
                 }
                 user.falladesConsecutives = 0;
             }
@@ -377,8 +391,17 @@ io.on('connection', (socket) => {
             });
             let llistatUsuarisMinim = [];
             llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-            io.to(roomID).emit("update players", llistatUsuarisMinim)
-            socket.emit('new question', arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual]);
+            io.to(roomID).emit("update players", llistatUsuarisMinim);
+
+            let preguntaEnviar = arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual];
+            if (user.infoPoders.tempspregunta > 0) {
+                preguntaEnviar.temps -= user.infoPoders.tempspregunta;
+                user.infoPoders.tempspregunta = 0;
+                socket.emit('menys temps');
+            }
+
+            socket.emit('new question', preguntaEnviar);
+            //arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual]
         }
     });
 
@@ -393,10 +416,21 @@ io.on('connection', (socket) => {
             return usuari.idSocket == socket.id;
         });
 
-        socket.emit('new question', arrayPreg[user.preguntaActual]);
+        let preguntaEnviar = arrayPreg[user.preguntaActual];
+
+        if (user.infoPoders.tempspregunta > 0) {
+            preguntaEnviar.temps -= user.infoPoders.tempspregunta;
+            user.infoPoders.tempspregunta = 0;
+            socket.emit('menys temps');
+        }
+
+        socket.emit('new question', preguntaEnviar);
     })
 
-    socket.on('utilitzar poder', (poder, objectiu) => {
+    /**
+     * utilitza el poder que té l'usuari
+     */
+    socket.on('use power', (poder, objectiu) => {
         let rooms = socket.rooms;
         let roomID;
         rooms.forEach((room) => {
@@ -409,33 +443,39 @@ io.on('connection', (socket) => {
         let userObjectiu = llistatUsuaris.find((usuari) => {
             return usuari.idSocket == objectiu;
         });
-        switch (poder) {
-            case "salt":
-                utilitzarPoderSalt(user, userObjectiu, roomID);
 
-                break;
-            case "vida":
-                utilizarPoderVida(user, userObjectiu, roomID);
-                break;
-            case "escut":
-                utilitzarPoderEscut(user, userObjectiu, roomID);
-                break;
-            case "robarVida":
-                utilitzarPoderRobarVida(user, userObjectiu, roomID);
-                break;
-            case "pararTemps":
-                utilitzarPoderPararTemps(user, socket);
-                break;
-            default:
-                break;
+        if (user.poder == poder) {
+            switch (poder) {
+                case "salt":
+                    utilitzarPoderSalt(user, userObjectiu, roomID);
+
+                    break;
+                case "vida":
+                    utilizarPoderVida(user, llistatUsuaris);
+                    break;
+                case "escut":
+                    utilitzarPoderEscut(user, userObjectiu, roomID);
+                    break;
+                case "robarVida":
+                    utilitzarPoderRobarVida(user, userObjectiu, roomID);
+                    break;
+                case "pararTemps":
+                    utilitzarPoderPararTemps(socket);
+                    break;
+                case "menysTemps":
+                    utilitzarPoderMenysTemps(user, userObjectiu, roomID);
+                    break;
+                default:
+                    break;
+            }
+            user.poder = "";
+            let llistatUsuarisMinim = [];
+            llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+            io.to(roomID).emit("update players", llistatUsuarisMinim)
         }
-        user.poder = "";
-        let llistatUsuarisMinim = [];
-        llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-        io.to(roomID).emit("update players", llistatUsuarisMinim)
     })
 
-    socket.on('sagnar vida', () => {
+    socket.on('bleed', () => {
         let roomID = trobarRoom(socket);
         let room = arrayRoom.find((room) => room.id == roomID);
         let llistatUsuaris = undefined;
@@ -448,13 +488,17 @@ io.on('connection', (socket) => {
             });
             user.vida -= restarVidaSagnar;
             let llistatUsuarisMinim = [];
-            if (comprovarMort(user)) {
+            if (comprovarMort(user) && !user.mort) {
+                user.mort = true;
                 user.vida = 0;
-                socket.emit('morir');
+                socket.emit('die');
+                user.poder = "";
+                user.infoPoders.robarVida = 0;
             }
             if (jugadorsVius(llistatUsuaris).length == 1) {
                 acabarPartida(socket, roomID);
             }
+            llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
             llistatUsuarisMinim = llistaMinim(llistatUsuaris);
             io.to(roomID).emit("update players", llistatUsuarisMinim)
         }
@@ -508,8 +552,8 @@ function acabarPartida(socket, roomID) {
  * @param {obj} user l'usuari i per conseqüencia el quadrant al qual es troba, per saber quin poder donar-li
  * @returns el poder que li ha tocat
  */
-function getRandomPoder(user) {
-    let random = Math.floor(Math.random() * 4) + 1;
+function getRandomPoder() {
+    let random = Math.floor(Math.random() * 6) + 1;
     let poder = "";
     switch (random) {
         case 1:
@@ -527,16 +571,58 @@ function getRandomPoder(user) {
         case 5:
             poder = "pararTemps";
             break;
+        case 6:
+            poder = "menysTemps";
+            break;
         default:
             break;
     }
     return poder;
 }
 
-function utilitzarPoderPararTemps(user, userObjectiu, roomID) {
+function getRandomPoderMort() {
+    let random = Math.floor(Math.random() * 2) + 1;
+    let poder = "";
+    switch (random) {
+        case 1:
+            poder = "vida";
+            break;
+        case 2:
+            poder = "menysTemps";
+            break;
+        default:
+            break;
+    }
+    return poder;
+}
+
+/**
+ * utilitza el poder de redüir el temps d'una pregunta a un enemic
+ * @param {obj} user  l'usuari que utilitza el poder
+ * @param {obj} userObjectiu  l'usuari que rep el poder
+ * @param {*} roomID  identificador de la sala
+ */
+
+function utilitzarPoderMenysTemps(user, userObjectiu, roomID) {
+
+    userObjectiu.infoPoders.tempspregunta += 5;
+}
+/**
+ * Utilitza el poder de parar temps
+ * @param {obj} user l'usuari que utilitza el poder
+ * @param {obj} userObjectiu l'usuari que rep el poder
+ * @param {int} roomID identificador de la sala
+*/
+function utilitzarPoderPararTemps(socket) {
     socket.emit('parar temps');
 }
 
+/**
+ * Utilitza el poder de robar vida
+ * @param {obj} user l'usuari que utilitza el poder
+ * @param {obj} userObjectiu l'usuari que rep el poder
+ * @param {int} roomID identificador de la sala
+*/
 function utilitzarPoderRobarVida(user, userObjectiu, roomID) {
     user.infoPoders.robarVida = 3;
 }
@@ -544,26 +630,24 @@ function utilitzarPoderRobarVida(user, userObjectiu, roomID) {
 /**
  * Utilitza el poder d'aconseguir un salt
  * @param {obj} user l'usuari que utilitza el poder
- * @param {obj} userObjectiu l'usuari que rep el poder
- * @param {int} roomID identificador de la sala
  */
 
-function utilitzarPoderSalt(user, userObjectiu, roomID) {
+function utilitzarPoderSalt(user) {
     user.skip++;
 }
 
 /**
  * Utilitza el poder de recuperar vida
  * @param {obj} user l'usuari que utilitza el poder
- * @param {obj} userObjectiu l'usuari que rep el poder
- * @param {int} roomID identificador de la sala
+ * @param {Array} llistatUsuaris llista de tots els usuaris de la partida
  */
 
-function utilizarPoderVida(user, userObjectiu, roomID) {
-    userObjectiu.vida += 20;
-    if (userObjectiu.vida > 100) {
-        userObjectiu.vida = 100;
+function utilizarPoderVida(user, llistatUsuaris) {
+    user.vida += 15;
+    if (user.vida > 100) {
+        user.vida = 100;
     }
+    llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
 }
 
 /**
@@ -577,7 +661,7 @@ function utilitzarPoderEscut(user, userObjectiu, roomID) {
     userObjectiu.infoPoders.escut = true;
 }
 
-function comprovarMort(user, roomID) {
+function comprovarMort(user) {
     if (user.vida <= 0) {
         return true;
     } else {
@@ -603,10 +687,11 @@ function createNewUser(idSocket, nick) {
         "temps": 0, //Es posa el temps quan mor el jugador, de base sera 0
         "falladesConsecutives": 0,
         "poder": "",
+        "mort": false,
         "infoPoders": {
             "escut": false,
             "robarVida": 0,
-
+            "tempspregunta": 0,
         }
     }
     return user;
@@ -626,9 +711,11 @@ function createUserMinim(user) {
         "skip": user.skip,
         "falladesConsecutives": user.falladesConsecutives,
         "poder": user.poder,
+        "mort": user.mort,
         "infoPoders": {
             "escut": user.infoPoders.escut,
             "robarVida": user.infoPoders.robarVida,
+            "tempspregunta": user.infoPoders.tempspregunta,
         }
 
     }

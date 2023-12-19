@@ -18,7 +18,7 @@ export const socket = io(URL, {
 /**
  * Guarda la llista de partides
  */
-socket.on("llista partides", (arrayRoom) => {
+socket.on("games list", (arrayRoom) => {
   const store = useAppStore();
   store.setPartides(arrayRoom);
 
@@ -43,7 +43,7 @@ socket.on("update chat", (msg) => {
 /**
  * Mou a la pantalla de la partida
  */
-socket.on("lobby tencada", () => {
+socket.on("closed lobby", () => {
   const store = useAppStore();
   router.push('/partides');
   store.stopTimer();
@@ -53,7 +53,7 @@ socket.on("lobby tencada", () => {
  * Guarda la pregunta
  */
 socket.on("new question", (question) => {
-  console.log(question);
+
   const store = useAppStore();
   store.stopTimer();
   store.setQuestion(question);
@@ -68,8 +68,7 @@ socket.on("new question", (question) => {
 socket.on("check", (correcte, acabat) => {
   const store = useAppStore();
   store.setAnswer(correcte);
-  console.log("correcte", correcte);
-  console.log("acabat", acabat);
+
   store.setAnswer(correcte);
   if (!acabat && correcte) {
     socket.emit("send");
@@ -89,12 +88,10 @@ socket.on("end", (guanyador, perdedors) => {
   const store = useAppStore();
   store.stopTimer();
   store.timer = 20;
-  console.log("guanyador", guanyador);
-  console.log("perdedors", perdedors);
+
   store.setQuestionIndex(-1);
   store.setGuanyador(guanyador);
   store.setPerdedors(perdedors);
-  console.log("end");
 });
 
 socket.on('parar temps', () => {
@@ -105,12 +102,19 @@ socket.on('parar temps', () => {
   }, 4000);
 });
 
-socket.on('morir', () => {
+socket.on('die', () => {
   const store = useAppStore();
   store.stopTimer();
   store.timer = 20;
+  store.playerDead();
   alert("Has mort");
 });
+
+socket.on('info partida', (nom, maxJugadors) =>{
+  const store = useAppStore();
+  console.log(nom,maxJugadors);
+  store.setInfoPartida(nom,maxJugadors);
+})
 
 /**
  * Mou a la pantalla de la partida

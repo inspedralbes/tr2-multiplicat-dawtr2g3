@@ -7,11 +7,14 @@ export const useAppStore = defineStore('app', {
       loggedIn: false,
       username: '',
       token: '',
+      verificat: false,
     },
     guanyador: {},
     perdedors: [],
     partides: [],
     chat: [],
+    nomPartida: '',
+    maxJugadors: 0,
     players: [],
     ownPlayer: [],
     question: null,
@@ -19,19 +22,24 @@ export const useAppStore = defineStore('app', {
     timer: 20,
     questionIndex: -1,
     timerInterval: null,
+    dead: false,
 
   }),
   actions: {
+    setInfoPartida(nom, maxJugadors) {
+      this.nomPartida = nom;
+      this.maxJugadors = maxJugadors;
+    },
     startTimer() {
-      // setTimeout(() => {
-      //   this.timerInterval = setInterval(() => {
-      //     if (this.timer <= 0) {
-      //       socket.emit('sagnar vida');
-      //     } else {
-      //       this.timer--;
-      //     }
-      //   }, 1000);
-      // }, 1000);
+      setTimeout(() => {
+        this.timerInterval = setInterval(() => {
+          if (this.timer <= 0) {
+            socket.emit('bleed');
+          } else {
+            this.timer--;
+          }
+        }, 1000);
+      }, 1000);
     },
 
     stopTimer() {
@@ -46,10 +54,11 @@ export const useAppStore = defineStore('app', {
     setPartides(arrayRoom) {
       this.partides = arrayRoom;
     },
-    setLoginInfo(loggedIn, username, token) {
+    setLoginInfo(loggedIn, username, token,verificat) {
       this.loginInfo.loggedIn = loggedIn;
       this.loginInfo.username = username;
       this.loginInfo.token = token;
+      this.loginInfo.verificat = verificat;
     },
     pushChat(msg) {
       this.chat.push(msg);
@@ -104,6 +113,9 @@ export const useAppStore = defineStore('app', {
     },
     getLoginInfo() {
       return this.loginInfo;
-    }
+    },
+    playerDead() {
+      this.dead = true;
+    },
   },
 })

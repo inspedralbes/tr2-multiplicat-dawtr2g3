@@ -221,7 +221,7 @@ export default {
 
         crear() {
             const store = useAppStore();
-            socket.emit('crearPartida', this.nom, this.maxJugadors, store.loginInfo.username);
+            socket.emit('create game', this.nom, this.maxJugadors, store.loginInfo.username);
             this.$router.push('/lobby');
         }
     },

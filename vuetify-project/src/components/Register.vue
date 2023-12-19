@@ -66,6 +66,7 @@ export default {
     first: null,
     last: null,
     email: null,
+    nom: null,
     password: null,
     password_confirmation: null,
     terms: false,
@@ -77,10 +78,9 @@ export default {
       const store = useAppStore();
       console.log(this.nom,this.email,this.password,this.password_confirmation);
       let response = await this.manager.register(this.nom,this.email,this.password,this.password_confirmation);
-      console.log(response);
       if(response.status == 201){
-        store.setLoginInfo(true,response.user.nom,response.token);
-        router.push('/partides');
+        store.setLoginInfo(true,response.user.nom,response.token,response.user.verificat);
+        router.push('/');
       }
       else{
         alert(response.missatge);

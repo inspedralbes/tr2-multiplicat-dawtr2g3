@@ -13,30 +13,25 @@
 <script>
 import { socket } from '../socket';
 
-export default {
-    name: "Poder",
-    props: {
-        poder: {
-            type: String,
-            required: true
-        }
-    },
-    data() {
-        return {
-            
-        };
-    },
-    methods: {
-        utilitzarPoder() {
-            if (this.poder.length > 0) {
-                console.log("si tens poder");
-                socket.emit("utilitzar poder", this.poder, socket.id);
-                this.showModal = true;
-            } else {
-                console.log("No tens poder");
+    export default {
+        name: "Poder",
+        props: {
+            poder: {
+                type: String,
+                required: true
             }
         },
-    },
+        data() {
+            return {
+
+            };
+        },
+        methods: {
+            utilitzarPoder() {
+                this.$emit('utilitzarPoder');
+            }
+        },
+    }
 }
 </script>
 

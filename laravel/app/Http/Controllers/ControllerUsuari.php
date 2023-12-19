@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Verificacio;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
 class ControllerUsuari extends Controller
 {
     public function register(Request $request)
@@ -20,7 +21,6 @@ class ControllerUsuari extends Controller
             return response($response,399);
         }
         $validator = Validator::make($request->all(), [
-            'nom' => 'required|string|unique:users,nom',
             'password' => 'required|string|confirmed'
         ]);
         //La contrasenya i la confirmació no coincideixen
@@ -31,7 +31,7 @@ class ControllerUsuari extends Controller
             ];
             return response($response,399);
         }
-
+        
         $validator = Validator::make($request->all(), [
             'mail' => 'required|string|unique:users,mail',
         ]);
@@ -44,7 +44,7 @@ class ControllerUsuari extends Controller
             ];
             return response($response,340);
         }
-
+        
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|unique:users,nom',
         ]);
@@ -65,7 +65,11 @@ class ControllerUsuari extends Controller
         ]);
 
         $token = $user->createToken('myapptoken')->plainTextToken;
+        $mail = new Verificacio($user);
+        Mail::to('admin@mathroyale.daw.inspedralbes.cat')->send($mail);
 
+
+        unset($user->password);
         $response = [
             'user' => $user,
             'token' => $token,
