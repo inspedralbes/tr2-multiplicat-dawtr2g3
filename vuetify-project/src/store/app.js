@@ -19,6 +19,7 @@ export const useAppStore = defineStore('app', {
     timer: 20,
     questionIndex: -1,
     timerInterval: null,
+    dead: false,
 
   }),
   actions: {
@@ -26,7 +27,7 @@ export const useAppStore = defineStore('app', {
       setTimeout(() => {
         this.timerInterval = setInterval(() => {
           if (this.timer <= 0) {
-            socket.emit('sagnar vida');
+            socket.emit('bleed');
           } else {
             this.timer--;
           }
@@ -104,6 +105,9 @@ export const useAppStore = defineStore('app', {
     },
     getLoginInfo() {
       return this.loginInfo;
-    }
+    },
+    playerDead() {
+      this.dead = true;
+    },
   },
 })

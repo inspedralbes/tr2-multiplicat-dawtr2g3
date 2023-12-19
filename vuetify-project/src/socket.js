@@ -18,7 +18,7 @@ export const socket = io(URL, {
 /**
  * Guarda la llista de partides
  */
-socket.on("llista partides", (arrayRoom) => {
+socket.on("games list", (arrayRoom) => {
   const store = useAppStore();
   store.setPartides(arrayRoom);
 
@@ -43,7 +43,7 @@ socket.on("update chat", (msg) => {
 /**
  * Mou a la pantalla de la partida
  */
-socket.on("lobby tencada", () => {
+socket.on("closed lobby", () => {
   const store = useAppStore();
   router.push('/partides');
   store.stopTimer();
@@ -105,10 +105,11 @@ socket.on('parar temps', () => {
   }, 4000);
 });
 
-socket.on('morir', () => {
+socket.on('die', () => {
   const store = useAppStore();
   store.stopTimer();
   store.timer = 20;
+  store.playerDead();
   alert("Has mort");
 });
 

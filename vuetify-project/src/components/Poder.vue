@@ -23,10 +23,7 @@ import { socket } from '../socket';
         methods: {
             utilitzarPoder() {
                 if (this.poder.length > 0) {
-                    console.log("si tens poder");
-                    socket.emit("utilitzar poder", this.poder, socket.id);
-                } else {
-                    console.log("No tens poder");
+                    socket.emit("use power", this.poder, socket.id);
                 }
             }
         },

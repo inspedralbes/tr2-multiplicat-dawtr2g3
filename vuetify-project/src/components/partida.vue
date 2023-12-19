@@ -106,7 +106,7 @@ export default {
             const store = useAppStore();
 
             var input = document.getElementById("inputChat");
-            socket.emit('enviar missatge', input.value, store.loginInfo.username);
+            socket.emit('send message', input.value, store.loginInfo.username);
             input.value = "";
         }
     },
