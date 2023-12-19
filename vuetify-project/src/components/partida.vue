@@ -124,7 +124,6 @@ export default {
                         this.game.dialog = true;
                     } else {
                         socket.emit("use power", this.game.ownPlayer.poder, objectiu);
-                        console.log("poder utilitzat");
                     }
                 }
 
@@ -166,10 +165,8 @@ export default {
 
         store.$subscribe((answer) => {
             if (store.getAnswer() == true) {
-                console.log("YIPPIEe");
 
             } else if (store.getAnswer() == false) {
-                console.log("   :(");
             }
             store.setAnswer(null);
         });

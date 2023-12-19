@@ -131,7 +131,6 @@ io.on('connection', (socket) => {
      */
     socket.on('disconnecting', () => {
         let roomID = trobarRoom(socket);
-        console.log(roomID);
 
         if (roomID != undefined) {
             let index = arrayRoom.findIndex((room) => room.id == roomID);
@@ -365,7 +364,6 @@ io.on('connection', (socket) => {
                 } else {
                     user.vida -= -10 * user.falladesConsecutives + 30;
                     if (jugadorsVius(llistatUsuaris).length == 1) {
-                        console.log(roomID);
                         acabarPartida(socket, roomID);
                     } else {
                         if (comprovarMort(user) && !user.mort) {
@@ -444,10 +442,7 @@ io.on('connection', (socket) => {
         let userObjectiu = llistatUsuaris.find((usuari) => {
             return usuari.idSocket == objectiu;
         });
-        console.log(userObjectiu);
-        console.log(user);
-        console.log(poder);
-        console.log(poder == user.poder);
+
         if (user.poder == poder) {
             switch (poder) {
                 case "salt":

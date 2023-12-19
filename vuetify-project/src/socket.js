@@ -53,7 +53,7 @@ socket.on("closed lobby", () => {
  * Guarda la pregunta
  */
 socket.on("new question", (question) => {
-  console.log(question);
+
   const store = useAppStore();
   store.stopTimer();
   store.setQuestion(question);
@@ -68,8 +68,7 @@ socket.on("new question", (question) => {
 socket.on("check", (correcte, acabat) => {
   const store = useAppStore();
   store.setAnswer(correcte);
-  console.log("correcte", correcte);
-  console.log("acabat", acabat);
+
   store.setAnswer(correcte);
   if (!acabat && correcte) {
     socket.emit("send");
@@ -89,12 +88,10 @@ socket.on("end", (guanyador, perdedors) => {
   const store = useAppStore();
   store.stopTimer();
   store.timer = 20;
-  console.log("guanyador", guanyador);
-  console.log("perdedors", perdedors);
+
   store.setQuestionIndex(-1);
   store.setGuanyador(guanyador);
   store.setPerdedors(perdedors);
-  console.log("end");
 });
 
 socket.on('parar temps', () => {
