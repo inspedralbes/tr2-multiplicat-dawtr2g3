@@ -40,7 +40,7 @@
                 <button @click="enviarMissatge()">Enviar</button>
             </div>
         </div>
-        <button @click="skip">Skip</button>
+        <button :disabled="disabled" @click="skip">Skip</button>
         <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
         <p>Vida: {{ game.ownPlayer.vida }}</p>
     </div>
@@ -102,6 +102,7 @@ export default {
                 dialog: false,
             },
             timerInterval: null,
+            disabled: false,
 
         };
     },
@@ -111,6 +112,10 @@ export default {
 
         skip() {
             socket.emit('skip');
+            this.disabled = true;
+            setTimeout(() => {
+                this.disabled = false;
+            }, 1000);
         },
 
         utilitzarPoder() {
