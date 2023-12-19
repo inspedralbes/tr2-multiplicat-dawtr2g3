@@ -488,6 +488,8 @@ io.on('connection', (socket) => {
             if (comprovarMort(user)) {
                 user.vida = 0;
                 socket.emit('die');
+                user.poder = "";
+                user.infoPoders.robarVida = 0;
             }
             if (jugadorsVius(llistatUsuaris).length == 1) {
                 acabarPartida(socket, roomID);
