@@ -88,7 +88,7 @@ io.on('connection', (socket) => {
                 room.jugadors.push(userMinim);
             }
         });
-
+        socket.emit('info partida', arrayRoom.find((room) => room.id == roomID).nom, arrayRoom.find((room) => room.id == roomID).maxJugadors);
         let jugadorsMinim = arrayRoomMinim.find((room) => room.id == roomID).jugadors;
         io.to(roomID).emit('update players', jugadorsMinim);
         io.emit('games list', arrayRoomMinim);
@@ -123,6 +123,7 @@ io.on('connection', (socket) => {
         })
         iniciarLobby(roomID);
         io.to(socket.id).emit('update players', [userMinim]);
+        socket.emit('info partida', arrayRoom.find((room) => room.id == roomID).nom, arrayRoom.find((room) => room.id == roomID).maxJugadors);
         io.emit('games list', arrayRoomMinim);
     })
 

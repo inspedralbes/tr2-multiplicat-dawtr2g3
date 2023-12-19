@@ -4,28 +4,20 @@
             <div class="board-llista-jugadors">
                 <h1 class="title-jugadors">Jugadors</h1>
                 <div class="info-sala">
-                    <span class="sala-name">Sala 344</span>
-                    <p class="sala-numJugadors">13/30 Jugadors</p>
+                    <span class="sala-name">{{this.nomPartida }}</span>
+                    <p class="sala-numJugadors">{{ this.players.length }}/{{this.jugadorsMax}} Jugadors</p>
                 </div>
                 <div class="container-llista-jugadors">
                     <ul class="llista-jugadors">
                         <li class="jugador" v-for="jugador in players">
                             <span class="name-jugador">{{ jugador.nick }}</span>
-                            <button class="btn-eliminar">Eliminar</button>
+                           <!--  <button class="btn-eliminar">Eliminar</button> -->
                         </li>
                     </ul>
                 </div>
-                <!-- <div class="jugador" v-for="jugador in players">
-                    {{ jugador.nick }}
-                </div> -->
+             
             </div>
-            <!-- <div class="chat">
-                    <div class="missatge" v-for="missatge in chat">
-                        <span>{{ missatge.nick  }}</span>:<span>  {{ missatge.msg  }}</span>
-                    </div>
-                    <input type="text" id="inputChat">
-                    <button @click="enviarMissatge()">Enviar</button>
-            </div> -->
+            
             <button v-if="$router.options.history.state.back == '/crearPartida'" class="btn-comencarPartida" @click="start">Iniciar partida</button>
             <h2 v-else class="subtitle-wait">Esperant Jugadors...</h2>
         </div>
@@ -183,6 +175,8 @@ export default {
         return {
             players: computed(() => store.players),
             chat: computed(() => store.chat),
+            nomPartida: computed(() => store.nomPartida),
+            jugadorsMax: computed(() => store.maxJugadors),
         };
     },
     methods: {

@@ -110,6 +110,12 @@ socket.on('die', () => {
   alert("Has mort");
 });
 
+socket.on('info partida', (nom, maxJugadors) =>{
+  const store = useAppStore();
+  console.log(nom,maxJugadors);
+  store.setInfoPartida(nom,maxJugadors);
+})
+
 /**
  * Mou a la pantalla de la partida
  */

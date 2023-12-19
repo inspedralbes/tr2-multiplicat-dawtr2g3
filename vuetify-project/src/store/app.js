@@ -13,6 +13,8 @@ export const useAppStore = defineStore('app', {
     perdedors: [],
     partides: [],
     chat: [],
+    nomPartida: '',
+    maxJugadors: 0,
     players: [],
     ownPlayer: [],
     question: null,
@@ -24,6 +26,10 @@ export const useAppStore = defineStore('app', {
 
   }),
   actions: {
+    setInfoPartida(nom, maxJugadors) {
+      this.nomPartida = nom;
+      this.maxJugadors = maxJugadors;
+    },
     startTimer() {
       setTimeout(() => {
         this.timerInterval = setInterval(() => {
