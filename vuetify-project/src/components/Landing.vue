@@ -152,7 +152,8 @@ import { socket } from '../socket';
 import { useAppStore } from '@/store/app';
 import router from '@/router'
 import { computed } from 'vue';
-
+import Toastify from 'toastify-js';
+import { resolveDirective } from 'vue';
 export default {
   data() {
     const store = useAppStore();
@@ -176,17 +177,41 @@ export default {
 
     },
     crear() {
-      const store = useAppStore();
-      store.setNick(this.nom);
-      router.push('/crearPartida')
+      let error = false;
+      if (this.loginInfo.loggedIn == false) {
+        error = true
+        
+      } else {
+        if (!this.loginInfo.verificat) {
+          error = true;
+          
+        }
+      }
+      if (!error) {
+        const store = useAppStore();
+        store.setNick(this.nom);
+        router.push('/crearPartida')
+      }
     },
     verificat() {
       console.log(this.loginInfo.verificat);
       if (this.loginInfo.loggedIn == false) {
-        alert("No estas logejat");
+        Toastify({
+
+          text: "No estas logejat",
+          backgroundColor: '#FC1A1A',
+          duration: 3000
+
+        }).showToast();
       } else {
         if (!this.loginInfo.verificat) {
-          alert("Nomes comptes verificades poden crear partides");
+          Toastify({
+
+            text: "Nomes comptes verificades poden crear partides",
+            backgroundColor: '#FC1A1A',
+            duration: 3000
+
+          }).showToast();
         }
       }
     },

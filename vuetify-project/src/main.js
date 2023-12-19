@@ -10,6 +10,8 @@ import { registerPlugins } from '@/plugins'
 // Components
 import App from './App.vue'
 import VueCountdown from '@chenfengyuan/vue-countdown';
+import Toastify from 'toastify-js'
+
 
 // Composables
 import { createApp } from 'vue'
@@ -21,3 +23,4 @@ registerPlugins(app)
 app.component(VueCountdown.name, VueCountdown);
 
 app.mount('#app')
+app.use(Toastify);
