@@ -22,9 +22,7 @@ import { socket } from '../socket';
         },
         methods: {
             utilitzarPoder() {
-                if (this.poder.length > 0) {
-                    socket.emit("use power", this.poder, socket.id);
-                }
+                this.$emit('utilitzarPoder');
             }
         },
     }

@@ -441,6 +441,10 @@ io.on('connection', (socket) => {
         let userObjectiu = llistatUsuaris.find((usuari) => {
             return usuari.idSocket == objectiu;
         });
+        console.log(userObjectiu);
+        console.log(user);
+        console.log(poder);
+        console.log(poder == user.poder);
         if (user.poder == poder) {
             switch (poder) {
                 case "salt":

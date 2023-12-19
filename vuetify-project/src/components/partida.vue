@@ -41,9 +41,30 @@
             </div>
         </div>
         <button @click="skip">Skip</button>
-        <Poder :poder="game.ownPlayer.poder" />
+        <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
         <p>Vida: {{ game.ownPlayer.vida }}</p>
     </div>
+    <v-row justify="center">
+        <v-dialog v-model="game.dialog" scrollable width="auto">
+            
+            <v-card>
+                <v-card-title>Escull objectiu</v-card-title>
+                <v-divider></v-divider>
+                <v-card-text style="height: 300px;">
+                    <div v-for="jugador in game.players">
+                        <v-btn v-if="jugador.idSocket != game.ownPlayer.idSocket" color="primary"
+                            @click="escollirObjectiu(jugador.idSocket)">{{ jugador.nick }}</v-btn>
+                    </div>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-btn color="blue-darken-1" variant="text" @click="game.dialog = false">
+                        Close
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </v-row>
 </template>
 
 <script>
@@ -74,8 +95,11 @@ export default {
                 ownPlayer: computed(() => store.ownPlayer),
                 question: computed(() => store.question),
                 answer: computed(() => store.answer),
-                notFirstQuestion: false,
                 temps: computed(() => store.timer),
+                mort: computed(() => store.dead),
+
+                notFirstQuestion: false,
+                dialog: false,
             },
             timerInterval: null,
 
@@ -87,6 +111,28 @@ export default {
 
         skip() {
             socket.emit('skip');
+        },
+
+        utilitzarPoder() {
+            if (this.game.ownPlayer.poder.length > 0) {
+                let objectiu = socket.id;
+
+                if (this.game.mort) {
+                    this.game.dialog = true;
+                } else {
+                    if (this.game.ownPlayer.poder == "menysTemps") {
+                        this.game.dialog = true;
+                    } else {
+                        socket.emit("use power", this.poder, objectiu);
+                    }
+                }
+
+            }
+        },
+
+        escollirObjectiu(id) {
+            socket.emit("use power", this.game.ownPlayer.poder, id);
+            this.game.dialog = false;
         },
 
         /**
@@ -126,7 +172,7 @@ export default {
             }
             store.setAnswer(null);
         });
-       
+
 
 
     },
