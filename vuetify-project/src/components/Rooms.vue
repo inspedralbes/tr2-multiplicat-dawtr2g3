@@ -4,51 +4,18 @@
             <div class="board-llista-salas">
                 <h1 class="llista-salas-title">Escull Una Sala per Jugar...</h1>
                 <div class="container-llista-salas">
-                    <ul class="llista-salas">
-                        <li class="sala" id="0">
-                            <span class="sala-name">Sala 346</span>
-                            <!-- <p class="sala-categoria">Multiplicacions</p> -->
-                            <p class="sala-jugadors">2/4 Jugadors</p>
-                        </li>
-                        <li class="sala" id="1">
-                            <span class="sala-name">Sala 346</span>
-                            <p class="sala-categoria">Multiplicacions</p>
-                            <p class="sala-jugadors">2/4 Jugadors</p>
-                        </li>
-                        <li class="sala" id="2">
-                            <span class="sala-name">Sala 346</span>
-                            <p class="sala-categoria">Multiplicacions</p>
-                            <p class="sala-jugadors">2/4 Jugadors</p>
-                        </li>
-                        <li class="sala" id="3">
-                            <span class="sala-name">Sala 346</span>
-                            <p class="sala-categoria">Multiplicacions</p>
-                            <p class="sala-jugadors">2/4 Jugadors</p>
-                        </li>
-                        <li class="sala" id="4">
-                            <span class="sala-name">Sala 346</span>
-                            <p class="sala-categoria">Multiplicacions</p>
-                            <p class="sala-jugadors">2/4 Jugadors</p>
-                        </li>
-                        <li class="sala" id="5">
-                            <span class="sala-name">Sala 346</span>
-                            <p class="sala-categoria">Multiplicacions</p>
-                            <p class="sala-jugadors">2/4 Jugadors</p>
-                        </li>
-                        <li class="sala" id="6">
-                            <span class="sala-name">Sala 346</span>
-                            <p class="sala-categoria">Multiplicacions</p>
-                            <p class="sala-jugadors">2/4 Jugadors</p>
-                        </li>
-                    </ul>
+                    
+                
+                <ul class="llista-salas" v-for="partida in partides">
+                    <li class="sala" @click="marcar(partida.id)" :id="partida.id">
+                        <span class="sala-name">{{partida.nom}}</span>
+                        <p class="sala-jugadors">{{ partida.jugadors.length }} / {{ partida.maxJugadors }} Jugadors</p>
+                    </li>
+                </ul>
                 </div>
-                <!-- <div class="partida" v-for="partida in partides">
-                        <h2 class="partida__nom">{{ partida.nom }}</h2>
-                        <p class="partida__jugadors">{{ partida.jugadors.length }} / {{ partida.maxJugadors }}</p>
-                        <button @click="join(partida.id)">Entrar</button>
-                    </div> -->
+                <button class="button-jugarPartida-background button-jugarPartida" v-if="this.idPartida != null" @click="join()">Jugar</button>
+                
             </div>
-            <button class="button-jugarPartida-background button-jugarPartida" @click="join(id)">Jugar</button>
         </div>
     </div>
 </template>
@@ -57,7 +24,7 @@
     width: 100vw;
     height: 100vh;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
@@ -173,6 +140,10 @@
     position: relative;
     z-index: 1;
 }
+.marcat{
+    background-color: rgba(255, 255, 255, 0.7);
+
+}
 </style>
 <script>
 // import { useAppStore } from "../stores/app.js";
@@ -188,12 +159,21 @@ export default {
             players: computed(() => store.players),
             chat: computed(() => store.chat),
             partides: computed(() => store.partides),
+            idPartida: null,
         };
     },
     methods: {
-        join(id) {
+        marcar(id){
+            if(this.idPartida != null){
+
+                document.getElementById(this.idPartida).classList.remove("marcat");
+            }
+            this.idPartida = id;
+            document.getElementById(id).classList.add("marcat");
+        },
+        join() {
             const store = useAppStore();
-            socket.emit('join', id, store.loginInfo.username);
+            socket.emit('join', this.idPartida, store.loginInfo.username);
             this.$router.push('/lobby');
         }
     },

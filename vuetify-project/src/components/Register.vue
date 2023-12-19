@@ -13,7 +13,7 @@
             variant="solo"></v-text-field>
 
           <div class="button-box">
-            <v-btn color="#33cccc">Registrar-se</v-btn>
+            <v-btn color="#33cccc" @click="submit">Registrar-se</v-btn>
           </div>
         </v-container>
       </v-card>
@@ -66,6 +66,7 @@ export default {
     first: null,
     last: null,
     email: null,
+    nom: null,
     password: null,
     password_confirmation: null,
     terms: false,
@@ -80,7 +81,7 @@ export default {
       console.log(response);
       if(response.status == 201){
         store.setLoginInfo(true,response.user.nom,response.token);
-        router.push('/partides');
+        router.push('/');
       }
       else{
         alert(response.missatge);
