@@ -30,9 +30,8 @@ import { socket } from '../socket';
             utilitzarPoder() {
                 this.$emit('utilitzarPoder');
             }
-        },
-    }
-}
+        }
+    };
 </script>
 
 <style lang="scss" scoped>
