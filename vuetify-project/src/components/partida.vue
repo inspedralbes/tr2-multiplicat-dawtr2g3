@@ -5,12 +5,13 @@
         </div>
     </div>
     <div v-else>
-        <div style="position: absolute; top: 0; left: 0;" @click="pararTemps()">stop timer</div>
         <div class="container">
             <div class="container__jugadors jugadors">
-                <div class="container__jugador jugador" v-for="jugador in game.players">
-                    <JugadorPartida :jugador="jugador" />
-                </div>
+               <div class="item-scroll">
+                    <div class="container__jugador jugador" v-for="jugador in game.players">
+                        <JugadorPartida :jugador="jugador" />
+                    </div>
+               </div>
             </div>
             <div class="container__preguntas preguntas">
                 <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
@@ -48,13 +49,13 @@
                         <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
                         <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
                         <div class="barra__vida">
-                            <img :src="getHP()" alt="">
+                            <img :src="getHP()" alt="" class="imagen-vida">
                             <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
                         </div>
                     </div>
                 </div>
                 <div class="container__skip">
-                    <button @click="skip">Skip</button>
+                    <button @click="skip"><img src="../assets/icono/skip.png" alt="" class="imagen__skip"></button>
                 </div>
                 <div class="container__poder poder">
                     <Poder :poder="game.ownPlayer.poder" />
@@ -70,7 +71,6 @@
     display: grid;
     grid-template-areas:
         "jugadors preguntas"
-
         "chat info";
     grid-template-columns: 1fr 2fr;
     grid-template-rows: 3fr 1.5fr;
@@ -85,13 +85,25 @@
     width: 50vh;
     background-color: rgb(37, 7, 107, 0.8);
     grid-area: jugadors;
-    margin-top: 5vh;
     border-radius: 6px;
-    position: absolute;
+    position: relative;
+    top: 5vh;
 }
 
+.item-scroll {
+    overflow-y: scroll;
+    position: relative;
+    height: 47vh;
+    top: 1vh;
+}
+.item-scroll::-webkit-scrollbar {
+    width: 1vh;
+}
 
-
+.item-scroll::-webkit-scrollbar-thumb {
+    background-color: rgb(134, 76, 191);
+    border-radius: 5px;
+}
 //color del scroll y forma
 
 //container de las preguntas
@@ -139,23 +151,20 @@
 
 //container del usuario
 .container__usuario {
-
     background-color: rgb(37, 7, 107, 0.8);
-
     width: 62vh;
     height: 20vh;
     border-radius: 60ch;
     position: relative;
-    justify-content: center;
-    align-items: center;
     display: flex;
 }
 
 //container del poder
 .container__poder {
-    margin-top: auto;
-    margin-bottom: auto;
-    right: 20ch;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    right: 5vh;
 }
 
 //container de las respuestas
@@ -180,12 +189,14 @@
 //container del chat
 .enviar {
     height: 3vh;
-    width: 3vh;
+    width: 2vw;
+    
+}
+.button__chat{
     display: flex;
     position: relative;
-    top: 7px;
+    left: 0.5rem;
 }
-
 //impunt del chat
 #inputChat {
     background-color: aliceblue;
@@ -262,25 +273,25 @@
 .barra__vida {
     position: absolute;
     top: 11vh;
-    left: 13vh;
+    left: 6vh;
     right: 0;
     z-index: 1;
-    margin-left: -3vw;
-    margin-right: auto;
 }
 
 .numero__vida {
     position: absolute;
     top: 0;
-    left: 25vh;
+    left: 34vh;
     right: 0;
     font-size: 4vh;
-    font-weight: bold;
     text-align: center;
     color: #ffdd33;
-    z-index: 2;
-    margin-left: 3.5vw;
-    margin-right: auto;
+}
+
+.imagen-vida {
+    position: absolute;
+    height: 7vh;
+
 }
 
 .vida {
@@ -291,6 +302,9 @@
     grid-area: info;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 
 }
 
@@ -303,6 +317,19 @@
     font-weight: bold;
     text-align: center;
     color: #ffdd33;
+}
+
+.imagen__skip {
+    height: 11vh;
+    width: 6vw;
+}
+
+.container__skip {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    left: 3vh;
+    bottom: 6vh;
 }
 </style>
 <script>

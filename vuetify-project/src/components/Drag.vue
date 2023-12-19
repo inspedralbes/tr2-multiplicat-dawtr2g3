@@ -102,7 +102,7 @@ export default {
     width: 65vh;
     height: 10vh;
     background-color: rgb(134, 76, 191);
-    color: white;
+    color: #ffa502;
     position: relative;
     top: 4vh;
     margin-left: auto;

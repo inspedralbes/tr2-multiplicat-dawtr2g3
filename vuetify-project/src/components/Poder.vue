@@ -1,6 +1,12 @@
 <template>
     <div class="container__power">
-        <button @click="utilitzarPoder()"><img src="../assets/icono/power.png" alt="" class="power"> {{ poder }} </button>
+        <v-btn variant="solo"  @click="utilitzarPoder()" class="boton__power"><img src="../assets/icono/power.png" alt="" class="power">
+            <!-- 
+                <div class="container__modal">
+                {{ poder }} 
+                </div>
+            -->
+        </v-btn>
     </div>
 </template>
 
@@ -35,14 +41,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container__power {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 .power {
     width: 10vw;
     height: 10vw;
+}
+.boton__power {
+    border-radius: 50%;
+    width: 0;
+    height: 0;
+    display: flex;
+    position: relative;
 }
 
 </style>

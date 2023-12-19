@@ -27,7 +27,7 @@ export default {
                 return "/src/assets/ilustracio-vida/50_health.png";
             } else if (this.jugador.vida > 0) {
                 return "/src/assets/ilustracio-vida/25_health.png";
-            } else {
+            } else  {
                 return "/src/assets/ilustracio-vida/0_health.png";
             }
         }

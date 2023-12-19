@@ -3,7 +3,6 @@
   <div class="container">
     <div class="container__login">
       <v-form v-model="form" @submit="submit()" class="login">
-        
         <div class="container__form">
           <h2 class="title__loginForm">Login</h2>
           <v-text-field v-model="nick" variant="solo"  :rules="[required]"  label="User" class="input__text"></v-text-field>
