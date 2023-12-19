@@ -11,7 +11,7 @@
               </v-btn>
             </div>
             <div class="items__userName userName">
-              <v-text-field class="pa-2" label="UserJugador" id="nomJugador"></v-text-field>
+              <v-text-field class="pa-2" label="UserJugador" :value="this.nom" :disabled="this.loginInfo.loggedIn" v-model="nom" id="nomJugador"></v-text-field>
             </div>
             <div class="items__btn-tutorial btn-tutorial">
               <v-btn rounded color="#106b03" class="px-5 mr-5 mt-3">Tutorial</v-btn>
@@ -25,7 +25,7 @@
       </div>
       <div class="container__buttons buttons">
         <v-btn rounded="xl" class="btn__entrar" color="#f5a23d" size="x-large" @click="empezar">Entrar</v-btn>
-        <v-btn rounded="xl" class="btn__crear" color="#f5a23d" size="x-large" @click="$router.push('/crearPartida')">Crear</v-btn>
+        <v-btn rounded="xl" class="btn__crear" color="#f5a23d" size="x-large" :disabled='this.nom=="" ' @click="crear">Crear</v-btn>
       </div>
     </div>
 </template>
@@ -140,27 +140,43 @@
 import { socket } from '../socket';
 import { useAppStore } from '@/store/app';
 import router from '@/router'
+import { computed } from 'vue';
 
 export default {
   data() {
+    const store = useAppStore();
+
     return {
       tempsRestant: null,
+      nom: '',
+      loginInfo: {
+        username: computed(() => store.loginInfo.username),
+        loggedIn: computed(() => store.loginInfo.loggedIn),
+      },
     };
   },
   methods: {
     empezar() {
 
       const store = useAppStore();
-      let nick = document.getElementById("nomJugador").value;
-      store.setNick(nick);
+      store.setNick(this.nom);
       router.push('/partides');
 
     },
+    crear(){
+      const store = useAppStore();
+      store.setNick(this.nom);
+      router.push('/crearPartida')
+    }
 
     
   },
 
   mounted() {
+    if(this.loginInfo.username != ''){
+      this.nom = this.loginInfo.username;
+      console.log(this.nom);
+    }
   },
   created() {
 

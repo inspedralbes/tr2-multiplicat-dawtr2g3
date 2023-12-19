@@ -95,7 +95,7 @@ export default {
 
       if(response.status == 201){
         store.setLoginInfo(true,response.user.nom,response.token);
-        router.push('/partides');
+        router.push('/');
       }
       else{
         alert("Usuario o contraseña incorrectos");
