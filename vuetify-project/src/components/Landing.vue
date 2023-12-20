@@ -14,8 +14,9 @@
             <v-text-field class="pa-2" label="UserJugador" :value="this.nom" :disabled="this.loginInfo.loggedIn"
               v-model="nom" id="nomJugador"></v-text-field>
           </div>
-          <div class="items__btn-tutorial btn-tutorial">
-            <v-btn rounded color="#106b03" class="px-5 mr-5 mt-3">Tutorial</v-btn>
+          <div class="items__btn-tutorial btn-tutorial" @click="verificat">
+            <v-btn rounded color="#106b03" @click="crearPregunta()" :disabled="!this.loginInfo.verificat"
+              class="px-5 mr-5 mt-3">Crear pregunta</v-btn>
           </div>
           <div class="items__btn-log-reg">
             <v-btn rounded color="#fad09e" class="px-5 ml-2 mt-3 text-white"
@@ -169,6 +170,21 @@ export default {
     };
   },
   methods: {
+    crearPregunta() {
+      let error = false;
+      if (this.loginInfo.loggedIn == false) {
+        error = true
+
+      } else {
+        if (!this.loginInfo.verificat) {
+          error = true;
+
+        }
+      }
+      if (!error) {
+        router.push('/crearPregunta')
+      }
+    },
     empezar() {
 
       const store = useAppStore();
@@ -180,11 +196,11 @@ export default {
       let error = false;
       if (this.loginInfo.loggedIn == false) {
         error = true
-        
+
       } else {
         if (!this.loginInfo.verificat) {
           error = true;
-          
+
         }
       }
       if (!error) {
@@ -207,7 +223,7 @@ export default {
         if (!this.loginInfo.verificat) {
           Toastify({
 
-            text: "Nomes comptes verificades poden crear partides",
+            text: "Nomes comptes verificades poden crear partides o preguntes",
             backgroundColor: '#FC1A1A',
             duration: 3000
 
