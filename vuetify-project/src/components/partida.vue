@@ -38,7 +38,13 @@
                         <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
                         <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
                         <div class="barra__vida" v-bind:class="{ 'animacioVida': animacioVida }">
-                            <img :src="getHP()" alt="" class="imagen-vida">
+                            <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png" alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 50" src="/src/assets/ilustracio-vida/75_health.png" alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 25" src="/src/assets/ilustracio-vida/50_health.png" alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 0" src="/src/assets/ilustracio-vida/25_health.png" alt="" class="imagen-vida">
+                            
+                            
+
                             <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
                         </div>
                     </div>
@@ -458,15 +464,15 @@ export default {
         getHP() {
 
             if (this.game.ownPlayer.vida > 75) {
-                return "/src/assets/ilustracio-vida/full-health.png";
+                return "../assets/ilustracio-vida/full-health.png";
             } else if (this.game.ownPlayer.vida > 50) {
-                return "/src/assets/ilustracio-vida/75_health.png";
+                return "../assets/ilustracio-vida/75_health.png";
             } else if (this.game.ownPlayer.vida > 25) {
-                return "/src/assets/ilustracio-vida/50_health.png";
+                return "../assets/ilustracio-vida/50_health.png";
             } else if (this.game.ownPlayer.vida > 0) {
-                return "/src/assets/ilustracio-vida/25_health.png";
+                return "../assets/ilustracio-vida/25_health.png";
             } else {
-                return "/src/assets/ilustracio-vida/0_health.png";
+                return "../assets/ilustracio-vida/0_health.png";
             }
         }
     },

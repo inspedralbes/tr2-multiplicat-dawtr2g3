@@ -3,7 +3,15 @@
         <span class="nick">{{ jugador.nick }}</span>
         <span class="vida__jugadors">{{ jugador.vida }}/100</span>
         <div class="container__vida-jugadors">
-             <img :src="getHP()" alt="" class="imagen__vida">
+            <img v-if="jugador.vida > 75" src="/src/assets/ilustracio-vida/full-health.png" alt=""
+                class="imagen__vida">
+            <img v-else-if="jugador.vida > 50" src="/src/assets/ilustracio-vida/75_health.png" alt=""
+                class="imagen__vida">
+            <img v-else-if="jugador.vida > 25" src="/src/assets/ilustracio-vida/50_health.png" alt=""
+                class="imagen__vida">
+            <img v-else-if="jugador.vida > 0" src="/src/assets/ilustracio-vida/25_health.png" alt=""
+                class="imagen__vida">
+
         </div>
         <div class="poder">{{ jugador.poder }}</div>
     </div>
@@ -27,7 +35,7 @@ export default {
                 return "/src/assets/ilustracio-vida/50_health.png";
             } else if (this.jugador.vida > 0) {
                 return "/src/assets/ilustracio-vida/25_health.png";
-            } else  {
+            } else {
                 return "/src/assets/ilustracio-vida/0_health.png";
             }
         }
@@ -40,9 +48,9 @@ export default {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    grid-template-areas: 
-                "nom nom poder"
-                "vidaImg vidaImg vidaText";
+    grid-template-areas:
+        "nom nom poder"
+        "vidaImg vidaImg vidaText";
     padding-left: 5px;
     padding-right: 5px;
 }
@@ -76,11 +84,13 @@ export default {
     color: #ffa502;
     align-self: center;
 }
+
 .imagen__vida {
     position: relative;
     height: 6vh;
     right: 6vh;
 }
+
 .container__vida-jugadors {
     grid-area: vidaImg;
 }
@@ -91,5 +101,4 @@ export default {
     font-weight: bold;
     color: #ffa502;
     align-self: center;
-}
-</style>
+}</style>

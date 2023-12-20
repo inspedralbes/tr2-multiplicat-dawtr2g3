@@ -5,7 +5,7 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 
 const app = express()
-const port = 3000
+const port = 3589
 app.use(cors());
 const server = createServer(app);
 
@@ -131,8 +131,8 @@ io.on('connection', (socket) => {
      * Elimina el jugador de la partida i de la llista de jugadors, si és l'últim jugador de la partida o el creador, la tanca
      */
     socket.on('disconnecting', () => {
-        let roomID = trobarRoom(socket);
-
+        const roomID = trobarRoom(socket);
+        console.log(socket.id);
         if (roomID != undefined) {
             let index = arrayRoom.findIndex((room) => room.id == roomID);
             if (roomID == "Partida" + socket.id && index != '-1') {
@@ -155,13 +155,15 @@ io.on('connection', (socket) => {
 
             } else if (index != '-1') {
 
+                console.log("me voy aqui");
+                let room = arrayRoom.find((room) => room.id == roomID);
+                let llistatUsuaris = room.jugadors;
 
-                arrayRoom.map((room) => {
-                    if (room.id == roomID) {
-                        let index = room.jugadors.findIndex((idSocket) => idSocket == socket.id);
-                        room.jugadors.splice(index, 1);
-                    }
-                });
+                let index = llistatUsuaris.findIndex((user) => user.idSocket == socket.id);
+                console.log(index);
+                llistatUsuaris.splice(index, 1);
+                console.log(arrayRoom.find((room) => room.id == roomID).jugadors);
+
                 if (arrayRoomMinim.find((room) => room.id == roomID) != undefined) {
                     arrayRoomMinim.map((room) => {
                         if (room.id == roomID) {
@@ -171,7 +173,14 @@ io.on('connection', (socket) => {
                     });
                     io.emit('games list', arrayRoomMinim);
                 }
-                let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+                arrayRoom.map((room) => {
+
+                    if (room.id == roomID) {
+                        room.jugadors = llistatUsuaris;
+                    }
+                });
+
+                llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
                 let llistatUsuarisMinim = [];
                 llistatUsuarisMinim = llistaMinim(llistatUsuaris);
 
@@ -371,7 +380,7 @@ io.on('connection', (socket) => {
                         if (comprovarMort(user) && !user.mort) {
                             matarJugador(user, start)
                             socket.emit('die');
-                         
+
                         }
                     }
                     llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
