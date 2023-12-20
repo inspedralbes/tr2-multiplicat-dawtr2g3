@@ -1,4 +1,5 @@
 <template>
+    <iconsHead></iconsHead>
     <label for="enunciat">Enunciat</label>
     <input type="text" v-model="enunciat">
     <label for="tipus">Tipus</label>
@@ -37,7 +38,12 @@ import { computed } from 'vue';
 import  CommunicationManager from '../communicationManager.js';
 import { useAppStore } from "../store/app.js";
 
+import iconsHead from './iconesHead.vue';
+
 export default {
+    components: {
+        iconsHead,
+    },
     data() {
         const store = useAppStore();
 

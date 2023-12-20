@@ -1,4 +1,5 @@
 <template>
+  <iconsHead></iconsHead>
   <div class="page-final">
     <h1 class="title-final">Final de la partida</h1>
     <div class="container-boxes">
@@ -191,7 +192,12 @@ import { useAppStore } from "../store/app.js";
 import { computed } from 'vue';
 import router from '@/router'
 
+import iconsHead from './iconesHead.vue';
+
 export default {
+  components: {
+    iconsHead,
+  },
   data() {
     const store = useAppStore();
     return {
