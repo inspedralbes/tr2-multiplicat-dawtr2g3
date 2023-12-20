@@ -54,4 +54,25 @@ class ControllerPregunta extends Controller
 
         return response()->json(null, 204);
     }
+    public function crearPregunta(Request $request)
+    {
+        $request->validate([
+            'enunciat' => 'required',
+            'tipus' => 'required',
+            'dificultat' => 'required',
+            'respostes' => 'required',
+            'categoria' => 'required',
+            'temps' => 'required',
+        ]);
+
+        $pregunta = new Pregunta();
+        $pregunta->enunciat = $request->enunciat;
+        $pregunta->tipus = $request->tipus;
+        $pregunta->dificultat = $request->dificultat;
+        $pregunta->respostes = $request->respostes;
+        $pregunta->categoria = $request->categoria;
+        $pregunta->temps = $request->temps;
+        $pregunta->save();
+        return response()->json($pregunta, 201);
+    }
 }

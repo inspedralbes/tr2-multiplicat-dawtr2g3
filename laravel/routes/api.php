@@ -26,3 +26,4 @@ Route::post('/register',[ControllerUsuari::class, 'register']);
 
 Route::get('/preguntes',[ControllerPregunta::class, 'index']); 
 Route::get('/preguntes/{id}',[ControllerPregunta::class, 'show']); 
+Route::post('/crearPregunta',[ControllerPregunta::class, 'crearPregunta'])->name('crearPregunta');

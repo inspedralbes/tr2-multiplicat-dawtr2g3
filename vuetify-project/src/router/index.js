@@ -7,6 +7,7 @@ import Rooms from "../components/Rooms.vue";
 import CrearPartida from "../components/CrearPartida.vue";
 import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
+import CrearPregunta from "../components/CrearPregunta.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -19,6 +20,11 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: Register
+    },
+    {
+      path: '/crearpregunta',
+      name: 'crearpregunta',
+      component: CrearPregunta
     },
     {
       path: '/login',
