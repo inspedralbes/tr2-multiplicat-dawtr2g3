@@ -307,8 +307,9 @@ io.on('connection', (socket) => {
                     user.falladesConsecutives++;
 
                     if (comprovarMort(user)) {
-                        matarJugador(user);
+                        matarJugador(user, start);
                         socket.emit('die');
+                        mort = true;
                     }
 
                     if (user.falladesConsecutives == 3) {
@@ -355,6 +356,7 @@ io.on('connection', (socket) => {
     socket.on('skip', () => {
         let roomID = trobarRoom(socket);
         let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        let start = arrayRoom.find((room) => room.id == roomID).start;
 
         llistatUsuaris.map((user) => {
             if (user.idSocket == socket.id) {
@@ -367,7 +369,7 @@ io.on('connection', (socket) => {
                         acabarPartida(socket, roomID);
                     } else {
                         if (comprovarMort(user) && !user.mort) {
-                            matarJugador(user)
+                            matarJugador(user, start)
                             socket.emit('die');
                          
                         }
@@ -476,8 +478,10 @@ io.on('connection', (socket) => {
         let roomID = trobarRoom(socket);
         let room = arrayRoom.find((room) => room.id == roomID);
         let llistatUsuaris = undefined;
+        let start
         if (room != undefined) {
             llistatUsuaris = room.jugadors;
+            start = room.start;
         }
         if (llistatUsuaris != undefined) {
             let user = llistatUsuaris.find((usuari) => {
@@ -486,7 +490,7 @@ io.on('connection', (socket) => {
             user.vida -= restarVidaSagnar;
             let llistatUsuarisMinim = [];
             if (comprovarMort(user) && !user.mort) {
-                matarJugador(user);
+                matarJugador(user, start);
                 socket.emit('die');
             }
             if (jugadorsVius(llistatUsuaris).length == 1) {
@@ -769,7 +773,7 @@ function jugadorsVius(arrayJugadors) {
     return jugadorsVius;
 }
 
-function matarJugador(user) {
+function matarJugador(user, start) {
     user.mort = true;
     user.vida = 0;
     user.temps = Date.now() - start;

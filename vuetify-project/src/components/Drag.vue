@@ -6,7 +6,7 @@
     </div>
         <div class="container__respostasPosicion">
             <div class="container__respostas">
-                <span v-for="(resposta, index) in respostes" class="dragable" :draggable="true"
+                <span v-for="(resposta, index) in respostes" class="dragable" :draggable="isDraggable"
                 @dragstart="handleDragStart(index)">{{ resposta }}</span>
             </div>
         </div>
@@ -27,6 +27,7 @@ export default {
     },
     data() {
         return {
+            isDraggable: true,
             actual: "",
         };
     },
@@ -41,6 +42,10 @@ export default {
             event.preventDefault();
             console.log("has clicat");
             this.$emit("comprovar", this.actual);
+            this.isDraggable = false;
+            setTimeout(() => {
+                this.isDraggable = true;
+            }, 1000);
         }
     },
     mounted() {
