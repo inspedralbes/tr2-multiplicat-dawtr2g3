@@ -102,6 +102,7 @@ export default {
 
             }).showToast();
             router.push('/');
+            
         },
     },
 }
