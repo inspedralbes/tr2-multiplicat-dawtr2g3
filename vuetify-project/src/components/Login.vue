@@ -3,14 +3,17 @@
   <div class="container">
     <div class="container__login">
       <v-form v-model="form" @submit="submit()" class="login">
+
         <div class="container__form">
           <h2 class="title__loginForm">Login</h2>
-          <v-text-field v-model="nick" variant="solo"  :rules="[required]"  label="User" class="input__text"></v-text-field>
-          <v-text-field type="password" v-model="password" variant="solo" :readonly="loading" :rules="[required]" label="Password"
-          placeholder="Enter your password" class="input__text"></v-text-field>
-          <v-btn @click="submit()" class="sign">Entrar</v-btn>
+          <v-text-field v-model="nick" variant="solo" :rules="[required]" label="User" class="input__text"></v-text-field>
+          <v-text-field type="password" v-model="password" variant="solo" :readonly="loading" :rules="[required]"
+            label="Password" placeholder="Enter your password" class="input__text"></v-text-field>
+          <v-btn @click="submit()" v-if="!loading" class="sign">Entrar</v-btn>
+          <img src="../assets/loading.gif" v-if="loading" alt="loading" width="50px" height="50px">
+
         </div>
-        
+
       </v-form>
     </div>
     <div class="container-imagen"></div>
@@ -27,18 +30,20 @@
 .sign {
   background-color: #33cccc;
 }
-.container__login{
+
+.container__login {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 90vh;
   border-radius: 10px;
 }
+
 .login {
-  background-color: rgb(37, 7, 107,0.8);
+  background-color: rgb(37, 7, 107, 0.8);
   height: 50vh;
   border-radius: 6px;
-  width: clamp(48vh,50%,35vh);
+  width: clamp(48vh, 50%, 35vh);
 }
 
 .container-imagen {
@@ -47,18 +52,18 @@
   background-size: cover;
 }
 
-.input__text{
+.input__text {
   color: aliceblue;
 }
 
-.title-login{
+.title-login {
   color: #ffa502;
   font-family: 'Battle Beasts';
   display: flex;
   position: absolute;
 }
 
-.container__form{
+.container__form {
   width: 40vh;
   position: relative;
   top: 8vh;
@@ -66,7 +71,7 @@
   margin-right: auto;
 }
 
-.title__loginForm{
+.title__loginForm {
   color: aliceblue;
   margin-bottom: 3vh;
 
@@ -75,9 +80,10 @@
 
 <script>
 import store from '@/store';
-import  CommunicationManager from '../communicationManager.js';
+import CommunicationManager from '../communicationManager.js';
 import router from '@/router'
 import { useAppStore } from '@/store/app';
+import Toastify from 'toastify-js';
 export default {
   data: () => ({
     form: false,
@@ -89,22 +95,31 @@ export default {
 
   methods: {
     async submit() {
-      const store = useAppStore();
-      let response = await this.manager.login(this.nick,this.password);
+      this.loading = true
 
-      if(response.status == 201){
-        store.setLoginInfo(true,response.user.nom,response.token,response.user.verificat);
+      const store = useAppStore();
+      let response = await this.manager.login(this.nick, this.password);
+
+      if (response.status == 201) {
+        store.setLoginInfo(true, response.user.nom, response.token, response.user.verificat);
         router.push('/');
       }
-      else{
-        alert("Usuario o contraseña incorrectos");
+      else {
+        this.loading = false;
+        Toastify({
+
+          text: response.missatge,
+          backgroundColor: '#FC1A1A',
+          duration: 3000
+
+        }).showToast();
       }
     },
     onSubmit() {
       if (!this.form) return
 
       this.loading = true
-      
+
       setTimeout(() => (this.loading = false), 2000)
     },
     required(v) {

@@ -38,6 +38,27 @@ export class CommunicationManager {
         let jsonResponse = await response.json();
         return jsonResponse;
     }
+    async crearPregunta(temps,enunciat,tipus,dificultat,categoria, resposta1, resposta2, resposta3, resposta4) {
+        let respostes = [resposta1,resposta2,resposta3,resposta4];
+         respostes = JSON.stringify(respostes);
+         console.log(respostes);
+        let formData = new FormData();
+        formData.append('enunciat', enunciat);
+        formData.append('tipus', tipus);
+        formData.append('temps', temps);
+        formData.append('categoria', categoria);
+        formData.append('respostes',respostes);
+        formData.append('dificultat', dificultat);
+        let response = await fetch(this.fetchLink + 'crearPregunta', {
+            method: 'POST',
+            headers: {
+                    "Access-Control-Allow-Origin": "*",
+            },
+            body: formData
+        });
+        let jsonResponse = await response.json();
+        return jsonResponse;
+    }
     logout() {
     }
 
