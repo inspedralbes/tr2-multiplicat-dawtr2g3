@@ -1,4 +1,5 @@
 <template>
+    <icons-head></icons-head>
     <div class="page-lobby">
         <div class="board-background">
             <div class="board-llista-jugadors">
@@ -169,7 +170,12 @@ import { socket } from '../socket';
 import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
 
+import iconsHead from './iconesHead.vue';
+
 export default {
+    components: {
+        iconsHead
+    },
     data() {
         const store = useAppStore();
         return {

@@ -1,4 +1,5 @@
 <template>
+  <icons-head></icons-head>
   <h1 class="title-landing text-center">Math Royale</h1>
   <div class="container">
     <div class="container__card card">
@@ -155,7 +156,16 @@ import router from '@/router'
 import { computed } from 'vue';
 import Toastify from 'toastify-js';
 import { resolveDirective } from 'vue';
+
+
+import iconsHead from './iconesHead.vue';
+
+
 export default {
+  components
+  : {
+    iconsHead
+  },
   data() {
     const store = useAppStore();
 

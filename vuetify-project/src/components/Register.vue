@@ -1,4 +1,6 @@
 <template>
+  <iconesHead></iconesHead>
+  <h1 class="title-registre">Math Royale</h1>
   <div class="container">
     <div class="container__register">
       <v-card class="mx-auto register" title="Registrar">
@@ -23,6 +25,15 @@
   </div>
 </template>
 <style scoped>
+.title-registre {
+  color: #ffa502;
+  font-family: 'Battle Beasts';
+  display: flex;
+  position: absolute;
+  margin-top: 1.4rem;
+  margin-left: 5rem;
+  font-size: 2vw;
+}
 .container {
   width: 100vw;
   height: 60vh;
@@ -63,7 +74,13 @@ import CommunicationManager from '../communicationManager.js';
 import { useAppStore } from '../store/app';
 import router from '@/router';
 import Toastify from 'toastify-js';
+
+import iconesHead from './iconesHead.vue';
+
 export default {
+  components: {
+    iconesHead
+  },
   data: () => ({
     first: null,
     last: null,
