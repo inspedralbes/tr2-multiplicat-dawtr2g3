@@ -40,7 +40,6 @@ export default {
         },
         handleDrop(event) {
             event.preventDefault();
-            console.log("has clicat");
             this.$emit("comprovar", this.actual);
             this.isDraggable = false;
             setTimeout(() => {

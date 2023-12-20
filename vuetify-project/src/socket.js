@@ -111,7 +111,6 @@ socket.on('die', () => {
 
 socket.on('info partida', (nom, maxJugadors) =>{
   const store = useAppStore();
-  console.log(nom,maxJugadors);
   store.setInfoPartida(nom,maxJugadors);
 })
 

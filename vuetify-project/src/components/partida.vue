@@ -423,7 +423,6 @@ export default {
          * @param {int} index index de la resposta
          */
         answer(index) {
-            console.log("He rebut la resposta");
             this.game.notFirstQuestion = true;
             socket.emit('answer', this.game.question.idPregunta, index);
 
