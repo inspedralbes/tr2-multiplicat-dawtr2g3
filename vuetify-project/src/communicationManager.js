@@ -40,6 +40,8 @@ export class CommunicationManager {
     }
     async crearPregunta(temps,enunciat,tipus,dificultat,categoria, resposta1, resposta2, resposta3, resposta4) {
         let respostes = [resposta1,resposta2,resposta3,resposta4];
+         respostes = JSON.stringify(respostes);
+         console.log(respostes);
         let formData = new FormData();
         formData.append('enunciat', enunciat);
         formData.append('tipus', tipus);

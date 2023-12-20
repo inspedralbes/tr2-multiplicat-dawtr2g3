@@ -307,8 +307,8 @@ io.on('connection', (socket) => {
                     user.falladesConsecutives++;
 
                     if (comprovarMort(user)) {
-                        user.vida = 0;
-                        user.temps = Date.now() - start;
+                        matarJugador(user, start);
+                        socket.emit('die');
                         mort = true;
                     }
 
@@ -356,6 +356,7 @@ io.on('connection', (socket) => {
     socket.on('skip', () => {
         let roomID = trobarRoom(socket);
         let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        let start = arrayRoom.find((room) => room.id == roomID).start;
 
         llistatUsuaris.map((user) => {
             if (user.idSocket == socket.id) {
@@ -368,11 +369,9 @@ io.on('connection', (socket) => {
                         acabarPartida(socket, roomID);
                     } else {
                         if (comprovarMort(user) && !user.mort) {
-                            user.mort = true;
-                            user.vida = 0;
+                            matarJugador(user, start)
                             socket.emit('die');
-                            user.poder = "";
-                            user.infoPoders.robarVida = 0;
+                         
                         }
                     }
                     llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
@@ -479,8 +478,10 @@ io.on('connection', (socket) => {
         let roomID = trobarRoom(socket);
         let room = arrayRoom.find((room) => room.id == roomID);
         let llistatUsuaris = undefined;
+        let start
         if (room != undefined) {
             llistatUsuaris = room.jugadors;
+            start = room.start;
         }
         if (llistatUsuaris != undefined) {
             let user = llistatUsuaris.find((usuari) => {
@@ -489,11 +490,8 @@ io.on('connection', (socket) => {
             user.vida -= restarVidaSagnar;
             let llistatUsuarisMinim = [];
             if (comprovarMort(user) && !user.mort) {
-                user.mort = true;
-                user.vida = 0;
+                matarJugador(user, start);
                 socket.emit('die');
-                user.poder = "";
-                user.infoPoders.robarVida = 0;
             }
             if (jugadorsVius(llistatUsuaris).length == 1) {
                 acabarPartida(socket, roomID);
@@ -773,6 +771,14 @@ function jugadorsVius(arrayJugadors) {
         }
     });
     return jugadorsVius;
+}
+
+function matarJugador(user, start) {
+    user.mort = true;
+    user.vida = 0;
+    user.temps = Date.now() - start;
+    user.poder = "";
+    user.infoPoders.robarVida = 0;
 }
 
 

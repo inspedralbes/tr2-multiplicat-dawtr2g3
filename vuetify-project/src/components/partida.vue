@@ -5,44 +5,51 @@
         </div>
     </div>
     <div v-else>
-        <div>
-            <div class="jugadors">
-                <div class="jugador" v-for="jugador in game.players">
-                    <span>{{ jugador.nick }}</span><span> - {{ jugador.encertades }}</span><span> - {{ jugador.vida
-                    }}/100</span>
-                    <div>{{ jugador.poder }}</div>
-                </div>
+        <div class="container">
+            <div class="container__jugadors jugadors">
+               <div class="item-scroll">
+                    <div class="container__jugador jugador" v-for="jugador in game.players">
+                        <JugadorPartida :jugador="jugador" />
+                    </div>
+               </div>
             </div>
-            <div v-if="game.question.tipus == 1">
-                <h1>{{ game.question.pregunta }}</h1>
-                <h2>Pregunta:{{ game.questionIndex }}</h2>
-                <div class="respostes">
-                    <div class="resposta" v-for="(resposta, index) in game.question.respostes">
+            <div class="container__preguntas preguntas">
+                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta" @comprovar="(index) => answer(index)"/>
 
-                        <button @click="answer(index)">{{ resposta }}</button>
+            </div>
+            <div class="container__chat">
+                <div class="chat">
+                    <div class="container__missatge">
+                        <div class="missatge" v-for="missatge in game.chat">
+                            <span>{{ missatge.nick }}</span>:<span> {{ missatge.msg }}</span>
+                        </div>
+                    </div>
+                    <div class="container__imputButtom">
+                        <input type="text" id="inputChat">
+                        <button @click="enviarMissatge()" class="button__chat"><img src="../assets/icono/enviar.png" alt=""
+                                class="enviar"></button>
                     </div>
                 </div>
             </div>
-            <div v-else>
-                <h1>{{ game.question.pregunta }}</h1>
-                <h2>Pregunta:{{ game.questionIndex }}</h2>
-                <Drag :respostes="game.question.respostes" @comprovar="(index) => answer(index)" />
-            </div>
-
-            <h1> {{ game.temps }}</h1>
-
-            <!--  -->
-            <div class="chat">
-                <div class="missatge" v-for="missatge in game.chat">
-                    <span>{{ missatge.nick }}</span>:<span> {{ missatge.msg }}</span>
+            <div class="container__info info">
+                <div class="container__usuario usuario">
+                    <div class="container__avatar">
+                        <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
+                        <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
+                        <div class="barra__vida">
+                            <img :src="getHP()" alt="" class="imagen-vida">
+                            <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
+                        </div>
+                    </div>
                 </div>
-                <input type="text" id="inputChat">
-                <button @click="enviarMissatge()">Enviar</button>
+                <div class="container__skip">
+                    <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt="" class="imagen__skip"></button>
+                </div>
+                <div class="container__poder poder">
+                    <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
+                </div>
             </div>
         </div>
-        <button :disabled="disabled" @click="skip">Skip</button>
-        <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
-        <p>Vida: {{ game.ownPlayer.vida }}</p>
     </div>
     <v-row justify="center">
         <v-dialog v-model="game.dialog" scrollable width="auto">
@@ -66,7 +73,269 @@
         </v-dialog>
     </v-row>
 </template>
+<style lang="scss" scoped>
+//container de la partida
+.container {
+    display: grid;
+    grid-template-areas:
+        "jugadors preguntas"
+        "chat info";
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 3fr 1.5fr;
+    margin-left: 15vh;
+    width: 85vw;
+}
 
+
+//container de los jugadores
+.container__jugadors {
+    height: 50vh;
+    width: 50vh;
+    background-color: rgb(37, 7, 107, 0.8);
+    grid-area: jugadors;
+    border-radius: 6px;
+    position: relative;
+    top: 5vh;
+}
+
+.item-scroll {
+    overflow-y: scroll;
+    position: relative;
+    height: 47vh;
+    top: 1vh;
+}
+.item-scroll::-webkit-scrollbar {
+    width: 1vh;
+}
+
+.item-scroll::-webkit-scrollbar-thumb {
+    background-color: rgb(134, 76, 191);
+    border-radius: 5px;
+}
+//color del scroll y forma
+
+//container de las preguntas
+.container__preguntas {
+    position: relative;
+    border-radius: 2vh;
+    background-color: aliceblue;
+    text-align: center;
+    grid-area: preguntas;
+    width: 95vh;
+    margin-left: auto;
+    margin-right: auto;
+    height: 60vh;
+    top: 5vh;
+}
+
+//container de las pregunta
+.container__pregunta {
+    position: relative;
+    background-color: rgb(134, 76, 191);
+    text-align: center;
+    height: 7vw;
+    width: 56vh;
+    border-radius: 60ch 60ch;
+    top: 2vw;
+}
+
+.pregunta {
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+}
+
+
+//container del chat
+.container__chat {
+    background-color: rgb(37, 7, 107, 0.8);
+    position: relative;
+    color: aliceblue;
+    width: 50vh;
+    grid-area: chat;
+    height: 33vh;
+    border-radius: 6px;
+}
+
+//container del usuario
+.container__usuario {
+    background-color: rgb(37, 7, 107, 0.8);
+    width: 62vh;
+    height: 20vh;
+    border-radius: 60ch;
+    position: relative;
+    display: flex;
+}
+
+//container del poder
+.container__poder {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    right: 5vh;
+}
+
+//container de las respuestas
+.container__respostes {
+    display: grid;
+    position: relative;
+    top: 33vh;
+    grid-template-columns: 1fr 1fr;
+    right: 6vh;
+}
+
+//boton de las respuestas
+.button__resposta {
+    background-color: aqua;
+    padding: 1vh;
+    width: 30vh;
+    margin: 2vh;
+    border-radius: 6px;
+    font-size: 2em;
+}
+
+//container del chat
+.enviar {
+    height: 3vh;    
+}
+.button__chat{
+    display: flex;
+    position: relative;
+    left: 0.5rem;
+}
+//impunt del chat
+#inputChat {
+    background-color: aliceblue;
+    width: 44vh;
+    border-radius: 5px;
+}
+
+//los mensajes del chat
+.missatge {
+    position: relative;
+    color: aliceblue;
+    width: 40vh;
+    left: 1vh;
+}
+
+//container del mensaje
+.container__missatge {
+    overflow-y: scroll;
+    position: relative;
+    height: 27vh;
+    bottom: 4vh;
+}
+
+//hancho del scroll
+.container__missatge::-webkit-scrollbar {
+    width: 1vh;
+}
+
+//color del scroll y forma
+.container__missatge::-webkit-scrollbar-thumb {
+    background-color: rgb(134, 76, 191);
+    border-radius: 5px;
+}
+
+//container del boton del chat
+.container__imputButtom {
+    display: flex;
+    position: absolute;
+    bottom: 1vh;
+    left: 1vh;
+}
+
+//container del chat
+.chat {
+    position: relative;
+    top: 6vh;
+}
+
+.pregunta__texto {
+    position: absolute;
+    font-size: 2vh;
+    font-weight: bold;
+    top: 5vh;
+    left: 0;
+    right: 0;
+}
+
+.container__avatar {
+    position: absolute;
+    top: 0;
+    left: 3ch;
+    right: 0;
+}
+
+.avatar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 19vh;
+    width: 19vh;
+    z-index: 0;
+}
+
+.barra__vida {
+    position: absolute;
+    top: 11vh;
+    left: 6vh;
+    right: 0;
+    z-index: 1;
+}
+
+.numero__vida {
+    position: absolute;
+    top: 0;
+    left: 34vh;
+    right: 0;
+    font-size: 4vh;
+    text-align: center;
+    color: #ffdd33;
+}
+
+.imagen-vida {
+    position: absolute;
+    height: 7vh;
+
+}
+
+.vida {
+    height: 8vh;
+}
+
+.container__info {
+    grid-area: info;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+}
+
+.nickUsuario {
+    position: absolute;
+    top: 3vh;
+    left: 0;
+    right: 3vh;
+    font-size: 4vh;
+    font-weight: bold;
+    text-align: center;
+    color: #ffdd33;
+}
+
+.imagen__skip {
+    height: 11vh;
+    width: 6vw;
+}
+
+.container__skip {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+</style>
 <script>
 import { socket } from '../socket';
 import { computed } from 'vue';
@@ -74,7 +343,8 @@ import { useAppStore } from "../store/app.js";
 import Drag from "./Drag.vue";
 import Poder from "./Poder.vue";
 import { toHandlers } from 'vue';
-
+import JugadorPartida from './JugadorPartida.vue';
+import store from '@/store';
 export default {
     data() {
         const store = useAppStore();
@@ -106,7 +376,7 @@ export default {
 
         };
     },
-    components: { Drag, Poder },
+    components: { Drag, Poder, JugadorPartida },
 
     methods: {
 
@@ -141,10 +411,19 @@ export default {
         },
 
         /**
+         * Para el temps
+         */
+        pararTemps() {
+            store.stopTImer();
+
+        },
+
+        /**
          * respon a la pregunta
          * @param {int} index index de la resposta
          */
         answer(index) {
+            console.log("He rebut la resposta");
             this.game.notFirstQuestion = true;
             socket.emit('answer', this.game.question.idPregunta, index);
 
@@ -159,6 +438,19 @@ export default {
             var input = document.getElementById("inputChat");
             socket.emit('send message', input.value, store.loginInfo.username);
             input.value = "";
+        },
+        getHP() {
+            if (this.game.ownPlayer.vida > 75) {
+                return "/src/assets/ilustracio-vida/full-health.png";
+            } else if (this.game.ownPlayer.vida > 50) {
+                return "/src/assets/ilustracio-vida/75_health.png";
+            } else if (this.game.ownPlayer.vida > 25) {
+                return "/src/assets/ilustracio-vida/50_health.png";
+            } else if (this.game.ownPlayer.vida > 0) {
+                return "/src/assets/ilustracio-vida/25_health.png";
+            } else {
+                return "/src/assets/ilustracio-vida/0_health.png";
+            }
         }
     },
 
@@ -171,10 +463,12 @@ export default {
         store.$subscribe((answer) => {
             if (store.getAnswer() == true) {
 
+
             } else if (store.getAnswer() == false) {
             }
             store.setAnswer(null);
         });
+
 
 
 
@@ -183,4 +477,3 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>

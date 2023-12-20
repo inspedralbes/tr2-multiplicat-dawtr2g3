@@ -107,7 +107,6 @@ socket.on('die', () => {
   store.stopTimer();
   store.timer = 20;
   store.playerDead();
-  alert("Has mort");
 });
 
 socket.on('info partida', (nom, maxJugadors) =>{
