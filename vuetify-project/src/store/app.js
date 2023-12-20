@@ -23,6 +23,7 @@ export const useAppStore = defineStore('app', {
     questionIndex: -1,
     timerInterval: null,
     dead: false,
+    animacioVida: false,
 
   }),
   actions: {
@@ -30,11 +31,18 @@ export const useAppStore = defineStore('app', {
       this.nomPartida = nom;
       this.maxJugadors = maxJugadors;
     },
+    triggerAnimacioVida() {
+      this.animacioVida = true;
+      setTimeout(() => {
+        this.animacioVida = false;
+      }, 500);
+    },
     startTimer() {
       setTimeout(() => {
         this.timerInterval = setInterval(() => {
           if (this.timer <= 0) {
             socket.emit('bleed');
+            this.triggerAnimacioVida();
           } else {
             this.timer--;
           }
@@ -54,7 +62,7 @@ export const useAppStore = defineStore('app', {
     setPartides(arrayRoom) {
       this.partides = arrayRoom;
     },
-    setLoginInfo(loggedIn, username, token,verificat) {
+    setLoginInfo(loggedIn, username, token, verificat) {
       this.loginInfo.loggedIn = loggedIn;
       this.loginInfo.username = username;
       this.loginInfo.token = token;

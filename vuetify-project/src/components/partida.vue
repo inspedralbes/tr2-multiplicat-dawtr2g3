@@ -7,14 +7,15 @@
     <div v-else>
         <div class="container">
             <div class="container__jugadors jugadors">
-               <div class="item-scroll">
+                <div class="item-scroll">
                     <div class="container__jugador jugador" v-for="jugador in game.players">
                         <JugadorPartida :jugador="jugador" />
                     </div>
-               </div>
+                </div>
             </div>
             <div class="container__preguntas preguntas">
-                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta" @comprovar="(index) => answer(index)"/>
+                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
+                    @comprovar="(index) => answer(index)" />
 
             </div>
             <div class="container__chat">
@@ -36,14 +37,15 @@
                     <div class="container__avatar">
                         <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
                         <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
-                        <div class="barra__vida">
+                        <div class="barra__vida" v-bind:class="{ 'animacioVida': animacioVida }">
                             <img :src="getHP()" alt="" class="imagen-vida">
                             <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
                         </div>
                     </div>
                 </div>
                 <div class="container__skip">
-                    <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt="" class="imagen__skip"></button>
+                    <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt=""
+                            class="imagen__skip"></button>
                 </div>
                 <div class="container__poder poder">
                     <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
@@ -53,7 +55,7 @@
     </div>
     <v-row justify="center">
         <v-dialog v-model="game.dialog" scrollable width="auto">
-            
+
             <v-card>
                 <v-card-title>Escull objectiu</v-card-title>
                 <v-divider></v-divider>
@@ -104,6 +106,18 @@
     height: 47vh;
     top: 1vh;
 }
+.animacioVida {
+    background-color: #ffdd33;
+    animation: tilt-shaking 0.5s;
+}
+
+@keyframes tilt-shaking {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  50% { transform: rotate(0eg); }
+  75% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
 .item-scroll::-webkit-scrollbar {
     width: 1vh;
 }
@@ -112,6 +126,7 @@
     background-color: rgb(134, 76, 191);
     border-radius: 5px;
 }
+
 //color del scroll y forma
 
 //container de las preguntas
@@ -196,13 +211,15 @@
 
 //container del chat
 .enviar {
-    height: 3vh;    
+    height: 3vh;
 }
-.button__chat{
+
+.button__chat {
     display: flex;
     position: relative;
     left: 0.5rem;
 }
+
 //impunt del chat
 #inputChat {
     background-color: aliceblue;
@@ -373,7 +390,7 @@ export default {
             },
             timerInterval: null,
             disabled: false,
-
+            animacioVida: computed(() => store.animacioVida),
         };
     },
     components: { Drag, Poder, JugadorPartida },
@@ -439,6 +456,7 @@ export default {
             input.value = "";
         },
         getHP() {
+
             if (this.game.ownPlayer.vida > 75) {
                 return "/src/assets/ilustracio-vida/full-health.png";
             } else if (this.game.ownPlayer.vida > 50) {
@@ -455,21 +473,6 @@ export default {
 
     mounted() {
         this.state.loading = false;
-        const store = useAppStore();
-
-
-
-        store.$subscribe((answer) => {
-            if (store.getAnswer() == true) {
-
-
-            } else if (store.getAnswer() == false) {
-            }
-            store.setAnswer(null);
-        });
-
-
-
 
     },
 
