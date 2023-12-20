@@ -27,8 +27,8 @@
                     </select>
                 </div>
                 <div class="buttons-background b-right">
-                    <select class="buttons-size-style" v-model="limit">
-                        <option :value="nothing" disabled selected>Limit de partida</option>
+                    <select class="buttons-size-style" >
+                        <option  disabled selected>Limit de partida</option>
                         <option v-for="item in ['Sense límit', '20 Preguntes', '10 Preguntes', '5 minuts', '10 minuts']" :value="item">{{ item }}</option>
                     </select>
                 </div>

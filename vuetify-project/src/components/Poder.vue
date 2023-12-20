@@ -1,17 +1,12 @@
 <template>
     <div class="container__power">
-        <v-btn variant="solo"  @click="utilitzarPoder()" class="boton__power"><img src="../assets/icono/power.png" alt="" class="power">
-            <!-- 
-                <div class="container__modal">
-                {{ poder }} 
-                </div>
-            -->
+        <v-btn  @click="utilitzarPoder()" class="boton__power">
+            <img src="../assets/icono/power.png" alt="" class="power">
         </v-btn>
     </div>
 </template>
 
 <script>
-import { socket } from '../socket';
 
     export default {
         name: "Poder",

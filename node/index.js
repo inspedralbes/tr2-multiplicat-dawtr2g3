@@ -307,9 +307,8 @@ io.on('connection', (socket) => {
                     user.falladesConsecutives++;
 
                     if (comprovarMort(user)) {
-                        user.vida = 0;
-                        user.temps = Date.now() - start;
-                        mort = true;
+                        matarJugador(user);
+                        socket.emit('die');
                     }
 
                     if (user.falladesConsecutives == 3) {
@@ -368,11 +367,9 @@ io.on('connection', (socket) => {
                         acabarPartida(socket, roomID);
                     } else {
                         if (comprovarMort(user) && !user.mort) {
-                            user.mort = true;
-                            user.vida = 0;
+                            matarJugador(user)
                             socket.emit('die');
-                            user.poder = "";
-                            user.infoPoders.robarVida = 0;
+                         
                         }
                     }
                     llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
@@ -489,11 +486,8 @@ io.on('connection', (socket) => {
             user.vida -= restarVidaSagnar;
             let llistatUsuarisMinim = [];
             if (comprovarMort(user) && !user.mort) {
-                user.mort = true;
-                user.vida = 0;
+                matarJugador(user);
                 socket.emit('die');
-                user.poder = "";
-                user.infoPoders.robarVida = 0;
             }
             if (jugadorsVius(llistatUsuaris).length == 1) {
                 acabarPartida(socket, roomID);
@@ -773,6 +767,14 @@ function jugadorsVius(arrayJugadors) {
         }
     });
     return jugadorsVius;
+}
+
+function matarJugador(user) {
+    user.mort = true;
+    user.vida = 0;
+    user.temps = Date.now() - start;
+    user.poder = "";
+    user.infoPoders.robarVida = 0;
 }
 
 

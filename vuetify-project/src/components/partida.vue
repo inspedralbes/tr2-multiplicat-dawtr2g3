@@ -14,21 +14,9 @@
                </div>
             </div>
             <div class="container__preguntas preguntas">
-                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
-                    @comprovar="(index) => answer(index)" />
+                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta" @comprovar="(index) => answer(index)"/>
 
             </div>
-
-            <!-- <vue-countdown ref="timer" :time="getTemps()" :auto-start="false" :interval="100"
-                :transform="transformSlotProps" v-slot="{ seconds, milliseconds }" 
-                @end="() => {timer.temps = timer.tempsRestant; console.log('startBleed'); startBleed()}"
-                @abort="() => { timer.temps = timer.tempsRestant }">
-                Temps restant: {{ seconds }}.{{ Math.floor(milliseconds / 100) }} seconds.
-            </vue-countdown> -->
-            <!--<vue-countdown ref="bleed" :time="2 * 24 * 60 * 60 * 2000" :auto-start="false" :interval="1000"
-                    :transform="sendBleed" v-slot="{ seconds }">
-                    Bleed: {{ seconds }} seconds.
-                </vue-countdown>  -->
             <div class="container__chat">
                 <div class="chat">
                     <div class="container__missatge">
@@ -55,16 +43,13 @@
                     </div>
                 </div>
                 <div class="container__skip">
-                    <button @click="skip"><img src="../assets/icono/skip.png" alt="" class="imagen__skip"></button>
+                    <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt="" class="imagen__skip"></button>
                 </div>
                 <div class="container__poder poder">
-                    <Poder :poder="game.ownPlayer.poder" />
+                    <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
                 </div>
             </div>
         </div>
-        <button :disabled="disabled" @click="skip">Skip</button>
-        <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
-        <p>Vida: {{ game.ownPlayer.vida }}</p>
     </div>
     <v-row justify="center">
         <v-dialog v-model="game.dialog" scrollable width="auto">
@@ -211,9 +196,7 @@
 
 //container del chat
 .enviar {
-    height: 3vh;
-    width: 2vw;
-    
+    height: 3vh;    
 }
 .button__chat{
     display: flex;
@@ -351,8 +334,6 @@
     position: relative;
     display: flex;
     justify-content: center;
-    left: 3vh;
-    bottom: 6vh;
 }
 </style>
 <script>
@@ -442,6 +423,7 @@ export default {
          * @param {int} index index de la resposta
          */
         answer(index) {
+            console.log("He rebut la resposta");
             this.game.notFirstQuestion = true;
             socket.emit('answer', this.game.question.idPregunta, index);
 
