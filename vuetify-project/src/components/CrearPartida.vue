@@ -1,4 +1,5 @@
 <template>
+    <iconsHead></iconsHead>
     <div class="page">
         <div class="configuration-board">
             <div class="configuration-title-background">
@@ -208,7 +209,12 @@ import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
 import store from '@/store';
 
+import iconsHead from './iconesHead.vue';
+
 export default {
+    components: {
+        iconsHead
+    },
     data() {
         const store = useAppStore();
         return {

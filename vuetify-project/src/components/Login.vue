@@ -1,4 +1,5 @@
 <template>
+  <icons-head></icons-head>
   <h1 class="title-login">MATH ROYALE</h1>
   <div class="container">
     <div class="container__login">
@@ -61,6 +62,9 @@
   font-family: 'Battle Beasts';
   display: flex;
   position: absolute;
+  margin-top: 1.4rem;
+  margin-left: 5rem;
+  font-size: 2vw;
 }
 
 .container__form {
@@ -84,7 +88,13 @@ import CommunicationManager from '../communicationManager.js';
 import router from '@/router'
 import { useAppStore } from '@/store/app';
 import Toastify from 'toastify-js';
+
+import iconsHead from './iconesHead.vue';
+
 export default {
+  components: {
+    iconsHead
+  },
   data: () => ({
     form: false,
     nick: null,

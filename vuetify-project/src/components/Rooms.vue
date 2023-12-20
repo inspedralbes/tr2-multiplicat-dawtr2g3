@@ -1,4 +1,5 @@
 <template>
+    <icons-head></icons-head>
     <div class="page-buscarPrtida">
         <div class="configuration-board-background">
             <div class="board-llista-salas">
@@ -152,7 +153,12 @@ import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
 import store from '@/store';
 
+import iconsHead from './iconesHead.vue';
+
 export default {
+    components: {
+        iconsHead
+    },
     data() {
         const store = useAppStore();
         return {

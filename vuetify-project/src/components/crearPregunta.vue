@@ -1,4 +1,5 @@
 <template>
+    <iconsHead></iconsHead>
     <div class="container">
         <form @submit.prevent="submit">
             <div class="form-group">
@@ -63,7 +64,12 @@ import { useAppStore } from "../store/app.js";
 import router from '@/router';
 import Toastify from 'toastify-js';
 
+import iconsHead from './iconesHead.vue';
+
 export default {
+    components: {
+        iconsHead,
+    },
     data() {
         const store = useAppStore();
 
