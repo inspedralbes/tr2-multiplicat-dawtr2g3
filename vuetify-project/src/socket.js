@@ -7,7 +7,7 @@ import router from '@/router'; // Import the router from your project
  * Si estas treballant en local ferem  url =localhost:3000
  * Si estas en producció ferem url = http://mathroyale.daw.inspedralbes.cat:3589
  */
-const URL = "http://mathroyale.daw.inspedralbes.cat:3589";
+const URL = "http://localhost:3589";
 
 export const socket = io(URL, {
   extraHeaders: {

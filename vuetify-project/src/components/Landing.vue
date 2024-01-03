@@ -6,8 +6,26 @@
       <v-card class="pa-5" color="#864cbf" width="500">
         <div class="card__items items">
           <div class="items__avatar avatar">
-            <v-avatar class="avatar__image" image="../assets/Avatar_22.png" size="100"></v-avatar>
-            <v-btn class="avatar-refresh" size="x-small" icon>
+            <v-avatar v-if="avatar == 1" class="avatar__image" image="../assets/avatar/Avatar_22.png" size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 2" class="avatar__image" image="../assets/avatar/avatarCerdo.png" size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 3" class="avatar__image" image="../assets/avatar/avatarEric.png" size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 4" class="avatar__image" image="../assets/avatar/avatarGatoSuperman.png"
+              size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 5" class="avatar__image" image="../assets/avatar/avatarHamsterTrex.png"
+              size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 6" class="avatar__image" image="../assets/avatar/avatarHombrePeloBlanco.png"
+              size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 7" class="avatar__image" image="../assets/avatar/avatarLevie.png" size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 8" class="avatar__image" image="../assets/avatar/avatarMikasa.png" size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 9" class="avatar__image" image="../assets/avatar/avatarMujerPeloRojo.png"
+              size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 10" class="avatar__image" image="../assets/avatar/avatarPerroBatman.png"
+              size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 11" class="avatar__image" image="../assets/avatar/avatarPerroDJ.png" size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 12" class="avatar__image" image="../assets/avatar/avatarPower.png" size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 13" class="avatar__image" image="../assets/avatar/avatarZorro.png" size="100"></v-avatar>
+
+            <v-btn class="avatar-refresh" size="x-small" icon @click="canviarAvatar()">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
           </div>
@@ -163,7 +181,7 @@ import iconsHead from './iconesHead.vue';
 
 export default {
   components
-  : {
+    : {
     iconsHead
   },
   data() {
@@ -172,6 +190,7 @@ export default {
     return {
       tempsRestant: null,
       nom: '',
+      avatar: 1,
       loginInfo: {
         username: computed(() => store.loginInfo.username),
         loggedIn: computed(() => store.loginInfo.loggedIn),
@@ -240,6 +259,10 @@ export default {
           }).showToast();
         }
       }
+    },
+
+    canviarAvatar() {
+      this.avatar = Math.floor(Math.random() * 13) + 1;
     },
 
 
