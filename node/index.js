@@ -473,6 +473,9 @@ io.on('connection', (socket) => {
                 case "menysTemps":
                     utilitzarPoderMenysTemps(user, userObjectiu, roomID);
                     break;
+                case "duelo":
+                    utilitzarPoderDuelo(user, userObjectiu, roomID);
+                    break;
                 default:
                     break;
             }
@@ -560,7 +563,7 @@ function acabarPartida(socket, roomID) {
  * @returns el poder que li ha tocat
  */
 function getRandomPoder() {
-    let random = Math.floor(Math.random() * 6) + 1;
+    let random = Math.floor(Math.random() * 7) + 1;
     let poder = "";
     switch (random) {
         case 1:
@@ -580,6 +583,9 @@ function getRandomPoder() {
             break;
         case 6:
             poder = "menysTemps";
+            break;
+        case 7:
+            poder = "duelo";
             break;
         default:
             break;
@@ -601,6 +607,11 @@ function getRandomPoderMort() {
             break;
     }
     return poder;
+}
+
+function utilitzarPoderDuelo(user, userObjectiu, roomID) {
+    user.poder = "";
+    io.to(roomID).emit('duelo', user.idSocket, userObjectiu.idSocket);
 }
 
 /**

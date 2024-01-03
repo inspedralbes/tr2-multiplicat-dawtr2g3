@@ -24,6 +24,7 @@ export const useAppStore = defineStore('app', {
     timerInterval: null,
     dead: false,
     animacioVida: false,
+    avatar: 1,
 
   }),
   actions: {
@@ -50,6 +51,9 @@ export const useAppStore = defineStore('app', {
       }, 1000);
     },
 
+    setAvatar(avatar) {
+      this.avatar = avatar;
+    },
     stopTimer() {
       clearInterval(this.timerInterval);
     },

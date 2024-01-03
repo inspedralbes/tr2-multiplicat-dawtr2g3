@@ -262,7 +262,10 @@ export default {
     },
 
     canviarAvatar() {
-      this.avatar = Math.floor(Math.random() * 13) + 1;
+      let nouAvatar = Math.floor(Math.random() * 13) + 1;
+      this.avatar = nouAvatar;
+      const store = useAppStore();
+      store.setAvatar(this.avatar);
     },
 
 

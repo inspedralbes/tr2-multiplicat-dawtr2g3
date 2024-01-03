@@ -1,7 +1,14 @@
 <template>
     <div class="container__power">
         <v-btn  @click="utilitzarPoder()" class="boton__power">
-            <img src="../assets/icono/power.png" alt="" class="power">
+            <img v-if="poder == 'duelo'" src="../assets/poderes/curar.jpg" alt="" class="power">
+            <img v-else-if="poder == 'menysTemps'" src="../assets/poderes/curar.jpg" alt="" class="power">
+            <img v-else-if="poder == 'pararTemps'" src="../assets/poderes/curar.jpg" alt="" class="power">
+            <img v-else-if="poder == 'escut'" src="../assets/poderes/curar.jpg" alt="" class="power">
+            <img v-else-if="poder == 'salut'" src="../assets/poderes/curar.jpg" alt="" class="power">
+            <img v-else-if="poder == 'robarVida'" src="../assets/poderes/curar.jpg" alt="" class="power">
+            <img v-else-if="poder == 'salt'" src="../assets/poderes/curar.jpg" alt="" class="power">
+            <img v-else src="../assets/icono/power.png" alt="" class="power">
         </v-btn>
     </div>
 </template>
