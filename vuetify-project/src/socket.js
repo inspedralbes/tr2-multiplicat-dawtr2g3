@@ -7,7 +7,7 @@ import router from '@/router'; // Import the router from your project
  * Si estas treballant en local ferem  url =localhost:3000
  * Si estas en producció ferem url = http://mathroyale.daw.inspedralbes.cat:3589
  */
-const URL = "http://localhost:3589";
+const URL = "http://localhost:3000";
 
 export const socket = io(URL, {
   extraHeaders: {
@@ -24,6 +24,13 @@ socket.on("games list", (arrayRoom) => {
 
 });
 
+socket.on("duelo recibir", ()=> {
+  console.log("duelo recibido");
+});
+
+socket.on("duelo enviar", ()=> {
+  console.log("duelo enviado");
+});
 /**
  * Modifica l'array d'usuaris
  */

@@ -5,7 +5,7 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 
 const app = express()
-const port = 3589
+const port = 3000
 app.use(cors());
 const server = createServer(app);
 
@@ -474,7 +474,7 @@ io.on('connection', (socket) => {
                     utilitzarPoderMenysTemps(user, userObjectiu, roomID);
                     break;
                 case "duelo":
-                    utilitzarPoderDuelo(user, userObjectiu, roomID);
+                    utilitzarPoderDuelo(user, userObjectiu, roomID, socket);
                     break;
                 default:
                     break;
@@ -531,8 +531,11 @@ function trobarRoom(socket) {
     let rooms = socket.rooms;
     let roomID;
     rooms.forEach((room) => {
-        roomID = room;
+        if (room.includes('Partida')) {
+            roomID = room;
+        }
     });
+    console.log(roomID);
     return roomID;
 
 }
@@ -590,6 +593,8 @@ function getRandomPoder() {
         default:
             break;
     }
+    poder = "duelo";
+
     return poder;
 }
 
@@ -609,9 +614,16 @@ function getRandomPoderMort() {
     return poder;
 }
 
-function utilitzarPoderDuelo(user, userObjectiu, roomID) {
+function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
+    let jugadors = arrayRoom.find((room) => room.id == roomID).jugadors;
+
     user.poder = "";
-    io.to(roomID).emit('duelo', user.idSocket, userObjectiu.idSocket);
+    io.to(userObjectiu.idSocket).emit('duelo recibir', user);
+    socket.join('duelo' + user.idSocket + userObjectiu.idSocket);
+    io.to(user.idSocket).emit('duelo enviar', userObjectiu.idSocket);
+    socket.id = userObjectiu.idSocket;
+    socket.join('duelo' + user.idSocket + userObjectiu.idSocket);
+    socket.id = user.idSocket;
 }
 
 /**
@@ -706,6 +718,7 @@ function createNewUser(idSocket, nick) {
         "falladesConsecutives": 0,
         "poder": "",
         "mort": false,
+        "duelo": false,
         "infoPoders": {
             "escut": false,
             "robarVida": 0,

@@ -35,7 +35,7 @@
             <div class="container__info info">
                 <div class="container__usuario usuario">
                     <div class="container__avatar">
-                        <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
+                         <!--<h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
                         <v-avatar v-if="avatar == 1" class="avatar" image="../assets/avatar/Avatar_22.png" size="100"></v-avatar>
                         <v-avatar v-else-if="avatar == 2" class="avatar" image="../assets/avatar/avatarCerdo.png" size="100"></v-avatar>
                         <v-avatar v-else-if="avatar == 3" class="avatar" image="../assets/avatar/avatarEric.png" size="100"></v-avatar>
@@ -53,7 +53,7 @@
                         size="100"></v-avatar>
                         <v-avatar v-else-if="avatar == 11" class="avatar" image="../assets/avatar/avatarPerroDJ.png" size="100"></v-avatar>
                         <v-avatar v-else-if="avatar == 12" class="avatar" image="../assets/avatar/avatarPower.png" size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 13" class="avatar" image="../assets/avatar/avatarZorro.png" size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 13" class="avatar" image="../assets/avatar/avatarZorro.png" size="100"></v-avatar> -->
                         <!-- <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar"> -->
                         <div class="barra__vida" v-bind:class="{ 'animacioVida': animacioVida }">
                             <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png" alt="" class="imagen-vida">
@@ -408,7 +408,6 @@ export default {
                 answer: computed(() => store.answer),
                 temps: computed(() => store.timer),
                 mort: computed(() => store.dead),
-                avatar: computed(() => store.avatar),
 
                 notFirstQuestion: false,
                 dialog: false,
