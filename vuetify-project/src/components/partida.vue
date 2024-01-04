@@ -5,7 +5,7 @@
         </div>
     </div>
     <div v-else>
-        <div class="container">
+        <div v-if="!game.duelo" class="container">
             <div class="container__jugadors jugadors">
                 <div class="item-scroll">
                     <div class="container__jugador jugador" v-for="jugador in game.players">
@@ -36,32 +36,44 @@
                 <div class="container__usuario usuario">
                     <div class="container__avatar">
                         <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
-                        <v-avatar v-if="avatar == 1" class="avatar" image="../assets/avatar/Avatar_22.png" size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 2" class="avatar" image="../assets/avatar/avatarCerdo.png" size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 3" class="avatar" image="../assets/avatar/avatarEric.png" size="100"></v-avatar>
+                        <v-avatar v-if="avatar == 1" class="avatar" image="../assets/avatar/Avatar_22.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 2" class="avatar" image="../assets/avatar/avatarCerdo.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 3" class="avatar" image="../assets/avatar/avatarEric.png"
+                            size="100"></v-avatar>
                         <v-avatar v-else-if="avatar == 4" class="avatar" image="../assets/avatar/avatarGatoSuperman.png"
-                        size="100"></v-avatar>
+                            size="100"></v-avatar>
                         <v-avatar v-else-if="avatar == 5" class="avatar" image="../assets/avatar/avatarHamsterTrex.png"
-                        size="100"></v-avatar>
+                            size="100"></v-avatar>
                         <v-avatar v-else-if="avatar == 6" class="avatar" image="../assets/avatar/avatarHombrePeloBlanco.png"
-                        size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 7" class="avatar" image="../assets/avatar/avatarLevie.png" size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 8" class="avatar" image="../assets/avatar/avatarMikasa.png" size="100"></v-avatar>
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 7" class="avatar" image="../assets/avatar/avatarLevie.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 8" class="avatar" image="../assets/avatar/avatarMikasa.png"
+                            size="100"></v-avatar>
                         <v-avatar v-else-if="avatar == 9" class="avatar" image="../assets/avatar/avatarMujerPeloRojo.png"
-                        size="100"></v-avatar>
+                            size="100"></v-avatar>
                         <v-avatar v-else-if="avatar == 10" class="avatar" image="../assets/avatar/avatarPerroBatman.png"
-                        size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 11" class="avatar" image="../assets/avatar/avatarPerroDJ.png" size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 12" class="avatar" image="../assets/avatar/avatarPower.png" size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 13" class="avatar" image="../assets/avatar/avatarZorro.png" size="100"></v-avatar>
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 11" class="avatar" image="../assets/avatar/avatarPerroDJ.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 12" class="avatar" image="../assets/avatar/avatarPower.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 13" class="avatar" image="../assets/avatar/avatarZorro.png"
+                            size="100"></v-avatar>
                         <!-- <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar"> -->
                         <div class="barra__vida" v-bind:class="{ 'animacioVida': animacioVida }">
-                            <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png" alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 50" src="/src/assets/ilustracio-vida/75_health.png" alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 25" src="/src/assets/ilustracio-vida/50_health.png" alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 0" src="/src/assets/ilustracio-vida/25_health.png" alt="" class="imagen-vida">
-                            
-                            
+                            <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 50" src="/src/assets/ilustracio-vida/75_health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 25" src="/src/assets/ilustracio-vida/50_health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 0" src="/src/assets/ilustracio-vida/25_health.png"
+                                alt="" class="imagen-vida">
+
+
 
                             <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
                         </div>
@@ -73,6 +85,109 @@
                 </div>
                 <div class="container__poder poder">
                     <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
+                </div>
+            </div>
+        </div>
+        <div v-else>
+            <div class="container__preguntas preguntas">
+                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
+                    @comprovar="(index) => answer(index)" />
+
+            </div>
+            <div class="container__info info">
+                <div class="container__usuario usuario">
+                    <div class="container__avatar">
+                        <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
+                        <v-avatar v-if="avatar == 1" class="avatar" image="../assets/avatar/Avatar_22.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 2" class="avatar" image="../assets/avatar/avatarCerdo.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 3" class="avatar" image="../assets/avatar/avatarEric.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 4" class="avatar" image="../assets/avatar/avatarGatoSuperman.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 5" class="avatar" image="../assets/avatar/avatarHamsterTrex.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 6" class="avatar" image="../assets/avatar/avatarHombrePeloBlanco.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 7" class="avatar" image="../assets/avatar/avatarLevie.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 8" class="avatar" image="../assets/avatar/avatarMikasa.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 9" class="avatar" image="../assets/avatar/avatarMujerPeloRojo.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 10" class="avatar" image="../assets/avatar/avatarPerroBatman.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 11" class="avatar" image="../assets/avatar/avatarPerroDJ.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 12" class="avatar" image="../assets/avatar/avatarPower.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 13" class="avatar" image="../assets/avatar/avatarZorro.png"
+                            size="100"></v-avatar>
+                        <!-- <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar"> -->
+                        <div class="barra__vida" v-bind:class="{ 'animacioVida': animacioVida }">
+                            <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 50" src="/src/assets/ilustracio-vida/75_health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 25" src="/src/assets/ilustracio-vida/50_health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 0" src="/src/assets/ilustracio-vida/25_health.png"
+                                alt="" class="imagen-vida">
+
+
+
+                            <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container__info info">
+                <div class="container__usuario usuario">
+                    <div class="container__avatar">
+                        <h2 class="nickUsuario">{{ game.oponent.nick }}</h2>
+                        <v-avatar v-if="avatar == 1" class="avatar" image="../assets/avatar/Avatar_22.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 2" class="avatar" image="../assets/avatar/avatarCerdo.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 3" class="avatar" image="../assets/avatar/avatarEric.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 4" class="avatar" image="../assets/avatar/avatarGatoSuperman.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 5" class="avatar" image="../assets/avatar/avatarHamsterTrex.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 6" class="avatar" image="../assets/avatar/avatarHombrePeloBlanco.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 7" class="avatar" image="../assets/avatar/avatarLevie.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 8" class="avatar" image="../assets/avatar/avatarMikasa.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 9" class="avatar" image="../assets/avatar/avatarMujerPeloRojo.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 10" class="avatar" image="../assets/avatar/avatarPerroBatman.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 11" class="avatar" image="../assets/avatar/avatarPerroDJ.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 12" class="avatar" image="../assets/avatar/avatarPower.png"
+                            size="100"></v-avatar>
+                        <v-avatar v-else-if="avatar == 13" class="avatar" image="../assets/avatar/avatarZorro.png"
+                            size="100"></v-avatar>
+                        <!-- <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar"> -->
+                        <div class="barra__vida" v-bind:class="{ 'animacioVida': animacioVida }">
+                            <img v-if="this.game.oponent.vida > 75" src="/src/assets/ilustracio-vida/full-health.png" alt=""
+                                class="imagen-vida">
+                            <img v-else-if="this.game.oponent.vida > 50" src="/src/assets/ilustracio-vida/75_health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.oponent.vida > 25" src="/src/assets/ilustracio-vida/50_health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.oponent.vida > 0" src="/src/assets/ilustracio-vida/25_health.png"
+                                alt="" class="imagen-vida">
+
+
+
+                            <h3 class="numero__vida">{{ game.oponent.vida }}</h3>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -130,18 +245,34 @@
     height: 47vh;
     top: 1vh;
 }
+
 .animacioVida {
     background-color: #ffdd33;
     animation: tilt-shaking 0.5s;
 }
 
 @keyframes tilt-shaking {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(5deg); }
-  50% { transform: rotate(0eg); }
-  75% { transform: rotate(-5deg); }
-  100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(5deg);
+    }
+
+    50% {
+        transform: rotate(0eg);
+    }
+
+    75% {
+        transform: rotate(-5deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
+
 .item-scroll::-webkit-scrollbar {
     width: 1vh;
 }
@@ -409,9 +540,11 @@ export default {
                 temps: computed(() => store.timer),
                 mort: computed(() => store.dead),
                 avatar: computed(() => store.avatar),
+                oponent: computed(() => players.find(player => player.idSocket == store.oponent)),
 
                 notFirstQuestion: false,
                 dialog: false,
+                duelo: false,
             },
             timerInterval: null,
             disabled: false,
