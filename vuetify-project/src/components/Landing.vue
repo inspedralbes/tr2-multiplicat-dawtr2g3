@@ -6,7 +6,7 @@
       <v-card class="pa-5" color="#864cbf" width="500">
         <div class="card__items items">
           <div class="items__avatar avatar">
-            <v-avatar v-if="avatar == 1" class="avatar__image" image="../assets/avatar/Avatar_22.png" size="100"></v-avatar>
+            <v-avatar v-if="avatar == 1" class="avatar__image" image="../assets/avatar/avatarVaiolet.png" size="100"></v-avatar>
             <v-avatar v-else-if="avatar == 2" class="avatar__image" image="../assets/avatar/avatarCerdo.png" size="100"></v-avatar>
             <v-avatar v-else-if="avatar == 3" class="avatar__image" image="../assets/avatar/avatarEric.png" size="100"></v-avatar>
             <v-avatar v-else-if="avatar == 4" class="avatar__image" image="../assets/avatar/avatarGatoSuperman.png"
