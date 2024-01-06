@@ -9,8 +9,6 @@ import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
 import CrearPregunta from "../components/CrearPregunta.vue";
 
-import Duelo from "../components/dueloPartida.vue";
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -56,10 +54,6 @@ const router = createRouter({
       path: '/crearPartida',
       name: 'CrearPartida',
       component: CrearPartida
-    },{
-      path: '/duelo',
-      name: 'duelo',
-      component: Duelo
     }
   ]
 })

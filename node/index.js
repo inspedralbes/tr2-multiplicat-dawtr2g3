@@ -564,32 +564,32 @@ function acabarPartida(socket, roomID) {
  */
 function getRandomPoder() {
     let random = Math.floor(Math.random() * 7) + 1;
-    let poder = "duelo";
-    // switch (random) {
-    //     case 1:
-    //         poder = "salt";
-    //         break;
-    //     case 2:
-    //         poder = "vida";
-    //         break;
-    //     case 3:
-    //         poder = "escut";
-    //         break;
-    //     case 4:
-    //         poder = "robarVida";
-    //         break;
-    //     case 5:
-    //         poder = "pararTemps";
-    //         break;
-    //     case 6:
-    //         poder = "menysTemps";
-    //         break;
-    //     case 7:
-    //         poder = "duelo";
-    //         break;
-    //     default:
-    //         break;
-    // }
+    let poder = "";
+    switch (random) {
+        case 1:
+            poder = "salt";
+            break;
+        case 2:
+            poder = "vida";
+            break;
+        case 3:
+            poder = "escut";
+            break;
+        case 4:
+            poder = "robarVida";
+            break;
+        case 5:
+            poder = "pararTemps";
+            break;
+        case 6:
+            poder = "menysTemps";
+            break;
+        case 7:
+            poder = "duelo";
+            break;
+        default:
+            break;
+    }
     return poder;
 }
 
