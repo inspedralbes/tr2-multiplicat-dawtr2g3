@@ -66,6 +66,7 @@ export const useAppStore = defineStore('app', {
       }, 500);
     },
     startTimer() {
+      this.stopTimer();
       setTimeout(() => {
         this.timerInterval = setInterval(() => {
           if (this.timer <= 0) {

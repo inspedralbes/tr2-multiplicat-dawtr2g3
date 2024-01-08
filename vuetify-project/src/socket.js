@@ -25,9 +25,11 @@ socket.on("games list", (arrayRoom) => {
 });
 
 
-socket.on('finalitzar duelo',()=>{
+socket.on('finalitzar duelo', () => {
   const store = useAppStore();
   store.setDuelo({});
+  store.stopTimer();
+
   socket.emit('sortir duelo');
 });
 
@@ -77,20 +79,20 @@ socket.on("check", (correcte, acabat) => {
   store.setAnswer(correcte);
 
   store.setAnswer(correcte);
-  if(!correcte && !store.getDuelo()){
+  if (!correcte && !store.getDuelo()) {
     store.triggerAnimacioVida();
   }
   if (!acabat && correcte) {
-    if(store.getDuelo()){
+    if (store.getDuelo()) {
       let victories = store.sumarVictoria();
-      if(victories == 3){
+      if (victories == 3) {
         store.setVictories(0);
         socket.emit("end duel");
       }
     }
     socket.emit("send");
   }
-  
+
   if (acabat) {
     store.stopTimer();
     router.push('/final');
@@ -105,6 +107,7 @@ socket.on("end", (guanyador, perdedors) => {
   router.push('/final');
   const store = useAppStore();
   store.stopTimer();
+
   store.timer = 20;
 
   store.setQuestionIndex(-1);
@@ -127,9 +130,9 @@ socket.on('die', () => {
   store.playerDead();
 });
 
-socket.on('info partida', (nom, maxJugadors) =>{
+socket.on('info partida', (nom, maxJugadors) => {
   const store = useAppStore();
-  store.setInfoPartida(nom,maxJugadors);
+  store.setInfoPartida(nom, maxJugadors);
 })
 
 /**
@@ -146,12 +149,12 @@ socket.on("play", (question) => {
 });
 
 socket.on("duelo recibir", (duelo) => {
- //Triger animacion de recibir duelo
- const store = useAppStore();
- console.log("recibir duelo");
- console.log(duelo);
-
- store.setDuelo(duelo);
+  //Triger animacion de recibir duelo
+  const store = useAppStore();
+  console.log("recibir duelo");
+  console.log(duelo);
+  store.stopTimer();
+  store.setDuelo(duelo);
 });
 
 socket.on("duelo enviar", (duelo) => {
@@ -159,6 +162,7 @@ socket.on("duelo enviar", (duelo) => {
   const store = useAppStore();
   console.log("enviar duelo");
   console.log(duelo);
+  store.stopTimer();
   store.setDuelo(duelo);
 });
 
