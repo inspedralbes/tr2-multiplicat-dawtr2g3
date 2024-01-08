@@ -77,12 +77,20 @@ socket.on("check", (correcte, acabat) => {
   store.setAnswer(correcte);
 
   store.setAnswer(correcte);
-  if(!correcte){
+  if(!correcte && !store.getDuelo()){
     store.triggerAnimacioVida();
   }
   if (!acabat && correcte) {
+    if(store.getDuelo()){
+      let victories = store.sumarVictoria();
+      if(victories == 3){
+        store.setVictories(0);
+        socket.emit("end duel");
+      }
+    }
     socket.emit("send");
   }
+  
   if (acabat) {
     store.stopTimer();
     router.push('/final');
@@ -135,6 +143,19 @@ socket.on("play", (question) => {
   store.timer = question.temps;
   router.push('/partida');
   store.startTimer();
+});
+
+socket.on("recieve duel", (oponent) => {
+  const store = useAppStore();
+  store.setOponent(oponent);
+  store.setDuelo(true);
+});
+
+socket.on("send duel", (oponent) => {
+  const store = useAppStore();
+  store.setOponent(oponent);
+  store.setDuelo(true);
+  
 });
 
 // socket.on("get power", (poder) => {

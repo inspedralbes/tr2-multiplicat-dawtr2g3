@@ -25,9 +25,29 @@ export const useAppStore = defineStore('app', {
     dead: false,
     animacioVida: false,
     avatar: 1,
+    duelo: false,
+    victories: 0,
+    opponent: null,
 
   }),
   actions: {
+    setOpponent(opponent) {
+      this.opponent = opponent;
+    },
+
+    sumarVictoria() {
+      this.victories++;
+      return this.victories;
+    },
+    setVictories(victories) {
+      this.victories = victories;
+    },
+    setDuelo(duelo) {
+      this.duelo = duelo;
+    },
+    getDuelo() {
+      return this.duelo;
+    },
     setInfoPartida(nom, maxJugadors) {
       this.nomPartida = nom;
       this.maxJugadors = maxJugadors;
