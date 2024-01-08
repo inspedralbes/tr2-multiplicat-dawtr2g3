@@ -59,6 +59,7 @@ export const useAppStore = defineStore('app', {
       }, 500);
     },
     startTimer() {
+      
       setTimeout(() => {
         this.timerInterval = setInterval(() => {
           if (this.timer <= 0) {
@@ -69,6 +70,7 @@ export const useAppStore = defineStore('app', {
           }
         }, 1000);
       }, 1000);
+  
     },
 
     setAvatar(avatar) {
