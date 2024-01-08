@@ -84,8 +84,9 @@
                 </div>
                 <div class="container__poder poder">
                     <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
-                    <p class="nomPoder">{{ game.ownPlayer.poder }}</p>
                 </div>
+                <p class="nomPoder">{{ game.ownPlayer.poder }}</p>
+
             </div>
         </div>
         <div v-else class="duelo">
@@ -220,7 +221,6 @@
 }
 
 .nomPoder {
-    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -234,9 +234,7 @@
   display: block;
 }
 
-.power:hover + .nomPoder {
-  display: block;
-}
+
 //container de la partida
 .container {
     display: grid;
