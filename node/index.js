@@ -499,18 +499,20 @@ io.on('connection', (socket) => {
             let user = llistatUsuaris.find((usuari) => {
                 return usuari.idSocket == socket.id;
             });
-            user.vida -= restarVidaSagnar;
-            let llistatUsuarisMinim = [];
-            if (comprovarMort(user) && !user.mort) {
-                matarJugador(user, start);
-                socket.emit('die');
+            if (!user.mort) {
+                user.vida -= restarVidaSagnar;
+                let llistatUsuarisMinim = [];
+                if (comprovarMort(user) && !user.mort) {
+                    matarJugador(user, start);
+                    socket.emit('die');
+                }
+                if (jugadorsVius(llistatUsuaris).length == 1) {
+                    acabarPartida(socket, roomID);
+                }
+                llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
+                llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+                io.to(roomID).emit("update players", llistatUsuarisMinim)
             }
-            if (jugadorsVius(llistatUsuaris).length == 1) {
-                acabarPartida(socket, roomID);
-            }
-            llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
-            llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-            io.to(roomID).emit("update players", llistatUsuarisMinim)
         }
     })
 

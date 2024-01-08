@@ -84,6 +84,7 @@
                 </div>
                 <div class="container__poder poder">
                     <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
+                    <p class="nomPoder">{{ game.ownPlayer.poder }}</p>
                 </div>
             </div>
         </div>
@@ -218,6 +219,24 @@
     filter: grayscale(100%);
 }
 
+.nomPoder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    font-size: 2vh;
+    text-align: center;
+    color: #ffdd33;
+    display: none;
+}
+
+.poder:hover + .nomPoder {
+  display: block;
+}
+
+.power:hover + .nomPoder {
+  display: block;
+}
 //container de la partida
 .container {
     display: grid;
