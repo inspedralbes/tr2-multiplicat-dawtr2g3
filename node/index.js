@@ -225,7 +225,25 @@ io.on('connection', (socket) => {
         }
         io.to(roomID).emit('update chat', obj);
     });
+    socket.on('sortir duelo', () => {
+        let roomID = trobarRoom(socket);
+        let roomDuelo = findRoomDuelo(socket);
+        let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        llistatUsuaris.map((user) => {
+            if (user.idSocket == socket.id) {
+                user.duelo.enDuelo = false;
+                user.duelo.encertades = 0;
+                user.duelo.oponent = {};
+            }
+        });
+        socket.leave(roomDuelo)
+        arrayRoom.map((room) => {
+            if (room.id == roomID) {
+                room.jugadors = llistatUsuaris;
+            }
+        });
 
+    });
     /**
      * Comprova si la resposta és correcta o no, i si és la última pregunta
      * @param {int} idPreg Identificador de la pregunta
@@ -243,44 +261,64 @@ io.on('connection', (socket) => {
         let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
         let start = arrayRoom.find((room) => room.id == roomID).start;
         let llistatUsuarisMinim = [];
-
+        let duelo = false;
+        let idOponent;
         // encerta la pregunta
         if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
             correcte = true;
             llistatUsuaris.map((user) => {
                 if (user.idSocket == socket.id) {
-                    user.encertades++;
-                    user.falladesConsecutives = 0;
-                    user.preguntaActual++;
-                    user.falladesConsecutives = 0;
 
-                    if (user.infoPoders.robarVida > 0) {
-                        if (!user.vida <= 0) {
-                            user.vida += 10;
-                            if (user.vida > 100) {
-                                user.vida = 100;
+                    duelo = user.duelo.enDuelo;
+
+                    if (!duelo) {
+                        user.encertades++;
+                        user.falladesConsecutives = 0;
+                        user.preguntaActual++;
+                        user.falladesConsecutives = 0;
+                        if (user.infoPoders.robarVida > 0) {
+                            if (!user.vida <= 0) {
+                                user.vida += 10;
+                                if (user.vida > 100) {
+                                    user.vida = 100;
+                                }
+                            }
+                            user.infoPoders.robarVida--;
+                        }
+
+                        if (!comprovarMort(user)) {
+                            if (user.encertades % 3 == 0) {
+
+                                let poder = getRandomPoder(user);
+                                user.poder = poder;
+                            }
+                        } else {
+                            if (user.encertades % 5 == 0) {
+
+                                let poder = getRandomPoderMort(user);
+                                user.poder = poder;
                             }
                         }
-                        user.infoPoders.robarVida--;
-                    }
-
-                    if (!comprovarMort(user)) {
-                        if (user.encertades % 3 == 0) {
-
-                            let poder = getRandomPoder(user);
-                            user.poder = poder;
-                        }
                     } else {
-                        if (user.encertades % 5 == 0) {
-
-                            let poder = getRandomPoderMort(user);
-                            user.poder = poder;
+                        user.duelo.encertades++;
+                        if (user.duelo.encertades == 5) {
+                            let duelo = findRoomDuelo(socket);
+                            io.to(duelo).emit('finalitzar duelo');
                         }
+                        let indexPregunta = user.duelo.encertades-1;
+                        idOponent = user.duelo.oponent.id;
+                        let preguntaDuelo = arrayPreg[indexPregunta];
+                        socket.emit('new question', preguntaDuelo);
                     }
-
                 }
             });
-
+            if(duelo){
+                llistatUsuaris.map((user) => {
+                    if (user.idSocket == idOponent) {
+                        user.duelo.oponent.encertades++;
+                    }
+                });
+            }
             llistatUsuaris.forEach((user) => {
 
                 let userMinim = createUserMinim(user);
@@ -299,39 +337,42 @@ io.on('connection', (socket) => {
 
 
         } else {
-            let mort = false
+            let mort = false;
+
             llistatUsuaris.map((user) => {
-                if (user.idSocket == socket.id) {
-                    user.vida -= 10;
+                if (!user.duelo.enDuelo) {
+                    if (user.idSocket == socket.id) {
+                        user.vida -= 10;
 
-                    if (user.infoPoders.escut) {
-                        user.infoPoders.escut = false;
-                        user.vida += 10;
-                    }
-
-                    if (user.infoPoders.robarVida > 0) {
-                        user.infoPoders.robarVida = 0;
-                    }
-
-                    user.falladesConsecutives++;
-
-                    if (comprovarMort(user)) {
-                        matarJugador(user, start);
-                        socket.emit('die');
-                        mort = true;
-                    }
-
-                    if (user.falladesConsecutives == 3) {
-                        user.preguntaActual++;
-                        user.falladesConsecutives = 0;
-                        let preguntaEnviar = arrayPreg[user.preguntaActual];
-                        if (user.infoPoders.tempspregunta > 0) {
-                            preguntaEnviar.temps -= user.infoPoders.tempspregunta;
-                            user.infoPoders.tempspregunta = 0;
-                            socket.emit('less time');
-                            //!!!! aquest encara s'ha de fer
+                        if (user.infoPoders.escut) {
+                            user.infoPoders.escut = false;
+                            user.vida += 10;
                         }
-                        socket.emit('new question', preguntaEnviar);
+
+                        if (user.infoPoders.robarVida > 0) {
+                            user.infoPoders.robarVida = 0;
+                        }
+
+                        user.falladesConsecutives++;
+
+                        if (comprovarMort(user)) {
+                            matarJugador(user, start);
+                            socket.emit('die');
+                            mort = true;
+                        }
+
+                        if (user.falladesConsecutives == 3) {
+                            user.preguntaActual++;
+                            user.falladesConsecutives = 0;
+                            let preguntaEnviar = arrayPreg[user.preguntaActual];
+                            if (user.infoPoders.tempspregunta > 0) {
+                                preguntaEnviar.temps -= user.infoPoders.tempspregunta;
+                                user.infoPoders.tempspregunta = 0;
+                                socket.emit('less time');
+                                //!!!! aquest encara s'ha de fer
+                            }
+                            socket.emit('new question', preguntaEnviar);
+                        }
                     }
                 }
             });
@@ -539,6 +580,18 @@ function trobarRoom(socket) {
     return roomID;
 
 }
+function findRoomDuelo(socket) {
+    let rooms = socket.rooms;
+    let roomID;
+    rooms.forEach((room) => {
+        if (room.includes('duelo')) {
+            roomID = room;
+        }
+    });
+    console.log(roomID);
+    return roomID;
+
+}
 function acabarPartida(socket, roomID) {
     let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
     let perdedors = llistatUsuaris.sort((a, b) => { return b.temps - a.temps });
@@ -615,8 +668,20 @@ function getRandomPoderMort() {
 }
 
 function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
-    let jugadors = arrayRoom.find((room) => room.id == roomID).jugadors;
+    let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+    llistatUsuaris.map((jugador) => {
+        if (jugador.idSocket == socket.id) {
+            jugador.duelo.enDuelo = true;
+            jugador.duelo.oponent.id = userObjectiu.id;
+            jugador.duelo.oponent.encertades = 0;
+        }
+        if (jugador.idSocket = userObjectiu.id) {
+            jugador.duelo.enDuelo = true;
+            jugador.duelo.oponent.id = user.id;
+            jugador.duelo.oponent.encertades = 0;
+        }
 
+    });
     user.poder = "";
     io.to(userObjectiu.idSocket).emit('duelo recibir', user);
     socket.join('duelo' + user.idSocket + userObjectiu.idSocket);
@@ -718,7 +783,15 @@ function createNewUser(idSocket, nick) {
         "falladesConsecutives": 0,
         "poder": "",
         "mort": false,
-        "duelo": false,
+        "duelo": {
+            "enDuelo": false,
+            "encertades": 0,
+            "indexPreg": [],
+            "oponent": {
+                'id': "",
+                'encertades': "",
+            },
+        },
         "infoPoders": {
             "escut": false,
             "robarVida": 0,

@@ -27,7 +27,10 @@ socket.on("games list", (arrayRoom) => {
 socket.on("duelo recibir", ()=> {
   console.log("duelo recibido");
 });
-
+socket.on('finalitzar duelo',()=>{
+  /**Codi per que el front actui */
+  socket.emit('sortir duelo');
+});
 socket.on("duelo enviar", ()=> {
   console.log("duelo enviado");
 });
