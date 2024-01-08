@@ -15,7 +15,7 @@
 
         <v-row>
             <v-col cols="12">
-                <h2 class="subtitle">Preguntes</h2>
+                <h2 class="subtitle">Poders</h2>
                 <p>adasdasd</p>
             </v-col>
         </v-row>
