@@ -544,8 +544,8 @@ export default {
                 temps: computed(() => store.timer),
                 mort: computed(() => store.dead),
                 avatar: computed(() => store.avatar),
-                oponent: computed(() => players.find(player => player.idSocket == store.duelo.oponent.id)),
                 duelo: computed(() => store.duelo),
+                oponent: computed(() => this.game.players.find(player => player.idSocket == store.duelo.oponent.id)),
 
                 notFirstQuestion: false,
                 dialog: false,
