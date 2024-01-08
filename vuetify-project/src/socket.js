@@ -28,7 +28,8 @@ socket.on("duelo recibir", ()=> {
   console.log("duelo recibido");
 });
 socket.on('finalitzar duelo',()=>{
-  /**Codi per que el front actui */
+  const store = useAppStore();
+  store.setDuelo(false);
   socket.emit('sortir duelo');
 });
 socket.on("duelo enviar", ()=> {
