@@ -5,6 +5,20 @@
                 <h1 class="title">Tutorial Game</h1>
             </v-col>
         </v-row>
+
+        <v-row>
+            <v-col cols="12">
+                <h2 class="subtitle">Com Jugar?</h2>
+                
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="12">
+                <h2 class="subtitle">Preguntes</h2>
+                <p>adasdasd</p>
+            </v-col>
+        </v-row>
         <v-row>
             <v-col cols="12" md="6" v-for="article in articles">
                 <v-card max-width="344" class="mx-auto article-card">
@@ -24,6 +38,16 @@
     margin-bottom: 4%;
     font-family: "Battle Beasts";
     font-size: 7rem !important;
+    font-weight: 300;
+    line-height: 6rem;
+    color: #ffc00a;
+}
+
+.subtitle {
+    text-align: center;
+    margin-top: 4%;
+    margin-bottom: 4%;
+    font-size: 4rem !important;
     font-weight: 300;
     line-height: 6rem;
     color: #ffc00a;
