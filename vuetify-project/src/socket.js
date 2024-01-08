@@ -24,17 +24,13 @@ socket.on("games list", (arrayRoom) => {
 
 });
 
-socket.on("duelo recibir", ()=> {
-  console.log("duelo recibido");
-});
+
 socket.on('finalitzar duelo',()=>{
   const store = useAppStore();
-  store.setDuelo(false);
+  store.setDuelo({});
   socket.emit('sortir duelo');
 });
-socket.on("duelo enviar", ()=> {
-  console.log("duelo enviado");
-});
+
 /**
  * Modifica l'array d'usuaris
  */
@@ -149,18 +145,23 @@ socket.on("play", (question) => {
   store.startTimer();
 });
 
-socket.on("recieve duel", (oponent) => {
-  const store = useAppStore();
-  store.setOponent(oponent);
-  store.setDuelo(true);
+socket.on("duelo recibir", (duelo) => {
+ //Triger animacion de recibir duelo
+ const store = useAppStore();
+ console.log("recibir duelo");
+ console.log(duelo);
+
+ store.setDuelo(duelo);
 });
 
-socket.on("send duel", (oponent) => {
+socket.on("duelo enviar", (duelo) => {
+  //Triger animacion de enviar duelo
   const store = useAppStore();
-  store.setOponent(oponent);
-  store.setDuelo(true);
-  
+  console.log("enviar duelo");
+  console.log(duelo);
+  store.setDuelo(duelo);
 });
+
 
 // socket.on("get power", (poder) => {
 //   const store = useAppStore();

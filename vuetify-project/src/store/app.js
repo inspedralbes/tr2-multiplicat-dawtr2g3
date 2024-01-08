@@ -25,9 +25,16 @@ export const useAppStore = defineStore('app', {
     dead: false,
     animacioVida: false,
     avatar: 1,
-    duelo: false,
-    victories: 0,
-    opponent: null,
+    duelo: {
+      "enDuelo": false,
+      "encertades": 0,
+      "indexPreg": [],
+      "oponent": {
+        'id': "",
+        'encertades': "",
+      },
+    },
+
 
   }),
   actions: {

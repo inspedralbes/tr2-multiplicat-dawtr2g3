@@ -5,7 +5,7 @@
         </div>
     </div>
     <div v-else v-bind:class="{ 'mort': game.mort }">
-        <div v-if="!game.duelo" class="container">
+        <div v-if="!game.duelo.enDuelo" class="container">
             <div class="container__jugadors jugadors">
                 <div class="item-scroll">
                     <div class="container__jugador jugador" v-for="jugador in game.players">
@@ -544,11 +544,11 @@ export default {
                 temps: computed(() => store.timer),
                 mort: computed(() => store.dead),
                 avatar: computed(() => store.avatar),
-                oponent: computed(() => players.find(player => player.idSocket == store.oponent)),
+                oponent: computed(() => players.find(player => player.idSocket == store.duelo.oponent.id)),
+                duelo: computed(() => store.duelo),
 
                 notFirstQuestion: false,
                 dialog: false,
-                duelo: false,
             },
             timerInterval: null,
             disabled: false,
