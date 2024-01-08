@@ -84,6 +84,7 @@ export const useAppStore = defineStore('app', {
     },
     stopTimer() {
       clearInterval(this.timerInterval);
+      console.log("Timer stopped")
     },
     setPerdedors(perdedors) {
       this.perdedors = perdedors;
