@@ -17,6 +17,10 @@
                 <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
                     @comprovar="(index) => answer(index)" />
             </div>
+            <div class="container__reloj">
+                <img src="../assets/altres ilustracions/relog-de-arena.gif" alt="" class="imagen__reloj">
+                <h6 class="texto__tiempo">{{ game.temps }}</h6>
+            </div>
             <div v-if="divActivo != 'partida'" class="container__chat">
                 <div class="chat">
                     <div class="container__missatge">
@@ -216,9 +220,9 @@
 .container {
     display: grid;
     grid-template-areas:
-        "jugadors preguntas"
-        "chat info";
-    grid-template-columns: 1fr 2fr;
+        "jugadors preguntas reloj"
+        "chat info info";
+    grid-template-columns: 2fr 3fr 0.1fr;
     grid-template-rows: 3fr 1.5fr;
     margin-left: 15vh;
     width: 85vw;
@@ -503,6 +507,27 @@
     position: relative;
     display: flex;
     justify-content: center;
+}
+
+.container__reloj {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.imagen__reloj {
+    height: 25vh;
+    margin: 0;
+}
+.texto__tiempo {
+    position: absolute;
+    top: 18vh;
+    left: 0;
+    right: 0;
+    font-size: 4vh;
+    font-weight: bold;
+    text-align: center;
+    color: white;
 }
 </style>
 <script>
