@@ -78,14 +78,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="container__skip">
-                    <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt=""
-                            class="imagen__skip"></button>
+                <div class="container__skip skip">
+                    <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt="" class="imagen__skip"></button>                    
+                </div>
+                <div class="hoverSkip">
+                    <p>
+                        Saltar pregunta: el primer no et treu vida. Després començaràs a perdre vida, MOLTA.
+                    </p>
                 </div>
                 <div class="container__poder poder">
                     <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
                 </div>
-                <p class="nomPoder">{{ game.ownPlayer.poder }}</p>
+                <div class="nomPoder">
+                    <p v-if="game.ownPlayer.poder.length != 0">{{ game.ownPlayer.poder }}</p>
+                    <p v-else>Poders: 0</p>
+                </div>
 
             </div>
         </div>
@@ -221,19 +228,41 @@
 }
 
 .nomPoder {
-    top: 0;
-    left: 0;
-    right: 0;
-    font-size: 2vh;
+    position: absolute;
+    top: 17%;
+    right: 9.5%;
+    background-color: white;
+    border: 1px solid black;
+    padding: 1%;
+    width: 7vw;
+    height: 5vh;
+    text-transform: uppercase;
     text-align: center;
-    color: #ffdd33;
+    color: #000000;
     display: none;
 }
 
 .poder:hover + .nomPoder {
-  display: block;
+    display: block;
 }
 
+.hoverSkip {
+    background-color: white;
+    border: 1px solid black;
+    padding: 1%;
+    width: 12vw;
+    height: 10vh;
+    position: absolute;
+    top: 6%;
+    right: 23%;
+    text-align: center;
+    color: #000000;
+    display: none;
+}
+
+.skip:hover + .hoverSkip {
+    display: block;
+}
 
 //container de la partida
 .container {

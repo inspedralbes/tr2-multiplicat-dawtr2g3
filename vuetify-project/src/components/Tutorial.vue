@@ -1,4 +1,5 @@
 <template>
+    <icons-head></icons-head>
     <v-container>
         <v-row>
             <v-col cols="12">
@@ -108,7 +109,12 @@
 </style>
 
 <script>
+import IconsHead from "@/components/iconesHead.vue";
+
 export default {
+    components: {
+        IconsHead
+    },
     data() {
         return {
             articles: [
