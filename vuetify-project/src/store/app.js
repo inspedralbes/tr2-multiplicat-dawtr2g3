@@ -25,9 +25,17 @@ export const useAppStore = defineStore('app', {
     dead: false,
     animacioVida: false,
     avatar: 1,
-    duelo: false,
-    victories: 0,
-    opponent: null,
+    timerStopped: true,
+    duelo: {
+      "enDuelo": false,
+      "encertades": 0,
+      "indexPreg": [],
+      "oponent": {
+        'id': "",
+        'encertades': "",
+      },
+    },
+
 
   }),
   actions: {
@@ -59,18 +67,18 @@ export const useAppStore = defineStore('app', {
       }, 500);
     },
     startTimer() {
-      
-      setTimeout(() => {
-        this.timerInterval = setInterval(() => {
-          if (this.timer <= 0) {
-            socket.emit('bleed');
-            this.triggerAnimacioVida();
-          } else {
-            this.timer--;
-          }
-        }, 1000);
-      }, 1000);
-  
+      if (this.timerStopped) {
+          this.timerInterval = setInterval(() => {
+
+            if (this.timer <= 0) {
+              socket.emit('bleed');
+              this.triggerAnimacioVida();
+            } else {
+              this.timer--;
+            }
+          }, 1000);
+        this.timerStopped = false;
+      }
     },
 
     setAvatar(avatar) {
@@ -78,6 +86,7 @@ export const useAppStore = defineStore('app', {
     },
     stopTimer() {
       clearInterval(this.timerInterval);
+      this.timerStopped = true;
     },
     setPerdedors(perdedors) {
       this.perdedors = perdedors;

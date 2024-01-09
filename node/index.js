@@ -3,9 +3,209 @@ import { fetchPreguntas } from "./preguntes.js";
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import cors from 'cors';
+const preguntasDuelo = [
+    {
+        "idPregunta": 0,
+        "pregunta": "Quant és 1500 mil·lilitres en litres?",
+        "categoria": 1,
+        "tipus": 0,
 
+        "respostes": [
+            "1.5 L",
+            "2.5 L",
+            "3.5 L",
+            "5 L"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 1,
+        "pregunta": "Quant és 4 quilòmetres en metres?",
+        "categoria": 1,
+        "tipus": 0,
+
+
+        "respostes": [
+            "4000 m",
+            "5000 m",
+            "6000 m",
+            "7000 m"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 2,
+        "pregunta": "Quants grams són 0.5 quilograms?",
+        "categoria": 2,
+        "tipus": 0,
+
+
+        "respostes": [
+            "500 g",
+            "750 g",
+            "1000 g",
+            "1250 g"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 3,
+        "pregunta": "Quina és l'àrea d'un cercle amb radi de 2 centímetres?",
+        "categoria": 3,
+        "tipus": 0,
+
+
+        "respostes": [
+            "4π cm²",
+            "8π cm²",
+            "12π cm²",
+            "16π cm²"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 4,
+        "pregunta": "Quant temps es tarda en recórrer 60 km si la velocitat és de 30 km/h?",
+        "categoria": 4,
+        "tipus": 0,
+
+
+        "respostes": [
+            "2 h",
+            "3 h",
+            "4 h",
+            "5 h"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 5,
+        "pregunta": "Quants mil·lilitres hi ha en 0.75 litres?",
+        "categoria": 1,
+        "tipus": 0,
+
+
+        "respostes": [
+            "750 mL",
+            "1000 mL",
+            "1250 mL",
+            "1500 mL"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 6,
+        "pregunta": "Quant és 5.5 quilòmetres en metres?",
+        "categoria": 1,
+        "tipus": 0,
+
+
+        "respostes": [
+            "5500 m",
+            "6000 m",
+            "6500 m",
+            "7000 m"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 7,
+        "pregunta": "Quants grams són 1.2 quilograms?",
+        "categoria": 2,
+        "tipus": 0,
+
+
+        "respostes": [
+            "1200 g",
+            "1400 g",
+            "1600 g",
+            "1800 g"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 8,
+        "pregunta": "Quina és l'àrea d'un quadrat amb costat de 3 centímetres?",
+        "categoria": 3,
+        "tipus": 0,
+
+
+        "respostes": [
+            "9 cm²",
+            "12 cm²",
+            "15 cm²",
+            "18 cm²"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+
+        }
+    },
+    {
+        "idPregunta": 9,
+        "pregunta": "Quant temps es tarda en recórrer 80 km si la velocitat és de 40 km/h?",
+        "categoria": 4,
+        "tipus": 0,
+
+
+        "respostes": [
+            "2 h",
+            "3 h",
+            "4 h",
+            "5 h"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+
+        }
+    }
+]
 const app = express()
-const port = 3589
+const port = 3000
 app.use(cors());
 const server = createServer(app);
 
@@ -225,7 +425,27 @@ io.on('connection', (socket) => {
         }
         io.to(roomID).emit('update chat', obj);
     });
+    socket.on('sortir duelo', () => {
+        let roomID = trobarRoom(socket);
+        let roomDuelo = findRoomDuelo(socket);
+        let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        if (llistatUsuaris != undefined) {
+            llistatUsuaris.map((user) => {
+                if (user.idSocket == socket.id) {
+                    user.duelo.enDuelo = false;
+                    user.duelo.encertades = 0;
+                    user.duelo.oponent = {};
+                }
+            });
+        }
+        socket.leave(roomDuelo)
+        arrayRoom.map((room) => {
+            if (room.id == roomID) {
+                room.jugadors = llistatUsuaris;
+            }
+        });
 
+    });
     /**
      * Comprova si la resposta és correcta o no, i si és la última pregunta
      * @param {int} idPreg Identificador de la pregunta
@@ -243,44 +463,64 @@ io.on('connection', (socket) => {
         let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
         let start = arrayRoom.find((room) => room.id == roomID).start;
         let llistatUsuarisMinim = [];
-
+        let duelo = false;
+        let idOponent;
         // encerta la pregunta
         if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
             correcte = true;
             llistatUsuaris.map((user) => {
                 if (user.idSocket == socket.id) {
-                    user.encertades++;
-                    user.falladesConsecutives = 0;
-                    user.preguntaActual++;
-                    user.falladesConsecutives = 0;
 
-                    if (user.infoPoders.robarVida > 0) {
-                        if (!user.vida <= 0) {
-                            user.vida += 10;
-                            if (user.vida > 100) {
-                                user.vida = 100;
+                    duelo = user.duelo.enDuelo;
+
+                    if (!duelo) {
+                        user.encertades++;
+                        user.falladesConsecutives = 0;
+                        user.preguntaActual++;
+                        user.falladesConsecutives = 0;
+                        if (user.infoPoders.robarVida > 0) {
+                            if (!user.vida <= 0) {
+                                user.vida += 10;
+                                if (user.vida > 100) {
+                                    user.vida = 100;
+                                }
+                            }
+                            user.infoPoders.robarVida--;
+                        }
+
+                        if (!comprovarMort(user)) {
+                            if (user.encertades % 3 == 0) {
+
+                                let poder = getRandomPoder(user);
+                                user.poder = poder;
+                            }
+                        } else {
+                            if (user.encertades % 5 == 0) {
+
+                                let poder = getRandomPoderMort(user);
+                                user.poder = poder;
                             }
                         }
-                        user.infoPoders.robarVida--;
-                    }
-
-                    if (!comprovarMort(user)) {
-                        if (user.encertades % 3 == 0) {
-
-                            let poder = getRandomPoder(user);
-                            user.poder = poder;
-                        }
                     } else {
-                        if (user.encertades % 5 == 0) {
-
-                            let poder = getRandomPoderMort(user);
-                            user.poder = poder;
+                        user.duelo.encertades++;
+                        if (user.duelo.encertades == 3) {
+                            let duelo = findRoomDuelo(socket);
+                            io.to(duelo).emit('finalitzar duelo');
                         }
+                        let indexPregunta = user.duelo.encertades;
+                        idOponent = user.duelo.oponent.id;
+                        let preguntaDuelo = preguntasDuelo[indexPregunta];
+                        socket.emit('new question', preguntaDuelo);
                     }
-
                 }
             });
-
+            if (duelo) {
+                llistatUsuaris.map((user) => {
+                    if (user.idSocket == idOponent) {
+                        user.duelo.oponent.encertades++;
+                    }
+                });
+            }
             llistatUsuaris.forEach((user) => {
 
                 let userMinim = createUserMinim(user);
@@ -299,39 +539,42 @@ io.on('connection', (socket) => {
 
 
         } else {
-            let mort = false
+            let mort = false;
+
             llistatUsuaris.map((user) => {
-                if (user.idSocket == socket.id) {
-                    user.vida -= 10;
+                if (!user.duelo.enDuelo) {
+                    if (user.idSocket == socket.id) {
+                        user.vida -= 10;
 
-                    if (user.infoPoders.escut) {
-                        user.infoPoders.escut = false;
-                        user.vida += 10;
-                    }
-
-                    if (user.infoPoders.robarVida > 0) {
-                        user.infoPoders.robarVida = 0;
-                    }
-
-                    user.falladesConsecutives++;
-
-                    if (comprovarMort(user)) {
-                        matarJugador(user, start);
-                        socket.emit('die');
-                        mort = true;
-                    }
-
-                    if (user.falladesConsecutives == 3) {
-                        user.preguntaActual++;
-                        user.falladesConsecutives = 0;
-                        let preguntaEnviar = arrayPreg[user.preguntaActual];
-                        if (user.infoPoders.tempspregunta > 0) {
-                            preguntaEnviar.temps -= user.infoPoders.tempspregunta;
-                            user.infoPoders.tempspregunta = 0;
-                            socket.emit('less time');
-                            //!!!! aquest encara s'ha de fer
+                        if (user.infoPoders.escut) {
+                            user.infoPoders.escut = false;
+                            user.vida += 10;
                         }
-                        socket.emit('new question', preguntaEnviar);
+
+                        if (user.infoPoders.robarVida > 0) {
+                            user.infoPoders.robarVida = 0;
+                        }
+
+                        user.falladesConsecutives++;
+
+                        if (comprovarMort(user)) {
+                            matarJugador(user, start);
+                            socket.emit('die');
+                            mort = true;
+                        }
+
+                        if (user.falladesConsecutives == 3) {
+                            user.preguntaActual++;
+                            user.falladesConsecutives = 0;
+                            let preguntaEnviar = arrayPreg[user.preguntaActual];
+                            if (user.infoPoders.tempspregunta > 0) {
+                                preguntaEnviar.temps -= user.infoPoders.tempspregunta;
+                                user.infoPoders.tempspregunta = 0;
+                                socket.emit('less time');
+                                //!!!! aquest encara s'ha de fer
+                            }
+                            socket.emit('new question', preguntaEnviar);
+                        }
                     }
                 }
             });
@@ -474,7 +717,7 @@ io.on('connection', (socket) => {
                     utilitzarPoderMenysTemps(user, userObjectiu, roomID);
                     break;
                 case "duelo":
-                    utilitzarPoderDuelo(user, userObjectiu, roomID);
+                    utilitzarPoderDuelo(user, userObjectiu, roomID, socket);
                     break;
                 default:
                     break;
@@ -491,11 +734,13 @@ io.on('connection', (socket) => {
         let room = arrayRoom.find((room) => room.id == roomID);
         let llistatUsuaris = undefined;
         let start
+        console.log(roomID);
         if (room != undefined) {
             llistatUsuaris = room.jugadors;
             start = room.start;
         }
         if (llistatUsuaris != undefined) {
+            console.log(llistatUsuaris);
             let user = llistatUsuaris.find((usuari) => {
                 return usuari.idSocket == socket.id;
             });
@@ -515,6 +760,10 @@ io.on('connection', (socket) => {
             }
         }
     })
+    socket.on('duelo entrar', (userObjectiu, user) => {
+        socket.join('duelo' + user + userObjectiu);
+
+    });
 
 
 })
@@ -533,8 +782,23 @@ function trobarRoom(socket) {
     let rooms = socket.rooms;
     let roomID;
     rooms.forEach((room) => {
-        roomID = room;
+        if (room.includes('Partida')) {
+            roomID = room;
+        }
     });
+    console.log(roomID);
+    return roomID;
+
+}
+function findRoomDuelo(socket) {
+    let rooms = socket.rooms;
+    let roomID;
+    rooms.forEach((room) => {
+        if (room.includes('duelo')) {
+            roomID = room;
+        }
+    });
+    console.log(roomID);
     return roomID;
 
 }
@@ -565,7 +829,7 @@ function acabarPartida(socket, roomID) {
  * @returns el poder que li ha tocat
  */
 function getRandomPoder() {
-    let random = Math.floor(Math.random() * 7) + 1;
+    let random = Math.floor(Math.random() * 6) + 1;
     let poder = "";
     switch (random) {
         case 1:
@@ -586,12 +850,14 @@ function getRandomPoder() {
         case 6:
             poder = "menysTemps";
             break;
-        case 7:
-            poder = "duelo";
-            break;
+            //si se quiere añadir el duelo, descomentar el case 7 y aumentar el random a 7
+        // case 7:
+        //     poder = "duelo";
+        //     break;
         default:
             break;
     }
+
     return poder;
 }
 
@@ -611,10 +877,44 @@ function getRandomPoderMort() {
     return poder;
 }
 
-function utilitzarPoderDuelo(user, userObjectiu, roomID) {
+function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
+    console.log("USER: " + user.idSocket);
+    console.log("USEROBJ: " + userObjectiu.idSocket);
+
+    let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+    console.log(llistatUsuaris);
+    llistatUsuaris.map((jugador) => {
+        if (jugador.idSocket == socket.id) {
+            jugador.duelo.enDuelo = true;
+            jugador.duelo.oponent.id = userObjectiu.idSocket;
+            jugador.duelo.oponent.encertades = 0;
+            user.duelo = jugador.duelo;
+            console.log(user.duelo)
+        }
+        if (jugador.idSocket == userObjectiu.idSocket) {
+            jugador.duelo.enDuelo = true;
+            jugador.duelo.oponent.id = user.idSocket;
+            jugador.duelo.oponent.encertades = 0;
+            userObjectiu.duelo = jugador.duelo;
+            console.log(userObjectiu.duelo)
+
+        }
+
+    });
+    arrayRoom.map((room) => {
+        if (room.id == roomID) {
+            room.jugadors = llistatUsuaris;
+        }
+    });
     user.poder = "";
-    io.to(roomID).emit('duelo', user.idSocket, userObjectiu.idSocket);
+    socket.emit('duelo enviar', user.duelo);
+    console.log(userObjectiu.idSocket);
+    let preguntaDuelo = preguntasDuelo[0];
+    socket.emit('new question', preguntaDuelo);
+    io.to(userObjectiu.idSocket).emit('duelo recibir', userObjectiu.duelo);
+    io.to(userObjectiu.idSocket).emit('new question', preguntaDuelo)
 }
+
 
 /**
  * utilitza el poder de redüir el temps d'una pregunta a un enemic
@@ -708,6 +1008,15 @@ function createNewUser(idSocket, nick) {
         "falladesConsecutives": 0,
         "poder": "",
         "mort": false,
+        "duelo": {
+            "enDuelo": false,
+            "encertades": 0,
+            "indexPreg": [],
+            "oponent": {
+                'id': "",
+                'encertades': "",
+            },
+        },
         "infoPoders": {
             "escut": false,
             "robarVida": 0,

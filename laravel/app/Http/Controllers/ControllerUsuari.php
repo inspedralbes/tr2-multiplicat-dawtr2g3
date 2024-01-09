@@ -65,9 +65,8 @@ class ControllerUsuari extends Controller
         ]);
 
         $token = $user->createToken('myapptoken')->plainTextToken;
-        $mail = new Verificacio($user);
-        Mail::to('admin@mathroyale.daw.inspedralbes.cat')->send($mail);
-
+        /** $mail = new Verificacio($user); Mail::to('admin@mathroyale.daw.inspedralbes.cat')->send($mail);
+         */
 
         unset($user->password);
         $response = [
