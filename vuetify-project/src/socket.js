@@ -99,7 +99,7 @@ socket.on("end", (guanyador, perdedors) => {
   const store = useAppStore();
   store.stopTimer();
   store.timer = 20;
-
+  store.dead = false;
   store.setQuestionIndex(-1);
   store.setGuanyador(guanyador);
   store.setPerdedors(perdedors);

@@ -499,18 +499,20 @@ io.on('connection', (socket) => {
             let user = llistatUsuaris.find((usuari) => {
                 return usuari.idSocket == socket.id;
             });
-            user.vida -= restarVidaSagnar;
-            let llistatUsuarisMinim = [];
-            if (comprovarMort(user) && !user.mort) {
-                matarJugador(user, start);
-                socket.emit('die');
+            if (!user.mort) {
+                user.vida -= restarVidaSagnar;
+                let llistatUsuarisMinim = [];
+                if (comprovarMort(user) && !user.mort) {
+                    matarJugador(user, start);
+                    socket.emit('die');
+                }
+                if (jugadorsVius(llistatUsuaris).length == 1) {
+                    acabarPartida(socket, roomID);
+                }
+                llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
+                llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+                io.to(roomID).emit("update players", llistatUsuarisMinim)
             }
-            if (jugadorsVius(llistatUsuaris).length == 1) {
-                acabarPartida(socket, roomID);
-            }
-            llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
-            llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-            io.to(roomID).emit("update players", llistatUsuarisMinim)
         }
     })
 
@@ -564,32 +566,32 @@ function acabarPartida(socket, roomID) {
  */
 function getRandomPoder() {
     let random = Math.floor(Math.random() * 7) + 1;
-    let poder = "duelo";
-    // switch (random) {
-    //     case 1:
-    //         poder = "salt";
-    //         break;
-    //     case 2:
-    //         poder = "vida";
-    //         break;
-    //     case 3:
-    //         poder = "escut";
-    //         break;
-    //     case 4:
-    //         poder = "robarVida";
-    //         break;
-    //     case 5:
-    //         poder = "pararTemps";
-    //         break;
-    //     case 6:
-    //         poder = "menysTemps";
-    //         break;
-    //     case 7:
-    //         poder = "duelo";
-    //         break;
-    //     default:
-    //         break;
-    // }
+    let poder = "";
+    switch (random) {
+        case 1:
+            poder = "salt";
+            break;
+        case 2:
+            poder = "vida";
+            break;
+        case 3:
+            poder = "escut";
+            break;
+        case 4:
+            poder = "robarVida";
+            break;
+        case 5:
+            poder = "pararTemps";
+            break;
+        case 6:
+            poder = "menysTemps";
+            break;
+        case 7:
+            poder = "duelo";
+            break;
+        default:
+            break;
+    }
     return poder;
 }
 

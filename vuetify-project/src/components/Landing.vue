@@ -33,9 +33,9 @@
             <v-text-field class="pa-2" label="UserJugador" :value="this.nom" :disabled="this.loginInfo.loggedIn"
               v-model="nom" id="nomJugador"></v-text-field>
           </div>
-          <div class="items__btn-tutorial btn-tutorial" @click="verificat">
-            <v-btn rounded color="#106b03" @click="crearPregunta()" :disabled="!this.loginInfo.verificat"
-              class="px-5 mr-5 mt-3">Crear pregunta</v-btn>
+          <div class="items__btn-tutorial btn-tutorial">
+            <v-btn rounded color="#106b03" @click="$router.push('/tutorial')"
+              class="px-5 mr-5 mt-3">Tutorial</v-btn>
           </div>
           <div class="items__btn-log-reg">
             <v-btn rounded color="#fad09e" class="px-5 ml-2 mt-3 text-white"

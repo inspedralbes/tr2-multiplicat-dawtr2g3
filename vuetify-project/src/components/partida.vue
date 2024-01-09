@@ -4,7 +4,7 @@
             <span class="sr-only">Loading...</span>
         </div>
     </div>
-    <div v-else>
+    <div v-else v-bind:class="{ 'mort': game.mort }">
         <div v-if="!game.duelo" class="container">
             <div class="container__jugadors jugadors">
                 <div class="item-scroll">
@@ -82,13 +82,22 @@
                         </div>
                     </div>
                 </div>
-                <div class="container__skip">
-                    <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt=""
-                            class="imagen__skip"></button>
+                <div class="container__skip skip">
+                    <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt="" class="imagen__skip"></button>                    
+                </div>
+                <div class="hoverSkip">
+                    <p>
+                        Saltar pregunta: el primer no et treu vida. Després començaràs a perdre vida, MOLTA.
+                    </p>
                 </div>
                 <div class="container__poder poder">
                     <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
                 </div>
+                <div class="nomPoder">
+                    <p v-if="game.ownPlayer.poder.length != 0">{{ game.ownPlayer.poder }}</p>
+                    <p v-else>Poders: 0</p>
+                </div>
+
             </div>
         </div>
         <div v-else class="duelo">
@@ -215,7 +224,50 @@
         </v-dialog>
     </v-row>
 </template>
+
 <style lang="scss" scoped>
+
+.mort{
+    filter: grayscale(100%);
+}
+
+.nomPoder {
+    position: absolute;
+    top: 17%;
+    right: 9.5%;
+    background-color: white;
+    border: 1px solid black;
+    padding: 1%;
+    width: 7vw;
+    height: 5vh;
+    text-transform: uppercase;
+    text-align: center;
+    color: #000000;
+    display: none;
+}
+
+.poder:hover + .nomPoder {
+    display: block;
+}
+
+.hoverSkip {
+    background-color: white;
+    border: 1px solid black;
+    padding: 1%;
+    width: 12vw;
+    height: 10vh;
+    position: absolute;
+    top: 6%;
+    right: 23%;
+    text-align: center;
+    color: #000000;
+    display: none;
+}
+
+.skip:hover + .hoverSkip {
+    display: block;
+}
+
 //container de la partida
 .container {
     display: grid;
@@ -530,6 +582,7 @@
     color: white;
 }
 </style>
+
 <script>
 import { socket } from '../socket';
 import { computed } from 'vue';
@@ -574,9 +627,7 @@ export default {
         };
     },
     components: { Drag, Poder, JugadorPartida },
-
     methods: {
-
         skip() {
             socket.emit('skip');
             this.disabled = true;
@@ -584,11 +635,9 @@ export default {
                 this.disabled = false;
             }, 1000);
         },
-
         utilitzarPoder() {
             if (this.game.ownPlayer.poder.length > 0) {
                 let objectiu = socket.id;
-
                 if (this.game.mort) {
                     this.game.dialog = true;
                 } else {
@@ -636,7 +685,6 @@ export default {
             input.value = "";
         },
         getHP() {
-
             if (this.game.ownPlayer.vida > 75) {
                 return "../assets/ilustracio-vida/full-health.png";
             } else if (this.game.ownPlayer.vida > 50) {
@@ -653,7 +701,6 @@ export default {
 
     mounted() {
         this.state.loading = false;
-
     },
 
 }
