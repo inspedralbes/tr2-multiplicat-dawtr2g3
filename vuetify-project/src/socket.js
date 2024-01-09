@@ -79,7 +79,7 @@ socket.on("check", (correcte, acabat) => {
   store.setAnswer(correcte);
 
   store.setAnswer(correcte);
-  if (!correcte && !store.getDuelo()) {
+  if (!correcte) {
     store.triggerAnimacioVida();
   }
   if (!acabat && correcte) {
