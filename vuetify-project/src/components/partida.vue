@@ -17,7 +17,7 @@
                 <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
                     @comprovar="(index) => answer(index)" />
             </div>
-            <div class="container__reloj">
+            <div v-if="!game.mort" class="container__reloj" >
                 <img src="../assets/altres ilustracions/relog-de-arena.gif" alt="" class="imagen__reloj">
                 <h6 class="texto__tiempo">{{ game.temps }}</h6>
             </div>
@@ -78,7 +78,7 @@
 
 
 
-                            <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
+                            <h3 v-if="!game.mort" class="numero__vida">{{ game.ownPlayer.vida }}</h3>
                         </div>
                     </div>
                 </div>

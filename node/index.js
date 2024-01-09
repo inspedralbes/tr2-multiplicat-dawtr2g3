@@ -857,7 +857,6 @@ function getRandomPoder() {
         default:
             break;
     }
-    poder = "duelo";
 
     return poder;
 }
