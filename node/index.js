@@ -3,7 +3,207 @@ import { fetchPreguntas } from "./preguntes.js";
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import cors from 'cors';
+const preguntasDuelo = [
+    {
+        "idPregunta": 0,
+        "pregunta": "Quant és 1500 mil·lilitres en litres?",
+        "categoria": 1,
+        "tipus": 0,
 
+        "respostes": [
+            "1.5 L",
+            "2.5 L",
+            "3.5 L",
+            "5 L"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 1,
+        "pregunta": "Quant és 4 quilòmetres en metres?",
+        "categoria": 1,
+        "tipus": 0,
+
+
+        "respostes": [
+            "4000 m",
+            "5000 m",
+            "6000 m",
+            "7000 m"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 2,
+        "pregunta": "Quants grams són 0.5 quilograms?",
+        "categoria": 2,
+        "tipus": 0,
+
+
+        "respostes": [
+            "500 g",
+            "750 g",
+            "1000 g",
+            "1250 g"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 3,
+        "pregunta": "Quina és l'àrea d'un cercle amb radi de 2 centímetres?",
+        "categoria": 3,
+        "tipus": 0,
+
+
+        "respostes": [
+            "4π cm²",
+            "8π cm²",
+            "12π cm²",
+            "16π cm²"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 4,
+        "pregunta": "Quant temps es tarda en recórrer 60 km si la velocitat és de 30 km/h?",
+        "categoria": 4,
+        "tipus": 0,
+
+
+        "respostes": [
+            "2 h",
+            "3 h",
+            "4 h",
+            "5 h"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 5,
+        "pregunta": "Quants mil·lilitres hi ha en 0.75 litres?",
+        "categoria": 1,
+        "tipus": 0,
+
+
+        "respostes": [
+            "750 mL",
+            "1000 mL",
+            "1250 mL",
+            "1500 mL"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 6,
+        "pregunta": "Quant és 5.5 quilòmetres en metres?",
+        "categoria": 1,
+        "tipus": 0,
+
+
+        "respostes": [
+            "5500 m",
+            "6000 m",
+            "6500 m",
+            "7000 m"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 7,
+        "pregunta": "Quants grams són 1.2 quilograms?",
+        "categoria": 2,
+        "tipus": 0,
+
+
+        "respostes": [
+            "1200 g",
+            "1400 g",
+            "1600 g",
+            "1800 g"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+        }
+
+    },
+    {
+        "idPregunta": 8,
+        "pregunta": "Quina és l'àrea d'un quadrat amb costat de 3 centímetres?",
+        "categoria": 3,
+        "tipus": 0,
+
+
+        "respostes": [
+            "9 cm²",
+            "12 cm²",
+            "15 cm²",
+            "18 cm²"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+
+        }
+    },
+    {
+        "idPregunta": 9,
+        "pregunta": "Quant temps es tarda en recórrer 80 km si la velocitat és de 40 km/h?",
+        "categoria": 4,
+        "tipus": 0,
+
+
+        "respostes": [
+            "2 h",
+            "3 h",
+            "4 h",
+            "5 h"
+        ],
+        "unitats": {
+            "valorInicial": null,
+            "unitatInicial": null,
+            "unitatFinal": null
+
+        }
+    }
+]
 const app = express()
 const port = 3000
 app.use(cors());
@@ -229,13 +429,15 @@ io.on('connection', (socket) => {
         let roomID = trobarRoom(socket);
         let roomDuelo = findRoomDuelo(socket);
         let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-        llistatUsuaris.map((user) => {
-            if (user.idSocket == socket.id) {
-                user.duelo.enDuelo = false;
-                user.duelo.encertades = 0;
-                user.duelo.oponent = {};
-            }
-        });
+        if (llistatUsuaris != undefined) {
+            llistatUsuaris.map((user) => {
+                if (user.idSocket == socket.id) {
+                    user.duelo.enDuelo = false;
+                    user.duelo.encertades = 0;
+                    user.duelo.oponent = {};
+                }
+            });
+        }
         socket.leave(roomDuelo)
         arrayRoom.map((room) => {
             if (room.id == roomID) {
@@ -305,14 +507,14 @@ io.on('connection', (socket) => {
                             let duelo = findRoomDuelo(socket);
                             io.to(duelo).emit('finalitzar duelo');
                         }
-                        let indexPregunta = user.duelo.encertades-1;
+                        let indexPregunta = user.duelo.encertades;
                         idOponent = user.duelo.oponent.id;
-                        let preguntaDuelo = arrayPreg[indexPregunta];
+                        let preguntaDuelo = preguntasDuelo[indexPregunta];
                         socket.emit('new question', preguntaDuelo);
                     }
                 }
             });
-            if(duelo){
+            if (duelo) {
                 llistatUsuaris.map((user) => {
                     if (user.idSocket == idOponent) {
                         user.duelo.oponent.encertades++;
@@ -557,6 +759,10 @@ io.on('connection', (socket) => {
             io.to(roomID).emit("update players", llistatUsuarisMinim)
         }
     })
+    socket.on('duelo entrar', (userObjectiu, user) => {
+        socket.join('duelo' + user + userObjectiu);
+
+    });
 
 
 })
@@ -671,21 +877,26 @@ function getRandomPoderMort() {
 }
 
 function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
-    console.log("USER: "+user.idSocket);
-    console.log("USEROBJ: "+userObjectiu.idSocket);
+    console.log("USER: " + user.idSocket);
+    console.log("USEROBJ: " + userObjectiu.idSocket);
+
     let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+    console.log(llistatUsuaris);
     llistatUsuaris.map((jugador) => {
         if (jugador.idSocket == socket.id) {
             jugador.duelo.enDuelo = true;
             jugador.duelo.oponent.id = userObjectiu.idSocket;
             jugador.duelo.oponent.encertades = 0;
-            userObjectiu.duelo = jugador.duelo;
+            user.duelo = jugador.duelo;
+            console.log(user.duelo)
         }
-        if (jugador.idSocket == userObjectiu.id) {
+        if (jugador.idSocket == userObjectiu.idSocket) {
             jugador.duelo.enDuelo = true;
             jugador.duelo.oponent.id = user.idSocket;
             jugador.duelo.oponent.encertades = 0;
             userObjectiu.duelo = jugador.duelo;
+            console.log(userObjectiu.duelo)
+
         }
 
     });
@@ -695,13 +906,14 @@ function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
         }
     });
     user.poder = "";
-    io.to(userObjectiu.idSocket).emit('duelo recibir', user);
-    socket.join('duelo' + user.idSocket + userObjectiu.idSocket);
-    io.to(user.idSocket).emit('duelo enviar', userObjectiu.duelo);
-    socket.id = userObjectiu.idSocket;
-    socket.join('duelo' + user.idSocket + userObjectiu.idSocket);
-    socket.id = user.idSocket;
+    socket.emit('duelo enviar', user.duelo);
+    console.log(userObjectiu.idSocket);
+    let preguntaDuelo = preguntasDuelo[0];
+    socket.emit('new question', preguntaDuelo);
+    io.to(userObjectiu.idSocket).emit('duelo recibir', userObjectiu.duelo);
+    io.to(userObjectiu.idSocket).emit('new question', preguntaDuelo)
 }
+
 
 /**
  * utilitza el poder de redüir el temps d'una pregunta a un enemic
