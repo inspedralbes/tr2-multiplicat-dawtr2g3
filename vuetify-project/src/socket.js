@@ -152,17 +152,22 @@ socket.on("duelo recibir", (duelo) => {
   //Triger animacion de recibir duelo
   const store = useAppStore();
   console.log("recibir duelo");
+  console.log(store.ownPlayer)
+  socket.emit("duelo entrar",store.ownPlayer.idSocket,duelo.oponent.id)
   console.log(duelo);
-  store.stopTimer();
   store.setDuelo(duelo);
+  console.log(socket.rooms);
 });
 
 socket.on("duelo enviar", (duelo) => {
   //Triger animacion de enviar duelo
   const store = useAppStore();
   console.log("enviar duelo");
+  console.log(store.ownPlayer)
+
+  socket.emit("duelo entrar",duelo.oponent.id,store.ownPlayer.idSocket);
+
   console.log(duelo);
-  store.stopTimer();
   store.setDuelo(duelo);
 });
 

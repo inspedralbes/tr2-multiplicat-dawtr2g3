@@ -25,6 +25,7 @@ export const useAppStore = defineStore('app', {
     dead: false,
     animacioVida: false,
     avatar: 1,
+    timerStopped: true,
     duelo: {
       "enDuelo": false,
       "encertades": 0,
@@ -66,17 +67,18 @@ export const useAppStore = defineStore('app', {
       }, 500);
     },
     startTimer() {
-      this.stopTimer();
-      setTimeout(() => {
-        this.timerInterval = setInterval(() => {
-          if (this.timer <= 0) {
-            socket.emit('bleed');
-            this.triggerAnimacioVida();
-          } else {
-            this.timer--;
-          }
-        }, 1000);
-      }, 1000);
+      if (this.timerStopped) {
+          this.timerInterval = setInterval(() => {
+            
+            if (this.timer <= 0) {
+              socket.emit('bleed');
+              this.triggerAnimacioVida();
+            } else {
+              this.timer--;
+            }
+          }, 1000);
+        this.timerStopped = false;
+      }
     },
 
     setAvatar(avatar) {
@@ -84,7 +86,7 @@ export const useAppStore = defineStore('app', {
     },
     stopTimer() {
       clearInterval(this.timerInterval);
-      console.log("Timer stopped")
+      this.timerStopped = true;
     },
     setPerdedors(perdedors) {
       this.perdedors = perdedors;
