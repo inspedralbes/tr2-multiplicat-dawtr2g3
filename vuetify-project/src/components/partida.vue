@@ -78,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="container__skip skip">
+                <div class="container__skip skip" :class="{ 'animate-arrow': isAnimating }">
                     <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt="" class="imagen__skip"></button>                    
                 </div>
                 <div class="hoverSkip">
@@ -222,6 +222,22 @@
 </template>
 
 <style lang="scss" scoped>
+
+@keyframes animateArrow {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(30%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.animate-arrow {
+    animation: animateArrow 0.5s ease-in-out;
+}
 
 .mort{
     filter: grayscale(100%);
@@ -572,7 +588,7 @@ export default {
         const store = useAppStore();
 
         return {
-
+            isAnimating: false,
             divActivo: 'duelo',
             state: {
 
@@ -609,8 +625,13 @@ export default {
             setTimeout(() => {
                 this.disabled = false;
             }, 1000);
-        },
-        utilitzarPoder() {
+            this.animateButton();
+        }, animateButton() {
+            this.isAnimating = true;
+            setTimeout(() => {
+                this.isAnimating = false;
+            }, 1000); // same duration as the animation
+        }, utilitzarPoder() {
             if (this.game.ownPlayer.poder.length > 0) {
                 let objectiu = socket.id;
                 if (this.game.mort) {
@@ -622,7 +643,6 @@ export default {
                         socket.emit("use power", this.game.ownPlayer.poder, objectiu);
                     }
                 }
-
             }
         },
 
