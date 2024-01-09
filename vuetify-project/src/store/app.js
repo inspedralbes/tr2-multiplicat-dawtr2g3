@@ -60,16 +60,16 @@ export const useAppStore = defineStore('app', {
     },
     startTimer() {
       
-      setTimeout(() => {
-        this.timerInterval = setInterval(() => {
-          if (this.timer <= 0) {
-            socket.emit('bleed');
-            this.triggerAnimacioVida();
-          } else {
-            this.timer--;
-          }
-        }, 1000);
-      }, 1000);
+      // setTimeout(() => {
+      //   this.timerInterval = setInterval(() => {
+      //     if (this.timer <= 0) {
+      //       socket.emit('bleed');
+      //       this.triggerAnimacioVida();
+      //     } else {
+      //       this.timer--;
+      //     }
+      //   }, 1000);
+      // }, 1000);
   
     },
 
