@@ -487,7 +487,7 @@
 
 .container__avatar {
     position: absolute;
-    top: 0;
+    top: 2.6ch;
     left: 3ch;
     right: 0;
 }
@@ -496,15 +496,15 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: 19vh;
-    width: 19vh;
+    height: 120px;
+    width: 120px;
     z-index: 0;
 }
 
 .barra__vida {
     position: absolute;
-    top: 11vh;
-    left: 6vh;
+    top: 7vh;
+    left: 3vh;
     right: 0;
     z-index: 1;
 }
@@ -541,7 +541,7 @@
 
 .nickUsuario {
     position: absolute;
-    top: 3vh;
+    top: 1vh;
     left: 0;
     right: 3vh;
     font-size: 4vh;
