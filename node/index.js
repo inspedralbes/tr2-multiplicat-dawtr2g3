@@ -744,20 +744,19 @@ io.on('connection', (socket) => {
             let user = llistatUsuaris.find((usuari) => {
                 return usuari.idSocket == socket.id;
             });
-            if (!user.mort) {
-                user.vida -= restarVidaSagnar;
-                let llistatUsuarisMinim = [];
-                if (comprovarMort(user) && !user.mort) {
-                    matarJugador(user, start);
-                    socket.emit('die');
-                }
-                if (jugadorsVius(llistatUsuaris).length == 1) {
-                    acabarPartida(socket, roomID);
-                }
-                llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
-                llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-                io.to(roomID).emit("update players", llistatUsuarisMinim)
+            console.log(user);
+            user.vida -= restarVidaSagnar;
+            let llistatUsuarisMinim = [];
+            if (comprovarMort(user) && !user.mort) {
+                matarJugador(user, start);
+                socket.emit('die');
             }
+            if (jugadorsVius(llistatUsuaris).length == 1) {
+                acabarPartida(socket, roomID);
+            }
+            llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
+            llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+            io.to(roomID).emit("update players", llistatUsuarisMinim)
         }
     })
     socket.on('duelo entrar', (userObjectiu, user) => {
@@ -829,7 +828,7 @@ function acabarPartida(socket, roomID) {
  * @returns el poder que li ha tocat
  */
 function getRandomPoder() {
-    let random = Math.floor(Math.random() * 6) + 1;
+    let random = Math.floor(Math.random() * 7) + 1;
     let poder = "";
     switch (random) {
         case 1:
@@ -850,10 +849,9 @@ function getRandomPoder() {
         case 6:
             poder = "menysTemps";
             break;
-            //si se quiere añadir el duelo, descomentar el case 7 y aumentar el random a 7
-        // case 7:
-        //     poder = "duelo";
-        //     break;
+        case 7:
+            poder = "duelo";
+            break;
         default:
             break;
     }
