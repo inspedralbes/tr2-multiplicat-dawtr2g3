@@ -235,7 +235,10 @@ export default {
     mounted() {
     },
     created() {
-
+        const store = useAppStore();
+        if (!store.loginInfo.verificat) {
+            this.$router.push('/');
+        }
     },
 
 }
