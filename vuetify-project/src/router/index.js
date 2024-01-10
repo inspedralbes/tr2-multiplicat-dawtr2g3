@@ -8,6 +8,7 @@ import CrearPartida from "../components/CrearPartida.vue";
 import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
 import CrearPregunta from "../components/CrearPregunta.vue";
+import Tutorial from "../components/Tutorial.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,6 +55,10 @@ const router = createRouter({
       path: '/crearPartida',
       name: 'CrearPartida',
       component: CrearPartida
+    },{
+      path: '/tutorial',
+      name: 'Tutorial',
+      component: Tutorial
     }
   ]
 })

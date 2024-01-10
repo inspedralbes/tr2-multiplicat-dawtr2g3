@@ -69,7 +69,7 @@ export const useAppStore = defineStore('app', {
     startTimer() {
       if (this.timerStopped) {
           this.timerInterval = setInterval(() => {
-            
+
             if (this.timer <= 0) {
               socket.emit('bleed');
               this.triggerAnimacioVida();
