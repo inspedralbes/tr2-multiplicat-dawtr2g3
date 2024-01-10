@@ -15,6 +15,7 @@
 <script>
 export default {
     name: "Drag",
+    emits: ["comprovar"],
     props: {
         respostes: {
             type: Array,

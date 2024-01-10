@@ -25,7 +25,7 @@
         },
         data() {
             return {
-
+                isAnimating: false
             };
         },
         methods: {
