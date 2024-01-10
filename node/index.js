@@ -247,6 +247,8 @@ io.on('connection', (socket) => {
     socket.on('sortir duelo', () => {
         let roomID = trobarRoom(socket);
         let roomDuelo = findRoomDuelo(socket);
+        let arrayPreg = arrayRoom.find((room) => room.id == roomID).arrayPreg;
+
         let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
         if (llistatUsuaris != undefined) {
             llistatUsuaris.map((user) => {
@@ -254,6 +256,8 @@ io.on('connection', (socket) => {
                     user.duelo.enDuelo = false;
                     user.duelo.encertades = 0;
                     user.duelo.oponent = {};
+                    socket.emit('new question', arrayPreg[user.preguntaActual]);
+
                 }
             });
         }
