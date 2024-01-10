@@ -7,7 +7,7 @@ import router from '@/router'; // Import the router from your project
  * Si estas treballant en local ferem  url =localhost:3000
  * Si estas en producció ferem url = http://mathroyale.daw.inspedralbes.cat:3589
  */
-const URL = "http://localhost:3589";
+const URL = "http://localhost:3000";
 
 export const socket = io(URL, {
   extraHeaders: {
@@ -22,6 +22,15 @@ socket.on("games list", (arrayRoom) => {
   const store = useAppStore();
   store.setPartides(arrayRoom);
 
+});
+
+
+socket.on('finalitzar duelo', () => {
+  const store = useAppStore();
+  store.setDuelo({});
+  store.stopTimer();
+
+  socket.emit('sortir duelo');
 });
 
 /**
@@ -70,20 +79,20 @@ socket.on("check", (correcte, acabat) => {
   store.setAnswer(correcte);
 
   store.setAnswer(correcte);
-  if(!correcte && !store.getDuelo()){
+  if (!correcte) {
     store.triggerAnimacioVida();
   }
   if (!acabat && correcte) {
-    if(store.getDuelo()){
+    if (store.getDuelo()) {
       let victories = store.sumarVictoria();
-      if(victories == 3){
+      if (victories == 3) {
         store.setVictories(0);
         socket.emit("end duel");
       }
     }
     socket.emit("send");
   }
-  
+
   if (acabat) {
     store.stopTimer();
     router.push('/final');
@@ -98,6 +107,7 @@ socket.on("end", (guanyador, perdedors) => {
   router.push('/final');
   const store = useAppStore();
   store.stopTimer();
+
   store.timer = 20;
   store.dead = false;
   store.setQuestionIndex(-1);
@@ -120,9 +130,9 @@ socket.on('die', () => {
   store.playerDead();
 });
 
-socket.on('info partida', (nom, maxJugadors) =>{
+socket.on('info partida', (nom, maxJugadors) => {
   const store = useAppStore();
-  store.setInfoPartida(nom,maxJugadors);
+  store.setInfoPartida(nom, maxJugadors);
 })
 
 /**
@@ -138,18 +148,29 @@ socket.on("play", (question) => {
   store.startTimer();
 });
 
-socket.on("recieve duel", (oponent) => {
+socket.on("duelo recibir", (duelo) => {
+  //Triger animacion de recibir duelo
   const store = useAppStore();
-  store.setOponent(oponent);
-  store.setDuelo(true);
+  console.log("recibir duelo");
+  console.log(store.ownPlayer)
+  socket.emit("duelo entrar",store.ownPlayer.idSocket,duelo.oponent.id)
+  console.log(duelo);
+  store.setDuelo(duelo);
+  console.log(socket.rooms);
 });
 
-socket.on("send duel", (oponent) => {
+socket.on("duelo enviar", (duelo) => {
+  //Triger animacion de enviar duelo
   const store = useAppStore();
-  store.setOponent(oponent);
-  store.setDuelo(true);
-  
+  console.log("enviar duelo");
+  console.log(store.ownPlayer)
+
+  socket.emit("duelo entrar",duelo.oponent.id,store.ownPlayer.idSocket);
+
+  console.log(duelo);
+  store.setDuelo(duelo);
 });
+
 
 // socket.on("get power", (poder) => {
 //   const store = useAppStore();

@@ -22,6 +22,17 @@
                 </div>
             </v-col>
         </v-row>
+
+        <v-row>
+            <v-col cols="12">
+                <div class="video-box">
+                    <video controls width="100%">
+                        <source src="" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                </div>
+            </v-col>
+        </v-row>
         
         <v-divider :thickness="3" class="border-opacity-50" color=#e21b3c></v-divider>
 
@@ -34,6 +45,31 @@
                         si falles perds vida i si encertes <strong>tres seguides</strong> pots guanyar poders. PER RESPONDRE HAS
                         DE ARROSEGAR LA RESPOSTA CORRECTA A LA CAIXA ON ES MOSTRA LA PREGUNTA.
                     </p>
+                </div>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="12">
+                <div class="video-box">
+                    <video controls width="100%">
+                        <source src="" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                </div>
+            </v-col>
+        </v-row>
+
+        <v-divider :thickness="3" class="border-opacity-50" color=#0542b9></v-divider>
+
+        <v-row>
+            <v-col cols="12">
+                <h2 class="subtitle">Demostració de desafiar</h2>
+                <div class="video-box">
+                    <video controls width="100%">
+                        <source src="" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
                 </div>
             </v-col>
         </v-row>
@@ -84,6 +120,17 @@
     font-weight: 300;
     line-height: 6rem;
     color: #ffc00a;
+}
+
+.video-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    height: 30vh;
+    margin: auto;
+    margin-top: 5%;
+    margin-bottom: 10%;
 }
 
 .description-box {
