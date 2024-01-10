@@ -130,8 +130,8 @@ io.on('connection', (socket) => {
             "jugadors": [user],
             "arrayPreg": [],
             "preguntasMal": [],
-            "preguntasDuelo":[],
-            "preguntasDueloMal":[],
+            "preguntasDuelo": [],
+            "preguntasDueloMal": [],
             "start": 0
         });
         arrayRoomMinim.push({
@@ -295,15 +295,40 @@ io.on('connection', (socket) => {
             if (preguntasDuelo[userDuelo.duelo.encertades].respostes[posResp] == (preguntasDueloMal[userDuelo.duelo.encertades].respostes[respuestaCorrecta])) {
                 correcte = true;
                 userDuelo.duelo.encertades++;
+
                 if (userDuelo.duelo.encertades == 3) {
                     let duelo = findRoomDuelo(socket);
                     io.to(duelo).emit('finalitzar duelo');
+                    idOponent = userDuelo.duelo.oponent.id;
+
+                    llistatUsuaris.map((user) => {
+                        if (user.idSocket == idOponent) {
+                            user.vida -= 30;
+                        }
+                    });
+
+                    llistatUsuaris.forEach((user) => {
+
+                        let userMinim = createUserMinim(user);
+                        llistatUsuarisMinim.push(userMinim);
+                    })
+
+                    arrayRoom.map((room) => {
+                        if (room.id == roomID) {
+                            room.jugadors = llistatUsuaris;
+                        }
+                    });
+
+                    llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
+
+                    io.to(roomID).emit("update players", llistatUsuarisMinim)
+
+                } else {
+                    let indexPregunta = userDuelo.duelo.encertades;
+                    let preguntaDuelo = preguntasDuelo[indexPregunta];
+                    console.log(preguntaDuelo);
+                    socket.emit('new question', preguntaDuelo);
                 }
-                let indexPregunta = userDuelo.duelo.encertades;
-                idOponent = userDuelo.duelo.oponent.id;
-                let preguntaDuelo = preguntasDuelo[indexPregunta];
-                console.log(preguntaDuelo);
-                socket.emit('new question', preguntaDuelo);
             }
         } else {
             // encerta la pregunta
@@ -345,13 +370,7 @@ io.on('connection', (socket) => {
                     }
                 }
                 );
-                if (duelo) {
-                    llistatUsuaris.map((user) => {
-                        if (user.idSocket == idOponent) {
-                            user.duelo.oponent.encertades++;
-                        }
-                    });
-                }
+                
                 llistatUsuaris.forEach((user) => {
 
                     let userMinim = createUserMinim(user);
@@ -375,11 +394,11 @@ io.on('connection', (socket) => {
                 llistatUsuaris.map((user) => {
                     if (!user.duelo.enDuelo) {
                         if (user.idSocket == socket.id) {
-                            user.vida -= 10;
+                            user.vida -= 5;
 
                             if (user.infoPoders.escut) {
                                 user.infoPoders.escut = false;
-                                user.vida += 10;
+                                user.vida += 5;
                             }
 
                             if (user.infoPoders.robarVida > 0) {
