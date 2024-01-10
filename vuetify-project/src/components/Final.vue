@@ -21,7 +21,7 @@
         <h2 class="title-winner">Guanyador</h2>
         <p class="name-winner">{{ guanyador.nick }}</p>
         <div class="columna-winner">
-          <img class="image-columna-winner" src="../assets/altres ilustracions/medalla.png" width="150">
+          <img class="image-columna-winner" src="../assets/altres ilustracions/medalla-de-oro.png" width="150">
         </div>
       </div>
     </div>
@@ -184,7 +184,6 @@
   width: 7vw;
   margin-left: 4.3vw;
   margin-right: 3.7vw;
-  top: 1vh;
 }
 </style>
 

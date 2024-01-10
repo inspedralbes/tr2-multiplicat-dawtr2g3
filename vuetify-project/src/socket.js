@@ -62,7 +62,7 @@ socket.on("closed lobby", () => {
  * Guarda la pregunta
  */
 socket.on("new question", (question) => {
-
+  console.log(question);
   const store = useAppStore();
   store.stopTimer();
   store.setQuestion(question);
@@ -109,7 +109,7 @@ socket.on("end", (guanyador, perdedors) => {
   store.stopTimer();
 
   store.timer = 20;
-  store.dead = false;
+
   store.setQuestionIndex(-1);
   store.setGuanyador(guanyador);
   store.setPerdedors(perdedors);

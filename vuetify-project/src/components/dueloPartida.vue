@@ -84,162 +84,43 @@
             </div>
         </div>
         <div v-else class="duelo">
-            <div class="container__preguntaDuelo">
-                <p class="cantidadPreguntas"><span>{{ game.questionIndex + 1 }}</span> /3 PREGUNTES
-                    
-                </p>
-            </div>
-            <div class="container__dueloUsuarios">
-                <div class="container__usuario usuario usuarioEnemigo">
-                    <div class="container__avatar">
-                    <img src="../assets/avatar/avatarMikasa.png" height="" class="avatar">
-                    <h2 class="nickEnemigo">Mikasa</h2>
-                    <div class="barra__vida">
-                        <img src="../assets/ilustracio-vida/full-health.png" alt="" class="imagen-vida">
-                    </div>
-                        <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
-                        <v-avatar v-if="avatar == 1" class="avatar" image="../assets/avatar/avatarVaiolet.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 2" class="avatar" image="../assets/avatar/avatarCerdo.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 3" class="avatar" image="../assets/avatar/avatarEric.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 4" class="avatar" image="../assets/avatar/avatarGatoSuperman.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 5" class="avatar" image="../assets/avatar/avatarHamsterTrex.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 6" class="avatar" image="../assets/avatar/avatarHombrePeloBlanco.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 7" class="avatar" image="../assets/avatar/avatarLevie.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 8" class="avatar" image="../assets/avatar/avatarMikasa.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 9" class="avatar" image="../assets/avatar/avatarMujerPeloRojo.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 10" class="avatar" image="../assets/avatar/avatarPerroBatman.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 11" class="avatar" image="../assets/avatar/avatarPerroDJ.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 12" class="avatar" image="../assets/avatar/avatarPower.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 13" class="avatar" image="../assets/avatar/avatarZorro.png"
-                            size="100"></v-avatar>
-                        <!-- <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar"> -->
-                        <div class="barra__vida" v-bind:class="{ 'animacioVida': animacioVida }">
-                            <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png"
-                                alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 50" src="/src/assets/ilustracio-vida/75_health.png"
-                                alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 25" src="/src/assets/ilustracio-vida/50_health.png"
-                                alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 0" src="/src/assets/ilustracio-vida/25_health.png"
-                                alt="" class="imagen-vida">
-                            <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="container__usuario usuario usuarioDuelo">
-                    <div class="container__avatarUsuario">
-                        <img src="../assets/avatar/avatarVaiolet.png" height="" class="avatarUsuario">
-                        <h2 class="nickUsuario">Orlito</h2>
-                        <div class="barra__vidaUsuario">
-                            <img src="../assets/ilustracio-vida/full-health.png" alt="" class="imagen-vida">
-                        </div>
-                        <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
-                        <v-avatar v-if="avatar == 1" class="avatar" image="../assets/avatar/avatarVaiolet.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 2" class="avatar" image="../assets/avatar/avatarCerdo.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 3" class="avatar" image="../assets/avatar/avatarEric.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 4" class="avatar" image="../assets/avatar/avatarGatoSuperman.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 5" class="avatar" image="../assets/avatar/avatarHamsterTrex.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 6" class="avatar" image="../assets/avatar/avatarHombrePeloBlanco.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 7" class="avatar" image="../assets/avatar/avatarLevie.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 8" class="avatar" image="../assets/avatar/avatarMikasa.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 9" class="avatar" image="../assets/avatar/avatarMujerPeloRojo.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 10" class="avatar" image="../assets/avatar/avatarPerroBatman.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 11" class="avatar" image="../assets/avatar/avatarPerroDJ.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 12" class="avatar" image="../assets/avatar/avatarPower.png"
-                            size="100"></v-avatar>
-                        <v-avatar v-else-if="avatar == 13" class="avatar" image="../assets/avatar/avatarZorro.png"
-                            size="100"></v-avatar>
-                        <!-- <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar"> -->
-                        <div class="barra__vida" v-bind:class="{ 'animacioVida': animacioVida }">
-                            <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png"
-                                alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 50" src="/src/assets/ilustracio-vida/75_health.png"
-                                alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 25" src="/src/assets/ilustracio-vida/50_health.png"
-                                alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 0" src="/src/assets/ilustracio-vida/25_health.png"
-                                alt="" class="imagen-vida">
-                            <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
-
-.duelo {
-    background-image: url("../assets/backgrounds/background-dol-joc.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+//container de la partida
+.container {
     display: grid;
     grid-template-areas:
-        "preguntaDuelo"
-        "usuarioDuelo";
+        "jugadors preguntas"
+        "chat info";
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 3fr 1.5fr;
+    margin-left: 15vh;
+    width: 85vw;
 }
-.container__preguntaDuelo {
-    display: grid;
-    grid-area: preguntaDuelo;
-    background-color: white;
-    position: relative;
-    color: aliceblue;
-    width: 50vw;
-    height: 60vh;
+
+
+//container de los jugadores
+.container__jugadors {
+    height: 50vh;
+    width: 50vh;
+    background-color: rgb(37, 7, 107, 0.8);
+    grid-area: jugadors;
     border-radius: 6px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.container__dueloUsuarios {
-    grid-area: usuarioDuelo;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-content: center;
-    align-items: center;
     position: relative;
+    top: 5vh;
 }
-.usuarioEnemigo{
-    right: 10vh;
+
+.item-scroll {
+    overflow-y: scroll;
+    position: relative;
+    height: 47vh;
+    top: 1vh;
 }
-.usuarioDuelo{
-    left: 10vh;
-}
-.cantidadPreguntas{
-    color: black;
-    font-size: 2vh;
-    margin: 1vh;
-}
-//container de la partida
+
 .animacioVida {
     background-color: #ffdd33;
     animation: tilt-shaking 0.5s;
@@ -266,6 +147,61 @@
         transform: rotate(0deg);
     }
 }
+
+.item-scroll::-webkit-scrollbar {
+    width: 1vh;
+}
+
+.item-scroll::-webkit-scrollbar-thumb {
+    background-color: rgb(134, 76, 191);
+    border-radius: 5px;
+}
+
+//color del scroll y forma
+
+//container de las preguntas
+.container__preguntas {
+    position: relative;
+    border-radius: 2vh;
+    background-color: aliceblue;
+    text-align: center;
+    grid-area: preguntas;
+    width: 95vh;
+    margin-left: auto;
+    margin-right: auto;
+    height: 60vh;
+    top: 5vh;
+}
+
+//container de las pregunta
+.container__pregunta {
+    position: relative;
+    background-color: rgb(134, 76, 191);
+    text-align: center;
+    height: 7vw;
+    width: 56vh;
+    border-radius: 60ch 60ch;
+    top: 2vw;
+}
+
+.pregunta {
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+}
+
+
+//container del chat
+.container__chat {
+    background-color: rgb(37, 7, 107, 0.8);
+    position: relative;
+    color: aliceblue;
+    width: 50vh;
+    grid-area: chat;
+    height: 33vh;
+    border-radius: 6px;
+}
+
 //container del usuario
 .container__usuario {
     background-color: rgb(37, 7, 107, 0.8);
@@ -276,6 +212,101 @@
     display: flex;
 }
 
+//container del poder
+.container__poder {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    right: 5vh;
+}
+
+//container de las respuestas
+.container__respostes {
+    display: grid;
+    position: relative;
+    top: 33vh;
+    grid-template-columns: 1fr 1fr;
+    right: 6vh;
+}
+
+//boton de las respuestas
+.button__resposta {
+    background-color: aqua;
+    padding: 1vh;
+    width: 30vh;
+    margin: 2vh;
+    border-radius: 6px;
+    font-size: 2em;
+}
+
+//container del chat
+.enviar {
+    height: 3vh;
+}
+
+.button__chat {
+    display: flex;
+    position: relative;
+    left: 0.5rem;
+}
+
+//impunt del chat
+#inputChat {
+    background-color: aliceblue;
+    width: 44vh;
+    border-radius: 5px;
+}
+
+//los mensajes del chat
+.missatge {
+    position: relative;
+    color: aliceblue;
+    width: 40vh;
+    left: 1vh;
+}
+
+//container del mensaje
+.container__missatge {
+    overflow-y: scroll;
+    position: relative;
+    height: 27vh;
+    bottom: 4vh;
+}
+
+//hancho del scroll
+.container__missatge::-webkit-scrollbar {
+    width: 1vh;
+}
+
+//color del scroll y forma
+.container__missatge::-webkit-scrollbar-thumb {
+    background-color: rgb(134, 76, 191);
+    border-radius: 5px;
+}
+
+//container del boton del chat
+.container__imputButtom {
+    display: flex;
+    position: absolute;
+    bottom: 1vh;
+    left: 1vh;
+}
+
+//container del chat
+.chat {
+    position: relative;
+    top: 6vh;
+}
+
+.pregunta__texto {
+    position: absolute;
+    font-size: 2vh;
+    font-weight: bold;
+    top: 5vh;
+    left: 0;
+    right: 0;
+}
+
 .container__avatar {
     position: absolute;
     top: 0;
@@ -283,12 +314,6 @@
     right: 0;
 }
 
-.container__avatarUsuario {
-    position: absolute;
-    top: 0;
-    left: 52ch;
-    right: 0;
-}
 .avatar {
     position: absolute;
     top: 0;
@@ -297,14 +322,7 @@
     width: 19vh;
     z-index: 0;
 }
-.avatarUsuario {
-    position: absolute;
-    top: 1ch;
-    left: 0;
-    height: 18vh;
-    width: 18vh;
-    z-index: 0;
-}
+
 .barra__vida {
     position: absolute;
     top: 11vh;
@@ -312,17 +330,7 @@
     right: 0;
     z-index: 1;
 }
-.barra__vidaUsuario {
-    position: absolute;
-    top: 11vh;
-    left: -33vh;
-    right: 0;
-    z-index: 1;
-}
 
-.barra__vidaUsuario img{
-    transform: scaleX(-1);
-}
 .numero__vida {
     position: absolute;
     top: 0;
@@ -353,7 +361,7 @@
 
 }
 
-.nickEnemigo {
+.nickUsuario {
     position: absolute;
     top: 3vh;
     left: 0;
@@ -364,15 +372,15 @@
     color: #ffdd33;
 }
 
-.nickUsuario {
-    position: absolute;
-    top: 3vh;
-    left: -35vh;
-    right: 0;
-    font-size: 4vh;
-    font-weight: bold;
-    text-align: center;
-    color: #ffdd33;
+.imagen__skip {
+    height: 11vh;
+    width: 6vw;
+}
+
+.container__skip {
+    position: relative;
+    display: flex;
+    justify-content: center;
 }
 </style>
 
