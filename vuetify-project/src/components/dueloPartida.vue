@@ -194,7 +194,7 @@
 <style lang="scss" scoped>
 
 .duelo {
-    background-image: url("../assets/backgrounds/background-dol-joc.png");
+    background-image: url("../assets/backgrounds/fondo-duelo.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
