@@ -205,25 +205,35 @@
         </div> 
     </div>
     <v-row justify="center">
-        <v-dialog v-model="game.dialog" scrollable width="auto">
-            <v-card>
-                <v-card-title>Escull objectiu</v-card-title>
-                <v-divider></v-divider>
-                <v-card-text style="height: 300px;">
-                    <div v-for="jugador in game.players">
-                        <v-btn v-if="jugador.idSocket != game.ownPlayer.idSocket" color="primary"
-                            @click="escollirObjectiu(jugador.idSocket)">{{ jugador.nick }}</v-btn>
+    <v-dialog v-model="game.dialog" scrollable width="30vw">
+        <v-card>
+            <v-card-title class="headline blue-grey white--text" style="font-size: 2rem; text-align: center; background-color: #a2d1f2;">Escull objectiu</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text style="height: 25vh; padding: 20px; background-color: #c2a5df;">
+                <v-card v-for="jugador in game.players" class="mb-4" style="background-color: #b2df9b;">
+                    <div v-if="game.ownPlayer.nick != jugador.nick ">
+                        <v-card-text>
+                            <div style="font-size: 2rem; text-align: center; text-transform: uppercase; color: #0542b9;">{{ jugador.nick }}</div>
+                        </v-card-text>
+                        <v-row align="center" justify="center" style="padding: 2vh;">
+                            <v-btn style="font-size: 1rem;" v-if="jugador.idSocket != game.ownPlayer.idSocket" @click="escollirObjectiu(jugador.idSocket)">
+                                <v-icon left>mdi-account-arrow-right</v-icon>
+                                Escollir
+                            </v-btn>
+                        </v-row>
                     </div>
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-actions>
-                    <v-btn color="blue-darken-1" variant="text" @click="game.dialog = false">
-                        Close
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-    </v-row>
+                </v-card>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions style="background-color: #a2d1f2;">
+                <v-btn style="background-color: #e21b3c; color: white;" variant="text" @click="game.dialog = false">
+                    <v-icon left>mdi-close</v-icon>
+                    Close
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</v-row>
 </template>
 
 <style lang="scss" scoped>
