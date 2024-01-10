@@ -76,13 +76,15 @@
     width: 65vw;
     height: 10vh;
     border-radius: 50px;
-    background-color: rgb(226, 65, 4);
+    background-color: rgb(255, 165, 2);
+    border: 4px solid rgb(226, 65, 4);
+
 }
 
 .title {
-    font-size: 8vh;
-    color: #ffc00a;
-    margin-left: 3vw;
+    color: #e24104;
+    text-align: center;
+    font-size: 3em;
 }
 
 .configuration-name-room {
