@@ -5,7 +5,7 @@
             <img v-else-if="poder == 'menysTemps'" src="../assets/poderes/reducirTiempo.png" alt="" class="power">
             <img v-else-if="poder == 'pararTemps'" src="../assets/poderes/pararTiempo.png" alt="" class="power">
             <img v-else-if="poder == 'escut'" src="../assets/poderes/escudo.png" alt="" class="power">
-            <img v-else-if="poder == 'salut'" src="../assets/poderes/curar.png" alt="" class="power">
+            <img v-else-if="poder == 'vida'" src="../assets/poderes/curar.png" alt="" class="power">
             <img v-else-if="poder == 'robarVida'" src="../assets/poderes/robarVida.png" alt="" class="power">
             <img v-else-if="poder == 'salt'" src="../assets/poderes/saltar.png" alt="" class="power">
             <img v-else src="../assets/icono/power.png" alt="" class="power">
