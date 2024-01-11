@@ -203,7 +203,6 @@
 </style>
 
 <script>
-// import { useAppStore } from "../stores/app.js";
 import { socket } from '../socket';
 import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
