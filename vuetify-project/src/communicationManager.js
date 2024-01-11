@@ -1,7 +1,7 @@
 import { useAppStore } from '@/store/app';
 export class CommunicationManager {
     constructor() {
-        this.fetchLink = 'http://pretr2g3.daw.inspedralbes.cat/laravel/public/api/';
+        this.fetchLink = 'http://localhost:8000/api/';
         this.loggedIn = false;
         this.store = useAppStore();
     }

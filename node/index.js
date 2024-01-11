@@ -8,7 +8,7 @@ import cors from 'cors';
 
 const app = express()
 //A pre 3590, a pro 3589
-const port = 3590
+const port = 3000
 app.use(cors());
 const server = createServer(app);
 
