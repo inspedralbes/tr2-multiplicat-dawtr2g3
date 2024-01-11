@@ -142,12 +142,12 @@
             <v-divider></v-divider>
             <v-card-text style="height: 25vh; padding: 20px; background-color: #c2a5df;">
                 <v-card v-for="jugador in game.players" class="mb-4" style="background-color: #b2df9b;">
-                    <div v-if="game.ownPlayer.nick != jugador.nick ">
+                    <div v-if="game.ownPlayer.nick != jugador.nick && !jugador.duelo.enDuelo && jugador.vida > 0 ">
                         <v-card-text>
                             <div style="font-size: 2rem; text-align: center; text-transform: uppercase; color: #0542b9;">{{ jugador.nick }}</div>
                         </v-card-text>
                         <v-row align="center" justify="center" style="padding: 2vh;">
-                            <v-btn style="font-size: 1rem;" v-if="jugador.idSocket != game.ownPlayer.idSocket" @click="escollirObjectiu(jugador.idSocket)">
+                            <v-btn style="font-size: 1rem;" v-if="jugador.idSocket != game.ownPlayer.idSocket  && !jugador.duelo.enDuelo && jugador.vida > 0" @click="escollirObjectiu(jugador.idSocket)">
                                 <v-icon left>mdi-account-arrow-right</v-icon>
                                 Escollir
                             </v-btn>
@@ -157,7 +157,7 @@
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions style="background-color: #a2d1f2;">
-                <v-btn style="background-color: #e21b3c; color: white;" variant="text" @click="game.dialog = false">
+                <v-btn  style="background-color: #e21b3c; color: white;" variant="text" @click="cerrarModal">
                     <v-icon left>mdi-close</v-icon>
                     Close
                 </v-btn>
@@ -700,7 +700,7 @@ export default {
                 oponent: computed(() => this.game.players.find(player => player.idSocket == store.duelo.oponent.id)),
 
                 notFirstQuestion: false,
-                dialog: false,
+                dialog: computed(() => store.dialog),
             },
             timerInterval: null,
             disabled: false,
@@ -723,13 +723,15 @@ export default {
                 this.isAnimating = false;
             }, 1000); // same duration as the animation
         }, utilitzarPoder() {
+            const store = useAppStore();
+
             if (this.game.ownPlayer.poder.length > 0) {
                 let objectiu = socket.id;
                 if (this.game.mort) {
-                    this.game.dialog = true;
+                    store.dialog = true;
                 } else {
                     if (this.game.ownPlayer.poder == "menysTemps" || this.game.ownPlayer.poder == "duelo") {
-                        this.game.dialog = true;
+                        store.dialog = true;
                     } else {
                         socket.emit("use power", this.game.ownPlayer.poder, objectiu);
                     }
@@ -739,9 +741,13 @@ export default {
 
         escollirObjectiu(id) {
             socket.emit("use power", this.game.ownPlayer.poder, id);
-            this.game.dialog = false;
+            const store = useAppStore();
+            store.dialog = false;
         },
-
+        cerrarModal(){
+            const store = useAppStore();
+            store.dialog = false;
+        },
         /**
          * Para el temps
          */

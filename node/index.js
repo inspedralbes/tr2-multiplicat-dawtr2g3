@@ -7,7 +7,8 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 
 const app = express()
-const port = 3000
+//A pre 3590, a pro 3589
+const port = 3590
 app.use(cors());
 const server = createServer(app);
 
@@ -208,7 +209,7 @@ io.on('connection', (socket) => {
                 llistatUsuarisMinim = llistaMinim(llistatUsuaris);
 
                 io.to(roomID).emit('update players', llistatUsuarisMinim);
-                if(jugadorsVius(llistatUsuaris).length == 1){
+                if (jugadorsVius(llistatUsuaris).length == 1) {
                     acabarPartida(socket, roomID);
                     io.to(roomID).emit('finalitzar duelo');
                 }
@@ -270,7 +271,7 @@ io.on('connection', (socket) => {
                 llistatUsuarisMinim = llistaMinim(llistatUsuaris);
 
                 io.to(roomID).emit('update players', llistatUsuarisMinim);
-                if(jugadorsVius(llistatUsuaris).length == 1){
+                if (jugadorsVius(llistatUsuaris).length == 1) {
                     acabarPartida(socket, roomID);
                     io.to(roomID).emit('finalitzar duelo');
                 }
@@ -339,6 +340,13 @@ io.on('connection', (socket) => {
                     room.jugadors = llistatUsuaris;
                 }
             });
+            let llistatUsuarisMinim = [];
+            llistatUsuaris.forEach((user) => {
+
+                let userMinim = createUserMinim(user);
+                llistatUsuarisMinim.push(userMinim);
+            })
+            io.to(roomID).emit("update players", llistatUsuarisMinim)
         }
         socket.leave(roomDuelo)
 
@@ -384,24 +392,15 @@ io.on('connection', (socket) => {
                     llistatUsuaris.map((user) => {
                         if (user.idSocket == idOponent) {
                             user.vida -= 30;
-                            if (comprovarMort(user)) {
-                                matarJugador(user, start);
-                                socket.emit('die');
-                                mort = true;
+                            if (user.vida <= 0) {
+                                user.vida = 1;
                             }
+
                         }
                     });
-                    if (mort) {
-                        if (jugadorsVius(llistatUsuaris).length == 1) {
-                            acabat = true;
-                        }
-                    }
 
-                    llistatUsuaris.forEach((user) => {
 
-                        let userMinim = createUserMinim(user);
-                        llistatUsuarisMinim.push(userMinim);
-                    })
+
 
                     arrayRoom.map((room) => {
                         if (room.id == roomID) {
@@ -410,11 +409,13 @@ io.on('connection', (socket) => {
                     });
 
                     llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
+                    llistatUsuaris.forEach((user) => {
 
+                        let userMinim = createUserMinim(user);
+                        llistatUsuarisMinim.push(userMinim);
+                    })
                     io.to(roomID).emit("update players", llistatUsuarisMinim)
-                    if (acabat) {
-                        acabarPartida(socket, roomID);
-                    }
+
                 } else {
                     let indexPregunta = userDuelo.duelo.encertades;
                     let preguntaDuelo = preguntasDuelo[indexPregunta];
@@ -560,6 +561,9 @@ io.on('connection', (socket) => {
                     user.skip--;
                 } else {
                     user.vida -= -10 * user.falladesConsecutives + 30;
+                    if(user.vida < 0){
+                        user.vida = 0;
+                    }
                     if (jugadorsVius(llistatUsuaris).length == 1) {
                         acabarPartida(socket, roomID);
                     } else {
@@ -774,7 +778,6 @@ function acabarPartida(socket, roomID) {
 function getRandomPoder() {
     let random = Math.floor(Math.random() * 7) + 1;
     let poder = "";
-    return "duelo";
     switch (random) {
         case 1:
             poder = "salt";
@@ -857,6 +860,13 @@ function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
     socket.emit('new question', preguntaDuelo);
     io.to(userObjectiu.idSocket).emit('duelo recibir', userObjectiu.duelo);
     io.to(userObjectiu.idSocket).emit('new question', preguntaDuelo)
+    let llistatUsuarisMinim = [];
+    llistatUsuaris.forEach((user) => {
+
+        let userMinim = createUserMinim(user);
+        llistatUsuarisMinim.push(userMinim);
+    })
+    io.to(roomID).emit("update players", llistatUsuarisMinim)
     console.log(preguntaDuelo);
 }
 
@@ -986,6 +996,15 @@ function createUserMinim(user) {
         "falladesConsecutives": user.falladesConsecutives,
         "poder": user.poder,
         "mort": user.mort,
+        "duelo": {
+            "enDuelo": user.duelo.enDuelo,
+            "encertades": user.duelo.encertades,
+            "indexPreg": user.duelo.indexPreg,
+            "oponent": {
+                'id': user.duelo.oponent.id,
+                'encertades': user.duelo.oponent.encertades,
+            },
+        },
         "infoPoders": {
             "escut": user.infoPoders.escut,
             "robarVida": user.infoPoders.robarVida,

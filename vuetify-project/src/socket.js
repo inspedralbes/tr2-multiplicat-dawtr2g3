@@ -4,10 +4,11 @@ import { useAppStore } from '@/store/app';
 import router from '@/router'; // Import the router from your project
 // "undefined" means the URL will be computed from the `window.location` object
 /**
- * Si estas treballant en local ferem  url =localhost:3000
+ * Si estas treballant en local ferem  url =localhost:3589
  * Si estas en producció ferem url = http://mathroyale.daw.inspedralbes.cat:3589
+ * Si estas en preproduccion ferem url = http://pretr2g3.daw.inspedralbes.cat:3590
  */
-const URL = "http://localhost:3000";
+const URL = "http://pretr2g3.daw.inspedralbes.cat:3590";
 
 export const socket = io(URL, {
   extraHeaders: {
@@ -156,6 +157,7 @@ socket.on("play", (question) => {
 socket.on("duelo recibir", (duelo) => {
   //Triger animacion de recibir duelo
   const store = useAppStore();
+  store.dialog = false;
   console.log("recibir duelo");
   console.log(store.ownPlayer)
   socket.emit("duelo entrar",store.ownPlayer.idSocket,duelo.oponent.id)
