@@ -95,7 +95,7 @@
                 <div class="container__usuarioDuelo usuario usuarioDuelo">
                     <h2 class="nickUsuarioDuelo">{{ game.ownPlayer.nick }}</h2>
                         <div class="container__avatar">
-                            <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
+                            <img src="../assets/avatar/avatarDerecha.png" alt="" class="avatar">
                             <div class="barra__vidaUsuario" v-bind:class="{ 'animacioVida': animacioVida }">
                                 <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png"
                                     alt="" class="imagen-vida">
@@ -115,7 +115,7 @@
                     <div class="container__usuarioEnemigo usuario">
                         <h2 class="nickEnemigo">{{ game.oponent.nick }}</h2>
                         <div class="container__avatarEnemigo">
-                            <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar">
+                            <img src="../assets/avatar/avatarIzquierda.png" alt="" class="avatar">
                             <div class="barra__vidaEnemigo" v-bind:class="{ 'animacioVida': animacioVida }">
                                 <img v-if="this.game.oponent.vida > 75" src="/src/assets/ilustracio-vida/full-health.png" alt=""
                                     class="imagen-vida">
