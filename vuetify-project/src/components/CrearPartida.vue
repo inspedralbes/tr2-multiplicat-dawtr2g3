@@ -24,7 +24,7 @@
                 <div class="buttons-background b-left">
                     <select class="buttons-size-style" v-model="maxJugadors">
                         <option :value="0" disabled selected>nº Jugadors</option>
-                        <option v-for="n in 40" :value="n">{{ n }}</option>
+                        <option v-for="n in 39" :value="n+1">{{ n+1 }}</option>
                     </select>
                 </div>
                 <!--  <div class="buttons-background b-right">

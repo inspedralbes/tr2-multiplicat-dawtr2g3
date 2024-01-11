@@ -134,6 +134,10 @@ socket.on('info partida', (nom, maxJugadors) => {
   const store = useAppStore();
   store.setInfoPartida(nom, maxJugadors);
 })
+socket.on('push a lobby',()=>{
+  router.push('/lobby');
+
+});
 
 /**
  * Mou a la pantalla de la partida
