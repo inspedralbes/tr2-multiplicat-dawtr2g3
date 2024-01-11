@@ -829,7 +829,7 @@ function acabarPartida(socket, roomID) {
  * @returns el poder que li ha tocat
  */
 function getRandomPoder() {
-    let random = Math.floor(Math.random() * 6) + 1;
+    let random = Math.floor(Math.random() * 7) + 1;
     let poder = "";
     switch (random) {
         case 1:
@@ -850,10 +850,10 @@ function getRandomPoder() {
         case 6:
             poder = "menysTemps";
             break;
-            //si se quiere añadir el duelo, descomentar el case 7 y aumentar el random a 7
-        // case 7:
-        //     poder = "duelo";
-        //     break;
+            
+        case 7:
+            poder = "duelo";
+            break;
         default:
             break;
     }
