@@ -71,18 +71,18 @@ export const useAppStore = defineStore('app', {
       }, 500);
     },
     startTimer() {
-      // if (this.timerStopped) {
-      //     this.timerInterval = setInterval(() => {
+      if (this.timerStopped) {
+          this.timerInterval = setInterval(() => {
 
-      //       if (this.timer <= 0) {
-      //         socket.emit('bleed');
-      //         this.triggerAnimacioVida();
-      //       } else {
-      //         this.timer--;
-      //       }
-      //     }, 1000);
-      //   this.timerStopped = false;
-      // }
+            if (this.timer <= 0) {
+              socket.emit('bleed');
+              this.triggerAnimacioVida();
+            } else {
+              this.timer--;
+            }
+          }, 1000);
+        this.timerStopped = false;
+      }
     },
 
     setAvatar(avatar) {
