@@ -476,6 +476,7 @@
     margin-right: auto;
     height: 60vh;
     top: 5vh;
+    left: 4vh;
 }
 
 //container de las pregunta
@@ -669,6 +670,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    left: 5vh;
 
 }
 
