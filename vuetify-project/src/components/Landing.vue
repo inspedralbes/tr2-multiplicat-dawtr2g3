@@ -195,6 +195,7 @@ export default {
     const store = useAppStore();
 
     return {
+      fetTutorial: false,
       tempsRestant: null,
       nom: '',
       avatar: 1,
@@ -222,8 +223,14 @@ export default {
       }
     },
     empezar() {
-
       const store = useAppStore();
+
+      if (!store.tutorial) {
+        store.setTutorial(true);
+        router.push('/tutorial');
+        
+      }
+
       store.setNick(this.nom);
       router.push('/partides');
 
