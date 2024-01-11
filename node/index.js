@@ -329,7 +329,15 @@ io.on('connection', (socket) => {
                         user.duelo.encertades = 0;
                         user.duelo.oponent = {};
                         if (arrayPreg != undefined) {
-                            socket.emit('new question', arrayPreg[user.preguntaActual]);
+                            let preguntaEnviar = arrayPreg[user.preguntaActual];
+                            if (preguntaEnviar != undefined) {
+                                socket.emit('new question', preguntaEnviar);
+                            } else {
+                                user.preguntaActual = 0;
+                                preguntaEnviar = arrayPreg[0];
+                                socket.emit('new question', preguntaEnviar);
+
+                            }
                         }
 
                     }
@@ -510,14 +518,24 @@ io.on('connection', (socket) => {
                                 if (user.falladesConsecutives == 3) {
                                     user.preguntaActual++;
                                     user.falladesConsecutives = 0;
+
                                     let preguntaEnviar = arrayPreg[user.preguntaActual];
+                                    if (preguntaEnviar != undefined) {
+                                        socket.emit('new question', preguntaEnviar);
+                                    } else {
+                                        user.preguntaActual = 0;
+                                        let preguntaEnviar = arrayPreg[0];
+
+                                        socket.emit('new question', preguntaEnviar);
+
+                                    }
+
                                     if (user.infoPoders.tempspregunta > 0) {
                                         preguntaEnviar.temps -= user.infoPoders.tempspregunta;
                                         user.infoPoders.tempspregunta = 0;
                                         socket.emit('less time');
                                         //!!!! aquest encara s'ha de fer
                                     }
-                                    socket.emit('new question', preguntaEnviar);
                                 }
                             }
                         }
@@ -553,55 +571,63 @@ io.on('connection', (socket) => {
      */
     socket.on('skip', () => {
         let roomID = trobarRoom(socket);
-        let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-        let start = arrayRoom.find((room) => room.id == roomID).start;
-
-        llistatUsuaris.map((user) => {
-            if (user.idSocket == socket.id) {
-                user.preguntaActual++;
-                if (user.skip > 0) {
-                    user.skip--;
-                } else {
-                    user.vida -= -10 * user.falladesConsecutives + 30;
-                    if (user.vida < 0) {
-                        user.vida = 0;
-                    }
-                    if (jugadorsVius(llistatUsuaris).length == 1) {
-                        acabarPartida(socket, roomID);
+        let room = arrayRoom.find((room) => room.id == roomID);
+        if (room != undefined) {
+            let llistatUsuaris = room.jugadors;
+            let start = room.start;
+            let arrayPreg = room.arrayPreg;
+            llistatUsuaris.map((user) => {
+                if (user.idSocket == socket.id) {
+                    user.preguntaActual++;
+                    if (user.skip > 0) {
+                        user.skip--;
                     } else {
-                        if (comprovarMort(user) && !user.mort) {
-                            matarJugador(user, start)
-                            socket.emit('die');
-
+                        user.vida -= -10 * user.falladesConsecutives + 30;
+                        if (user.vida < 0) {
+                            user.vida = 0;
                         }
+                        if (jugadorsVius(llistatUsuaris).length == 1) {
+                            acabarPartida(socket, roomID);
+                        } else {
+                            if (comprovarMort(user) && !user.mort) {
+                                matarJugador(user, start)
+                                socket.emit('die');
+
+                            }
+                        }
+                        llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
                     }
-                    llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
-                }
-                user.falladesConsecutives = 0;
-            }
-        });
-        if (jugadorsVius(llistatUsuaris).length > 1) {
-            let user = llistatUsuaris.find((usuari) => {
-                return usuari.idSocket == socket.id;
-            });
-            arrayRoom.map((room) => {
-                if (room.id == roomID) {
-                    room.jugadors = llistatUsuaris;
+                    user.falladesConsecutives = 0;
                 }
             });
-            let llistatUsuarisMinim = [];
-            llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-            io.to(roomID).emit("update players", llistatUsuarisMinim);
+            if (jugadorsVius(llistatUsuaris).length > 1) {
+                let user = llistatUsuaris.find((usuari) => {
+                    return usuari.idSocket == socket.id;
+                });
+                arrayRoom.map((room) => {
+                    if (room.id == roomID) {
+                        room.jugadors = llistatUsuaris;
+                    }
+                });
+                let llistatUsuarisMinim = [];
+                llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+                io.to(roomID).emit("update players", llistatUsuarisMinim);
 
-            let preguntaEnviar = arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual];
-            if (user.infoPoders.tempspregunta > 0) {
-                preguntaEnviar.temps -= user.infoPoders.tempspregunta;
-                user.infoPoders.tempspregunta = 0;
-                socket.emit('menys temps');
+                if (user.infoPoders.tempspregunta > 0) {
+                    preguntaEnviar.temps -= user.infoPoders.tempspregunta;
+                    user.infoPoders.tempspregunta = 0;
+                    socket.emit('menys temps');
+                }
+                let preguntaEnviar = arrayPreg[user.preguntaActual];
+                if (preguntaEnviar != undefined) {
+                    socket.emit('new question', preguntaEnviar);
+                } else {
+                    user.preguntaActual = 0;
+                    preguntaEnviar = arrayPreg[0];
+                    socket.emit('new question', preguntaEnviar);
+                }
+                //arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual]
             }
-
-            socket.emit('new question', preguntaEnviar);
-            //arrayRoom.find((room) => room.id == roomID).arrayPreg[user.preguntaActual]
         }
     });
 
@@ -616,7 +642,6 @@ io.on('connection', (socket) => {
             return usuari.idSocket == socket.id;
         });
 
-        let preguntaEnviar = arrayPreg[user.preguntaActual];
 
         if (user.infoPoders.tempspregunta > 0) {
             preguntaEnviar.temps -= user.infoPoders.tempspregunta;
@@ -624,7 +649,14 @@ io.on('connection', (socket) => {
             socket.emit('menys temps');
         }
 
-        socket.emit('new question', preguntaEnviar);
+        let preguntaEnviar = arrayPreg[user.preguntaActual];
+        if (preguntaEnviar != undefined) {
+            socket.emit('new question', preguntaEnviar);
+        } else {
+            user.preguntaActual = 0;
+            preguntaEnviar = arrayPreg[0];
+            socket.emit('new question', preguntaEnviar);
+        }
     })
 
     /**
