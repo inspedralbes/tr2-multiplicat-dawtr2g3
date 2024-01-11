@@ -1,15 +1,15 @@
 <template>
     <div>
         <div class="dragEnd" @dragover="handleDragOver($event)" @drop="handleDrop($event)">
-            <h2 class="pregunta">{{pregunta}}</h2>
+            <h2 class="pregunta">{{ pregunta }}</h2>
         </div>
     </div>
-        <div class="container__respostasPosicion">
-            <div class="container__respostas">
-                <span v-for="(resposta, index) in respostes" class="dragable" :draggable="isDraggable"
+    <div class="container__respostasPosicion">
+        <div class="container__respostas">
+            <span v-for="(resposta, index) in respostes" class="dragable" :draggable="isDraggable"
                 @dragstart="handleDragStart(index)">{{ resposta }}</span>
-            </div>
         </div>
+    </div>
 </template>
 
 <script>
@@ -27,6 +27,7 @@ export default {
         }
     },
     data() {
+
         return {
             isDraggable: true,
             actual: "",
@@ -40,12 +41,14 @@ export default {
             event.preventDefault();
         },
         handleDrop(event) {
-            event.preventDefault();
-            this.$emit("comprovar", this.actual);
-            this.isDraggable = false;
-            setTimeout(() => {
-                this.isDraggable = true;
-            }, 1000);
+
+                event.preventDefault();
+                this.$emit("comprovar", this.actual);
+                this.isDraggable = false;
+                setTimeout(() => {
+                    this.isDraggable = true;
+                }, 1000);
+
         }
     },
     mounted() {
@@ -77,7 +80,7 @@ export default {
 
 }
 
-.container__respostas > * {
+.container__respostas>* {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -86,22 +89,26 @@ export default {
     margin-right: auto;
 }
 
-.container__respostas > *:hover {
+.container__respostas>*:hover {
     cursor: pointer;
 }
 
-.container__respostas > *:nth-child(1) {
+.container__respostas>*:nth-child(1) {
     background-color: #e21b3c;
 }
-.container__respostas > *:nth-child(2) {
+
+.container__respostas>*:nth-child(2) {
     background-color: #ffa502;
 }
-.container__respostas > *:nth-child(3) {
+
+.container__respostas>*:nth-child(3) {
     background-color: #25890c;
 }
-.container__respostas > *:nth-child(4) {
-    background-color: #1369ce ;
+
+.container__respostas>*:nth-child(4) {
+    background-color: #1369ce;
 }
+
 .dragEnd {
     display: flex;
     width: 65vh;
@@ -123,5 +130,4 @@ export default {
     position: relative;
     top: 15vh;
 
-}
-</style>
+}</style>
