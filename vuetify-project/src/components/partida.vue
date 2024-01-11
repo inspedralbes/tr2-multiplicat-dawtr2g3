@@ -82,23 +82,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="container__skip skip" :class="{ 'animate-arrow': isAnimating }">
-                    <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt=""
-                            class="imagen__skip"></button>
+                <div class="container__skip">
+                    <div class="skip" :class="{ 'animate-arrow': isAnimating }">
+                        <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt=""  class="imagen__skip"></button>
+                    </div>
+                    <div class="hoverSkip">
+                        <p>
+                            Saltar pregunta: el primer no et treu vida. Després començaràs a perdre vida, MOLTA.
+                        </p>
+                    </div>
                 </div>
-                <div class="hoverSkip">
-                    <p>
-                        Saltar pregunta: el primer no et treu vida. Després començaràs a perdre vida, MOLTA.
-                    </p>
-                </div>
-                <div class="container__poder poder">
-                    <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
-                </div>
-                <div class="nomPoder">
-                    <p v-if="game.ownPlayer.poder.length != 0">{{ game.ownPlayer.poder }}</p>
-                    <p v-else>Poders: 0</p>
-                </div>
-
+                
+                <div class="container__poder">
+                    <div class="poder">
+                        <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
+                    </div>
+                    <div class="nomPoder">
+                        <p v-if="game.ownPlayer.poder.length != 0">{{ game.ownPlayer.poder }}</p>
+                        <p v-else>Poders: 0</p>
+                    </div>
+                </div>             
             </div>
         </div>
         <div v-else class="duelo">
@@ -369,15 +372,13 @@
 }
 
 .nomPoder {
-    position: absolute;
-    top: 17%;
-    right: 9.5%;
     background-color: white;
     border: 1px solid black;
     padding: 1%;
     width: 7vw;
-    height: 5vh;
-    text-transform: uppercase;
+    height: 4vh;
+    position: absolute;
+    top: -9.5vh;
     text-align: center;
     color: #000000;
     display: none;
@@ -394,8 +395,7 @@
     width: 12vw;
     height: 10vh;
     position: absolute;
-    top: 6%;
-    right: 23%;
+    top: -6.5vh;
     text-align: center;
     color: #000000;
     display: none;
