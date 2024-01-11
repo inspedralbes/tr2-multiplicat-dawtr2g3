@@ -14,7 +14,7 @@
                 <h2 class="subtitle">Com crear una partida?</h2>
                 <div class="description-box">
                     <p class="description-article">
-                        ATENCIÓ PER CREAR UNA PARTIDA HAS DE TENIR UN COMPTE DE USUARI VERIFICAT.
+                        ATENCIÓ PER CREAR UNA PARTIDA HAS DE TENIR UN COMPTE D'USUARI VERIFICAT.
                         Per crear una partida has de clicar al botó de <strong>Crear Partida</strong> i 
                         posar el nom de la partida. Un cop posat el nom de la partida, has de clicar al 
                         botó de <strong>Crear</strong> i ja tindràs la partida creada.
@@ -41,9 +41,9 @@
                 <h2 class="subtitle">Com Jugar?</h2>
                 <div class="description-box">
                     <p class="description-article">
-                        Aquest joc es un joc de preguntes i respostes. El joc consisteix en anar respondre preguntes, 
-                        si falles perds vida i si encertes <strong>tres seguides</strong> pots guanyar poders. PER RESPONDRE HAS
-                        DE ARROSEGAR LA RESPOSTA CORRECTA A LA CAIXA ON ES MOSTRA LA PREGUNTA.
+                        Aquest joc és un joc de preguntes i respostes. El joc consisteix a anar responent preguntes,
+                        si en falles perds vida i si n'encertes<strong>tres</strong> obtens un poder. PER RESPONDRE HAS
+                        D'ARROSEGAR LA RESPOSTA CORRECTA A LA CAIXA ON ES MOSTRA LA PREGUNTA.
                     </p>
                 </div>
             </v-col>
@@ -81,9 +81,8 @@
                 <h2 class="subtitle">Poders</h2>
                 <div class="description-box">
                     <p class="description-article">
-                        Els poders en el joc serveixen per afegir una rivalitat i ganes de competencia entre els jugadors. 
-                        Ni han varius tipus de poders per beneficiarte molt o una petita ajuda, a més i han poders que et 
-                        permetren molestar a un altre jugador si veus que va molt bé.
+                        Els poders en el joc serveixen per afegir-hi una rivalitat i competició entre els jugadors. 
+                        N'hi ha varius tipus de poders els quals poden ajudar-te o pots molestar a un altre jugador.
                     </p>
                 </div>
             </v-col>

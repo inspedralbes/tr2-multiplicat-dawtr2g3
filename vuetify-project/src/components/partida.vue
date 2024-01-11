@@ -25,7 +25,7 @@
                 <div class="chat">
                     <div class="container__missatge">
                         <div class="missatge" v-for="missatge in game.chat">
-                            <span>{{ missatge.nick }}</span>:<span> {{ missatge.msg }}</span>
+                            <span class="missatgeUsuari">{{ missatge.nick }}</span>: <span> {{ missatge.msg }}</span>
                         </div>
                     </div>
                     <div class="container__imputButtom">
@@ -314,7 +314,9 @@
 .usuarioEnemigo{
     left: 10vh;
 }
-
+.missatgeUsuari{
+    font-size: 25px;
+}
 .nickUsuarioDuelo {
     position: absolute;
     top: 3vh;
