@@ -27,12 +27,13 @@
                         <option v-for="n in 40" :value="n">{{ n }}</option>
                     </select>
                 </div>
-                <div class="buttons-background b-right">
+                <!--  <div class="buttons-background b-right">
                     <select class="buttons-size-style" >
                         <option  disabled selected>Limit de partida</option>
                         <option v-for="item in ['Sense límit', '20 Preguntes', '10 Preguntes', '5 minuts', '10 minuts']" :value="item">{{ item }}</option>
                     </select>
                 </div>
+                 -->
             </div>
         </div>
         <button class="button-crearPartida-background button-crearPartida" @click="crear">Crear partida</button>
@@ -40,7 +41,6 @@
 </template>
 
 <style scoped>
-
 .page {
     width: 100vw;
     height: 100vh;
@@ -153,7 +153,7 @@
     justify-content: space-evenly;
     /* estils fons */
     background-color: rgba(51, 204, 204, 1);
-    border: 3px solid rgba(10, 163, 163, 1);    
+    border: 3px solid rgba(10, 163, 163, 1);
     box-shadow: inset 4px 4px 4px 0px rgba(0, 0, 0, 0.2);
 }
 
@@ -162,18 +162,18 @@
     width: 14vw;
     height: 6vh;
     /* aliniació */
-    margin-top: 0.7vh;   
+    margin-top: 0.7vh;
     /* estils text */
     color: rgba(235, 33, 60, 1);
     font-family: 'Battle Beasts';
-    font-size: 2vw; 
+    font-size: 2vw;
 }
 
-.buttons-size-style > option {
+.buttons-size-style>option {
     /* estils text */
     color: rgba(235, 33, 60, 1);
     font-family: 'Battle Beasts';
-    font-size: 1vw; 
+    font-size: 1vw;
 }
 
 .button-crearPartida-background {
@@ -198,14 +198,13 @@
     font-size: 5vw;
 }
 
-.input-name:focus, .buttons-size-style:focus{
+.input-name:focus,
+.buttons-size-style:focus {
     outline: none;
 }
-
 </style>
 
 <script>
-// import { useAppStore } from "../stores/app.js";
 import { socket } from '../socket';
 import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
@@ -237,7 +236,10 @@ export default {
     mounted() {
     },
     created() {
-
+        const store = useAppStore();
+        if (!store.loginInfo.verificat) {
+            this.$router.push('/');
+        }
     },
 
 }

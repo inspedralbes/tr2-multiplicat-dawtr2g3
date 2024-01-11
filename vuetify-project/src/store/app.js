@@ -26,6 +26,7 @@ export const useAppStore = defineStore('app', {
     animacioVida: false,
     avatar: 1,
     timerStopped: true,
+    tutorial: false,
     duelo: {
       "enDuelo": false,
       "encertades": 0,
@@ -39,6 +40,9 @@ export const useAppStore = defineStore('app', {
 
   }),
   actions: {
+    setTutorial(tutorial) {
+      this.tutorial = tutorial;
+    },
     setOpponent(opponent) {
       this.opponent = opponent;
     },
