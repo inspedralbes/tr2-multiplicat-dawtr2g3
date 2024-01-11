@@ -208,6 +208,10 @@ io.on('connection', (socket) => {
                 llistatUsuarisMinim = llistaMinim(llistatUsuaris);
 
                 io.to(roomID).emit('update players', llistatUsuarisMinim);
+                if(jugadorsVius(llistatUsuaris).length == 1){
+                    acabarPartida(socket, roomID);
+                    io.to(roomID).emit('finalitzar duelo');
+                }
             }
         }
     });
@@ -266,6 +270,10 @@ io.on('connection', (socket) => {
                 llistatUsuarisMinim = llistaMinim(llistatUsuaris);
 
                 io.to(roomID).emit('update players', llistatUsuarisMinim);
+                if(jugadorsVius(llistatUsuaris).length == 1){
+                    acabarPartida(socket, roomID);
+                    io.to(roomID).emit('finalitzar duelo');
+                }
             }
         }
     });

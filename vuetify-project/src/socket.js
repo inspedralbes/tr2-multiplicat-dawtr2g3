@@ -107,7 +107,7 @@ socket.on("end", (guanyador, perdedors) => {
   router.push('/final');
   const store = useAppStore();
   store.stopTimer();
-
+  store.enPartida = false;
   store.timer = 20;
   store.dead = false;
   store.setQuestionIndex(-1);
@@ -148,6 +148,7 @@ socket.on("play", (question) => {
   store.setQuestion(question);
   store.setAnswer(null);
   store.timer = question.temps;
+  store.enPartida = true;
   router.push('/partida');
   store.startTimer();
 });

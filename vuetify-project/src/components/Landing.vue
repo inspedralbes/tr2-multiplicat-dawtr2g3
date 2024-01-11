@@ -228,7 +228,7 @@ export default {
       if (!store.tutorial) {
         store.setTutorial(true);
         router.push('/tutorial');
-        
+
       }
 
       store.setNick(this.nom);
@@ -286,7 +286,26 @@ export default {
   },
 
   mounted() {
-   
+    const store = useAppStore();
+    if (!store.tutorial) {
+      var toast = Toastify({
+
+        text: "Si us plau, fes el tutorial per poder jugar correctament fent click aqui!",
+        backgroundColor: '#FC1A1A',
+        duration: 5000,
+        position: 'center',
+        offset: {
+          x: 0,
+          y: '35vh'
+        },
+        close: true,
+        onClick: function () {
+          router.push('/tutorial');
+          toast.hideToast();
+        }
+
+      }).showToast();
+    }
 
     if (this.loginInfo.username != '') {
       this.nom = this.loginInfo.username;
@@ -294,12 +313,10 @@ export default {
     }
   },
   created() {
-    if (this.$router.options.history.state.back == '/lobby') {
+    console.log(this.$router.options.history.state.back)
+    if (this.$router.options.history.state.back == '/lobby' || this.$router.options.history.state.back == '/') {
       socket.emit('tornar a lobby');
       console.log('adios')
-    }else{
-      socket.emit('asd');
-
     }
   },
 

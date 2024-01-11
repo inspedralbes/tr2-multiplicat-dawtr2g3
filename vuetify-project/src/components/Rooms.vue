@@ -184,7 +184,7 @@ export default {
             const store = useAppStore();
             socket.emit('join', this.idPartida, store.loginInfo.username);
         },
-        toast(){
+        toast() {
             Toastify({
 
                 text: "Partida plena!",
@@ -196,14 +196,21 @@ export default {
     },
 
     mounted() {
-       
+
 
         socket.on('max jugadors', () => {
             console.log("max jugadors");
             this.toast();
         });
     },
-   
+    created() {
+        console.log(this.$router.options.history.state.back)
+
+        if (this.$router.options.history.state.back == '/lobby' || this.$router.options.history.state.back == '/' ) {
+            socket.emit('tornar a lobby');
+            console.log('adios')
+        }
+    },
 
 }
 </script>

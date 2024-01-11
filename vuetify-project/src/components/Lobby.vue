@@ -5,21 +5,22 @@
             <div class="board-llista-jugadors">
                 <h1 class="title-jugadors">Jugadors</h1>
                 <div class="info-sala">
-                    <span class="sala-name">{{this.nomPartida }}</span>
-                    <p class="sala-numJugadors">{{ this.players.length }}/{{this.jugadorsMax}} Jugadors</p>
+                    <span class="sala-name">{{ this.nomPartida }}</span>
+                    <p class="sala-numJugadors">{{ this.players.length }}/{{ this.jugadorsMax }} Jugadors</p>
                 </div>
                 <div class="container-llista-jugadors">
                     <ul class="llista-jugadors">
                         <li class="jugador" v-for="jugador in players">
                             <span class="name-jugador">{{ jugador.nick }}</span>
-                           <!--  <button class="btn-eliminar">Eliminar</button> -->
+                            <!--  <button class="btn-eliminar">Eliminar</button> -->
                         </li>
                     </ul>
                 </div>
-             
+
             </div>
-            
-            <button v-if="$router.options.history.state.back == '/crearPartida'" class="btn-comencarPartida" @click="start">Iniciar partida</button>
+
+            <button v-if="$router.options.history.state.back == '/crearPartida'" class="btn-comencarPartida"
+                @click="start">Iniciar partida</button>
             <h2 v-else class="subtitle-wait">Esperant Jugadors...</h2>
         </div>
     </div>
@@ -75,6 +76,7 @@
     text-shadow: 0.1em 0.1em 0.4em rgb(0, 0, 0);
     color: rgba(102, 191, 57, 1);
 }
+
 .sala-name {
     font-size: 1.5vw;
     display: inline-block;
@@ -145,7 +147,7 @@
     border-radius: 60px;
 }
 
-.btn-comencarPartida{
+.btn-comencarPartida {
     color: rgba(70, 23, 143, 1);
     font-family: 'Battle Beasts';
     font-size: 2vw;
@@ -157,7 +159,7 @@
     margin-top: 1vh;
 }
 
-.subtitle-wait{
+.subtitle-wait {
     color: rgba(255, 51, 85, 1);
     font-family: 'Battle Beasts';
     font-size: 4vw;
@@ -171,6 +173,8 @@ import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
 
 import iconsHead from './iconesHead.vue';
+import store from '@/store';
+import router from '@/router';
 
 export default {
     components: {
@@ -202,7 +206,19 @@ export default {
     mounted() {
     },
     created() {
+        console.log(this.$router.options.history.state.back)
+        const store = useAppStore();
+        if (this.$router.options.history.state.back == '/partida' || this.$router.options.history.state.back == '/' ) {
+            socket.emit('tornar a lobby');
+            console.log('adios')
+        }
+        if(store.enPartida){
+            socket.emit('tornar a lobby');
+            router.push('/');
+            store.enPartida = false;
+            console.log('adios')
 
+        }
     },
 
 }
