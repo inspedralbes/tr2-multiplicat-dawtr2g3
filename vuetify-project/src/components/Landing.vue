@@ -286,15 +286,27 @@ export default {
   },
 
   mounted() {
+    const store = useAppStore();
+    if (!store.tutorial) {
+      var toast = Toastify({
 
-    Toastify({
+        text: "Si us plau, fes el tutorial per poder jugar correctament fent click aqui!",
+        backgroundColor: '#FC1A1A',
+        duration: 5000,
+        position: 'center',
+        offset: {
+          x: 0,
+          y: '35vh'
+        },
+        close: true,
+        onClick: function () {
+          router.push('/tutorial');
+          toast.hideToast();
+        }
 
-      text: "Hola",
-      backgroundColor: '#FC1A1A',
-      duration: 3000,
+      }).showToast();
+    }
 
-
-    }).showToast();
     if (this.loginInfo.username != '') {
       this.nom = this.loginInfo.username;
       console.log(this.nom);

@@ -157,7 +157,7 @@
 
 <script>
 import IconsHead from "@/components/iconesHead.vue";
-
+import { useAppStore } from "../store/app.js";
 export default {
     components: {
         IconsHead
@@ -208,6 +208,10 @@ export default {
                 }
             ]
         };
+    },
+    mounted(){
+        const store = useAppStore();
+        store.tutorial = true;
     }
 };
 </script>
