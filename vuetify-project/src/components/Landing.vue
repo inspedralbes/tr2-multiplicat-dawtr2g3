@@ -6,24 +6,32 @@
       <v-card class="pa-5" color="#864cbf" width="500">
         <div class="card__items items">
           <div class="items__avatar avatar">
-            <v-avatar v-if="avatar == 1" class="avatar__image" image="../assets/avatar/avatarVaiolet.png" size="100"></v-avatar>
-            <v-avatar v-else-if="avatar == 2" class="avatar__image" image="../assets/avatar/avatarCerdo.png" size="100"></v-avatar>
-            <v-avatar v-else-if="avatar == 3" class="avatar__image" image="../assets/avatar/avatarEric.png" size="100"></v-avatar>
+            <v-avatar v-if="avatar == 1" class="avatar__image" image="../assets/avatar/avatarVaiolet.png"
+              size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 2" class="avatar__image" image="../assets/avatar/avatarCerdo.png"
+              size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 3" class="avatar__image" image="../assets/avatar/avatarEric.png"
+              size="100"></v-avatar>
             <v-avatar v-else-if="avatar == 4" class="avatar__image" image="../assets/avatar/avatarGatoSuperman.png"
               size="100"></v-avatar>
             <v-avatar v-else-if="avatar == 5" class="avatar__image" image="../assets/avatar/avatarHamsterTrex.png"
               size="100"></v-avatar>
             <v-avatar v-else-if="avatar == 6" class="avatar__image" image="../assets/avatar/avatarHombrePeloBlanco.png"
               size="100"></v-avatar>
-            <v-avatar v-else-if="avatar == 7" class="avatar__image" image="../assets/avatar/avatarLevie.png" size="100"></v-avatar>
-            <v-avatar v-else-if="avatar == 8" class="avatar__image" image="../assets/avatar/avatarMikasa.png" size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 7" class="avatar__image" image="../assets/avatar/avatarLevie.png"
+              size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 8" class="avatar__image" image="../assets/avatar/avatarMikasa.png"
+              size="100"></v-avatar>
             <v-avatar v-else-if="avatar == 9" class="avatar__image" image="../assets/avatar/avatarMujerPeloRojo.png"
               size="100"></v-avatar>
             <v-avatar v-else-if="avatar == 10" class="avatar__image" image="../assets/avatar/avatarPerroBatman.png"
               size="100"></v-avatar>
-            <v-avatar v-else-if="avatar == 11" class="avatar__image" image="../assets/avatar/avatarPerroDJ.png" size="100"></v-avatar>
-            <v-avatar v-else-if="avatar == 12" class="avatar__image" image="../assets/avatar/avatarPower.png" size="100"></v-avatar>
-            <v-avatar v-else-if="avatar == 13" class="avatar__image" image="../assets/avatar/avatarZorro.png" size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 11" class="avatar__image" image="../assets/avatar/avatarPerroDJ.png"
+              size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 12" class="avatar__image" image="../assets/avatar/avatarPower.png"
+              size="100"></v-avatar>
+            <v-avatar v-else-if="avatar == 13" class="avatar__image" image="../assets/avatar/avatarZorro.png"
+              size="100"></v-avatar>
 
             <v-btn class="avatar-refresh" size="x-small" icon @click="canviarAvatar()">
               <v-icon>mdi-refresh</v-icon>
@@ -34,8 +42,7 @@
               v-model="nom" id="nomJugador"></v-text-field>
           </div>
           <div class="items__btn-tutorial btn-tutorial">
-            <v-btn rounded color="#106b03" @click="$router.push('/tutorial')"
-              class="px-5 mr-5 mt-3">Tutorial</v-btn>
+            <v-btn rounded color="#106b03" @click="$router.push('/tutorial')" class="px-5 mr-5 mt-3">Tutorial</v-btn>
           </div>
           <div class="items__btn-log-reg">
             <v-btn rounded color="#fad09e" class="px-5 ml-2 mt-3 text-white"
@@ -221,7 +228,7 @@ export default {
       if (!store.tutorial) {
         store.setTutorial(true);
         router.push('/tutorial');
-        
+
       }
 
       store.setNick(this.nom);
@@ -279,13 +286,26 @@ export default {
   },
 
   mounted() {
+
+    Toastify({
+
+      text: "Hola",
+      backgroundColor: '#FC1A1A',
+      duration: 3000,
+
+
+    }).showToast();
     if (this.loginInfo.username != '') {
       this.nom = this.loginInfo.username;
       console.log(this.nom);
     }
   },
   created() {
-
+    console.log(this.$router.options.history.state.back)
+    if (this.$router.options.history.state.back == '/lobby' || this.$router.options.history.state.back == '/') {
+      socket.emit('tornar a lobby');
+      console.log('adios')
+    }
   },
 
 }

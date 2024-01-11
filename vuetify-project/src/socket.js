@@ -62,7 +62,7 @@ socket.on("closed lobby", () => {
  * Guarda la pregunta
  */
 socket.on("new question", (question) => {
-
+  console.log(question);
   const store = useAppStore();
   store.stopTimer();
   store.setQuestion(question);
@@ -107,7 +107,7 @@ socket.on("end", (guanyador, perdedors) => {
   router.push('/final');
   const store = useAppStore();
   store.stopTimer();
-
+  store.enPartida = false;
   store.timer = 20;
   store.dead = false;
   store.setQuestionIndex(-1);
@@ -134,6 +134,10 @@ socket.on('info partida', (nom, maxJugadors) => {
   const store = useAppStore();
   store.setInfoPartida(nom, maxJugadors);
 })
+socket.on('push a lobby',()=>{
+  router.push('/lobby');
+
+});
 
 /**
  * Mou a la pantalla de la partida
@@ -144,6 +148,7 @@ socket.on("play", (question) => {
   store.setQuestion(question);
   store.setAnswer(null);
   store.timer = question.temps;
+  store.enPartida = true;
   router.push('/partida');
   store.startTimer();
 });

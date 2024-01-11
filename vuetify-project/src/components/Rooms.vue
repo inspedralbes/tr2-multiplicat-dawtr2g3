@@ -5,17 +5,18 @@
             <div class="board-llista-salas">
                 <h1 class="llista-salas-title">Escull Una Sala per Jugar...</h1>
                 <div class="container-llista-salas">
-                    
-                
-                <ul class="llista-salas" v-for="partida in partides">
-                    <li class="sala" @click="marcar(partida.id)" :id="partida.id">
-                        <span class="sala-name">{{partida.nom}}</span>
-                        <p class="sala-jugadors">{{ partida.jugadors.length }} / {{ partida.maxJugadors }} Jugadors</p>
-                    </li>
-                </ul>
+
+
+                    <ul class="llista-salas" v-for="partida in partides">
+                        <li class="sala" @click="marcar(partida.id)" :id="partida.id">
+                            <span class="sala-name">{{ partida.nom }}</span>
+                            <p class="sala-jugadors">{{ partida.jugadors.length }} / {{ partida.maxJugadors }} Jugadors</p>
+                        </li>
+                    </ul>
                 </div>
-                <button class="button-jugarPartida-background button-jugarPartida" v-if="this.idPartida != null" @click="join()">Jugar</button>
-                
+                <button class="button-jugarPartida-background button-jugarPartida" v-if="this.idPartida != null"
+                    @click="join()">Jugar</button>
+
             </div>
         </div>
     </div>
@@ -141,7 +142,8 @@
     position: relative;
     z-index: 1;
 }
-.marcat{
+
+.marcat {
     background-color: rgba(255, 255, 255, 0.7);
 
 }
@@ -152,6 +154,7 @@ import { socket } from '../socket';
 import { computed } from 'vue';
 import { useAppStore } from "../store/app.js";
 import store from '@/store';
+import Toastify from 'toastify-js';
 
 import iconsHead from './iconesHead.vue';
 
@@ -169,8 +172,8 @@ export default {
         };
     },
     methods: {
-        marcar(id){
-            if(this.idPartida != null){
+        marcar(id) {
+            if (this.idPartida != null) {
 
                 document.getElementById(this.idPartida).classList.remove("marcat");
             }
@@ -180,14 +183,33 @@ export default {
         join() {
             const store = useAppStore();
             socket.emit('join', this.idPartida, store.loginInfo.username);
-            this.$router.push('/lobby');
+        },
+        toast() {
+            Toastify({
+
+                text: "Partida plena!",
+                backgroundColor: '#FC1A1A',
+                duration: 3000
+
+            }).showToast();
         }
     },
 
     mounted() {
+
+
+        socket.on('max jugadors', () => {
+            console.log("max jugadors");
+            this.toast();
+        });
     },
     created() {
+        console.log(this.$router.options.history.state.back)
 
+        if (this.$router.options.history.state.back == '/lobby' || this.$router.options.history.state.back == '/' ) {
+            socket.emit('tornar a lobby');
+            console.log('adios')
+        }
     },
 
 }
