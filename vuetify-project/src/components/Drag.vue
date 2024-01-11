@@ -74,7 +74,7 @@ export default {
     position: relative;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    font-size: 2em;
+    font-size: 3vh;
 
     align-items: center;
 
@@ -120,7 +120,7 @@ export default {
     margin-left: auto;
     margin-right: auto;
     border-radius: 60ch;
-    font-size: 2ch;
+    font-size: 2vh;
     justify-content: center;
     align-items: center;
 
