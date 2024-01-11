@@ -228,7 +228,7 @@ export default {
       if (!store.tutorial) {
         store.setTutorial(true);
         router.push('/tutorial');
-        
+
       }
 
       store.setNick(this.nom);
@@ -286,20 +286,25 @@ export default {
   },
 
   mounted() {
-   
 
+    Toastify({
+
+      text: "Hola",
+      backgroundColor: '#FC1A1A',
+      duration: 3000,
+
+
+    }).showToast();
     if (this.loginInfo.username != '') {
       this.nom = this.loginInfo.username;
       console.log(this.nom);
     }
   },
   created() {
-    if (this.$router.options.history.state.back == '/lobby') {
+    console.log(this.$router.options.history.state.back)
+    if (this.$router.options.history.state.back == '/lobby' || this.$router.options.history.state.back == '/') {
       socket.emit('tornar a lobby');
       console.log('adios')
-    }else{
-      socket.emit('asd');
-
     }
   },
 
