@@ -1,7 +1,10 @@
 import { useAppStore } from '@/store/app';
 export class CommunicationManager {
     constructor() {
-        this.fetchLink = 'http://pretr2g3.daw.inspedralbes.cat/laravel/public/api/';
+        //En local el fetch es fa a http://localhost:8000/api/
+        //En producció cambiem a http://mathroyale.daw.inspedralbes.cat/laravel/public/api/
+        //En preproducció cambiem a http://pretr2g3.daw.inspedralbes.cat/laravel/public/api/
+        this.fetchLink = 'http://mathroyale.daw.inspedralbes.cat/laravel/public/api/';
         this.loggedIn = false;
         this.store = useAppStore();
     }
