@@ -27,7 +27,7 @@
             <v-col cols="12">
                 <div class="video-box">
                     <video controls width="100%">
-                        <source src="" type="video/mp4">
+                        <source src="https://www.youtube.com/watch?v=XNmIv_hYlik" type="video/mp4">
                         Tu navegador no soporta el elemento de video.
                     </video>
                 </div>
@@ -53,7 +53,7 @@
             <v-col cols="12">
                 <div class="video-box">
                     <video controls width="100%">
-                        <source src="" type="video/mp4">
+                        <source src="https://www.youtube.com/watch?v=K8eGJ-ZaONE" type="video/mp4">
                         Tu navegador no soporta el elemento de video.
                     </video>
                 </div>
@@ -67,7 +67,7 @@
                 <h2 class="subtitle">Demostració de desafiar</h2>
                 <div class="video-box">
                     <video controls width="100%">
-                        <source src="" type="video/mp4">
+                        <source src="https://www.youtube.com/watch?v=R2oPLlv0Fc8" type="video/mp4">
                         Tu navegador no soporta el elemento de video.
                     </video>
                 </div>
