@@ -12,7 +12,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-        
+
       - name: Install npm dependencies for vuetify
         working-directory: ./vuetify-project
         run: npm install
@@ -20,17 +20,39 @@ jobs:
       - name: Run build task
         working-directory: ./vuetify-project
         run: npm run build --if-present
-        
-      - name: scp a produccio
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/prod_key.pem
-          chmod 600 ~/prod_key.pem
-          cd ${{ github.workspace }}
-          scp -r -o stricthostkeychecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./vuetify-project/dist/* ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/home/a22lorcrinor/web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/vuetify
-          scp -r -o stricthostkeychecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./node/* ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/home/a22lorcrinor/web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/node
-          scp -r -o stricthostkeychecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./laravel/* ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/home/a22lorcrinor/web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/laravel
-      
-      - name: print out example job
+
+      - name: Pujant vue
+        uses: burnett01/rsync-deployments@7.0.0
+        with:
+          switches: -avzr --delete
+          path: vuetify-project/dist/
+          remote_path: ${{ secrets.REMOTE_TARGET }}vuetify
+          remote_host: ${{ secrets.REMOTE_HOST }}
+          remote_user: ${{ secrets.REMOTE_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}  
+
+      - name: Pujant node  
+        uses: burnett01/rsync-deployments@7.0.0
+        with:
+          switches: -avzr --delete
+          path: node/
+          remote_path: ${{ secrets.REMOTE_TARGET }}node
+          remote_host: ${{ secrets.REMOTE_HOST }}
+          remote_user: ${{ secrets.REMOTE_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}  
+
+      - name: Pujant laravel  
+        uses: burnett01/rsync-deployments@7.0.0
+        with:
+          switches: -avzr --delete
+          path: laravel/
+          remote_path: ${{ secrets.REMOTE_TARGET }}laravel
+          remote_host: ${{ secrets.REMOTE_HOST }}
+          remote_user: ${{ secrets.REMOTE_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }} 
+
+     
+      - name: Npm install i composer install a prod
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.REMOTE_HOST }}
@@ -38,5 +60,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           command_timeout: 30m
           script: | 
-            ls && cd ./web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/node && npm install && cd .. && cd ./laravel && composer install 
+            ls && cd ${{ secrets.REMOTE_TARGET }}node && npm install && cd .. && cd ./laravel && composer install 
       - run: echo "🍏 This job's status is ${{ job.status }}."
