@@ -18,12 +18,15 @@ jobs:
         run: npm install
       
       - name: Run build task
-        run: cd vuetify-project | npm run build --if-present
+        working-directory: ./vuetify-project
+        run: npm run build --if-present
       
       - name: Install npm dependencies for node
-        run : cd ./node | npm install
+        working-directory: ./node
+        run : npm install
     
       - name: Installing composer dependencies for laravel
+        working-directory: ./laravel
         run : cd ./laravel | composer install
 
       - name: scp a produccio
