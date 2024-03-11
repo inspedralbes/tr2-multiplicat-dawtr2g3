@@ -38,5 +38,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           command_timeout: 30m
           script: | 
-            ls && cd ./web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/node && npm install && cd .. && cd .. && cd ./laravel && composer install && php artisan migrate:fresh
+            ls && cd ./web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/node && npm install && cd .. && cd ./laravel && composer install && php artisan migrate:fresh
       - run: echo "🍏 This job's status is ${{ job.status }}."
