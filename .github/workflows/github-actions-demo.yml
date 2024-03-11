@@ -1,0 +1,36 @@
+name: Preparant per producció
+run-name: ${{ github.actor }} està pujant l'aplicació a PROD  🚀
+on: [push]
+jobs:
+  Pujar-a-produccio-amb-SCP:
+    runs-on: ubuntu-latest
+    steps:
+      
+      - uses: actions/checkout@v4
+      
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: Install npm dependencies for vuetify
+        run: cd ./vuetify-project | npm install
+      
+      - name: Run build task
+        run: cd ./vuetify-project | npm run build --if-present
+      
+      - name: Install npm dependencies for node
+        run : cd ./node | npm install
+    
+      - name: Installing composer dependencies for laravel
+        run : cd ./laravel | composer install
+
+      - name: scp a produccio
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+          cd ${{ github.workspace }}
+          scp -r -o stricthostkeychecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./vuetify-project/dist/* ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/home/a22lorcrinor/web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/vuetify
+          scp -r -o stricthostkeychecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./node/* ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/home/a22lorcrinor/web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/node
+          scp -r -o stricthostkeychecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./laravel/* ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/home/a22lorcrinor/web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/laravel
+
+      - run: echo "🍏 This job's status is ${{ job.status }}."
