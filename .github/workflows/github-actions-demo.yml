@@ -7,28 +7,7 @@ jobs:
     steps:
       
       - uses: actions/checkout@v4
-      
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-        
-      - name: Install npm dependencies for vuetify
-        working-directory: ./vuetify-project
-        run: npm install
-      
-      - name: Run build task
-        working-directory: ./vuetify-project
-        run: npm run build --if-present
-      
-      - name: Install npm dependencies for node
-        working-directory: ./node
-        run : npm install
     
-      - name: Installing composer dependencies for laravel
-        working-directory: ./laravel
-        run : cd ./laravel | composer install
-
       - name: scp a produccio
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/prod_key.pem
@@ -37,5 +16,14 @@ jobs:
           scp -r -o stricthostkeychecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./vuetify-project/dist/* ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/home/a22lorcrinor/web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/vuetify
           scp -r -o stricthostkeychecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./node/* ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/home/a22lorcrinor/web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/node
           scp -r -o stricthostkeychecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" ./laravel/* ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/home/a22lorcrinor/web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/laravel
-
+      
+      - name: print out example job
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.REMOTE_USER }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command_timeout: 30m
+          script: | 
+            cd ./web/a22lorcrinoractions.daw.inspedralbes.cat/public_html/vuetify | npm install | cd ../node | npm install | cd ../laravel | composer install | php artisan migrate:fresh
       - run: echo "🍏 This job's status is ${{ job.status }}."
