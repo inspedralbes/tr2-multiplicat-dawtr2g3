@@ -33,8 +33,8 @@ jobs:
       - name: print out example job
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.REMOTE_USER }}
-          username: ${{ secrets.USERNAME }}
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           command_timeout: 30m
           script: | 
