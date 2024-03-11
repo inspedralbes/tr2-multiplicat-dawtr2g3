@@ -7,7 +7,7 @@ import Rooms from "../components/Rooms.vue";
 import CrearPartida from "../components/CrearPartida.vue";
 import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
-import Tutorial from "../components/Tutorial.vue";
+import Tutorial from "../components/Tutorial.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
