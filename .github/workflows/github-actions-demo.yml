@@ -13,10 +13,10 @@ jobs:
         with:
           node-version: '20.x'
       - name: Install npm dependencies for vuetify
-        run: cd ./vuetify-project | npm install
+        run: cd vuetify-project | npm install
       
       - name: Run build task
-        run: cd ./vuetify-project | npm run build --if-present
+        run: cd vuetify-project | npm run build --if-present
       
       - name: Install npm dependencies for node
         run : cd ./node | npm install
