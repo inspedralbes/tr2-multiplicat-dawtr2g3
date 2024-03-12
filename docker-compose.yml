@@ -1,7 +1,7 @@
 services:
-  vue:
+  math-royale-vue:
     image: node:21-bookworm-slim
-    container_name: vue
+    container_name: math-royale-vue
     volumes:
       - ./vuetify-project:/usr/src/app
     working_dir: /usr/src/app
@@ -9,9 +9,9 @@ services:
     ports:
       - "4000:4000"
   
-  back:
+  math-royale-back:
     image: node:21-bookworm-slim
-    container_name: back
+    container_name: math-royale-back
     volumes:
       - ./node:/usr/src/app
     working_dir: /usr/src/app
@@ -19,30 +19,47 @@ services:
     ports:
       - "3589:3589"
     links:
-      - vue
-  
-  db:
-    image: mysql:8.2.0
-    container_name: db
+      - math-royale-vue
+
+  # math-royale-mariadb:
+  #   image: mariadb
+  #   container_name: math-royale-mariadb
+  #   restart: always
+  #   environment:
+  #     MARIADB_ROOT_PASSWORD: root
+  #     # MARIADB_DATABASE: prova1
+  #   volumes:
+  #    - ./mysql/mysql_data:/var/lib/mysql
+
+  math-royale-mysql:
+    image: mysql
+    container_name: math-royale-mysql
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: persones
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user
     ports:
       - 3306:3306
-    volumes:
-      # Per guardar les dades de forma persistent
-      - ./mysql/mysql_data:/var/lib/mysql
-      # Per crear algunes taules al primer inici
-      # - ./mysql/dades.sql:/docker-entrypoint-initdb.d/dades.sql
-  
-  adminer:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: prova1
+
+  math-royale-adminer:
     image: adminer:4.8.1-standalone
-    container_name: adminer
+    container_name: math-royale-adminer
     restart: always
     ports:
       - 8080:8080
     depends_on:
-      - db
+      - math-royale-mysql
+
+  math-royale-web:
+    build: 
+      dockerfile: ./apache.DockerFile
+      context: ./sites-available
+    container_name: math-royale-web
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./laravel:/var/www/html/
+    links:
+      - math-royale-mysql
+    working_dir: /var/www/html/
+    command: sh -c "composer install && php artisan migrate && php artisan key:generate && php artisan serve --host=0.0.0.0"
