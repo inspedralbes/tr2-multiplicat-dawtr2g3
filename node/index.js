@@ -679,14 +679,26 @@ io.on('connection', (socket) => {
         if (user.poder == poder) {
             switch (poder) {
                 case "salt":
-                    utilitzarPoderSalt(user, userObjectiu, roomID);
+                    if (!user.mort) {
+                        utilitzarPoderSalt(user, roomID);
+                    } else {
+                        utilitzarPoderSalt(userObjectiu, roomID);
 
+                    }
                     break;
                 case "vida":
-                    utilizarPoderVida(user, llistatUsuaris);
+                    if (!user.mort) {
+                        utilizarPoderVida(user, llistatUsuaris);
+                    } else {
+                        utilitzarPoderVida(userObjectiu, llistatUsuaris)
+                    }
                     break;
                 case "escut":
-                    utilitzarPoderEscut(user, userObjectiu, roomID);
+                    if (!user.mort) {
+                        utilitzarPoderEscut(user, roomID);
+                    }else{
+                        utilitzarPoderEscut(userObjectiu,roomID)
+                    }
                     break;
                 case "robarVida":
                     utilitzarPoderRobarVida(user, userObjectiu, roomID);
@@ -966,7 +978,7 @@ function utilizarPoderVida(user, llistatUsuaris) {
  * @param {int} roomID identificador de la sala
  */
 
-function utilitzarPoderEscut(user, userObjectiu, roomID) {
+function utilitzarPoderEscut(userObjectiu, roomID) {
     userObjectiu.infoPoders.escut = true;
 }
 
