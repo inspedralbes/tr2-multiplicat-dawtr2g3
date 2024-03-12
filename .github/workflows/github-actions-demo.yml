@@ -1,6 +1,10 @@
 name: Preparant per producció
 run-name: ${{ github.actor }} està pujant l'aplicació a PROD  🚀
-on: [push]
+on: 
+  push:
+    branches:
+      - 'Develop'
+      
 jobs:
   Pujar-a-produccio-amb-SCP:
     runs-on: ubuntu-latest

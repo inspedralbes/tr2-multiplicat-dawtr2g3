@@ -643,13 +643,17 @@ io.on('connection', (socket) => {
         });
 
 
+        
+
+        let preguntaEnviar = arrayPreg[user.preguntaActual];
         if (user.infoPoders.tempspregunta > 0) {
-            preguntaEnviar.temps -= user.infoPoders.tempspregunta;
+            if (preguntaEnviar) {
+                preguntaEnviar.temps -= user.infoPoders.tempspregunta;
+            }
             user.infoPoders.tempspregunta = 0;
             socket.emit('menys temps');
         }
-
-        let preguntaEnviar = arrayPreg[user.preguntaActual];
+        
         if (preguntaEnviar != undefined) {
             socket.emit('new question', preguntaEnviar);
         } else {
@@ -690,14 +694,15 @@ io.on('connection', (socket) => {
                     if (!user.mort) {
                         utilizarPoderVida(user, llistatUsuaris);
                     } else {
-                        utilitzarPoderVida(userObjectiu, llistatUsuaris)
+                        console.log(userObjectiu);
+                        utilizarPoderVida(userObjectiu, llistatUsuaris)
                     }
                     break;
                 case "escut":
                     if (!user.mort) {
                         utilitzarPoderEscut(user, roomID);
-                    }else{
-                        utilitzarPoderEscut(userObjectiu,roomID)
+                    } else {
+                        utilitzarPoderEscut(userObjectiu, roomID)
                     }
                     break;
                 case "robarVida":
