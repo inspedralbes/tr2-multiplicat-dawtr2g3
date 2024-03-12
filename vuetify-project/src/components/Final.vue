@@ -9,7 +9,7 @@
           <ul class="llista-jugadors">
             <li class="jugador" v-for="(jugador, index) in perdedors">
               <span class="name-jugador">{{ jugador.nick }}</span>
-              <p class="btn-eliminar">Temps aguantat: {{ jugador.temps % 1000 / 10 }}s</p>
+              <p class="btn-eliminar">Temps aguantat: {{ jugador.temps }}s</p>
             </li>
           </ul>
         </div>
