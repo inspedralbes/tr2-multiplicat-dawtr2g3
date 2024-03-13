@@ -1,3 +1,10 @@
+const entorno = "dev"
+
+const dev = "http://localhost:8000/api/preguntes"
+
+const pre = "http://pretr2g3.daw.inspedralbes.cat/laravel/public/api/preguntes"
+ 
+
 export async function fetchPreguntas() {
     //En local el fetch es fa a http://localhost:8000/api/preguntes
     //En producció cambiem a http://mathroyale.daw.inspedralbes.cat/laravel/public/api/preguntes
