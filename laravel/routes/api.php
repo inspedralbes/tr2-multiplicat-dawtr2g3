@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ControllerPregunta;
+use App\Http\Controllers\ControllerPreguntaDuelo;
 use App\Http\Controllers\ControllerUsuari;
 
 /*
@@ -25,5 +26,7 @@ Route::post('/login',[ControllerUsuari::class, 'login']);
 Route::post('/register',[ControllerUsuari::class, 'register']); 
 
 Route::get('/preguntes',[ControllerPregunta::class, 'index']); 
+Route::get('/preguntesDuelo',[ControllerPreguntaDuelo::class, 'index']); 
+
 Route::get('/preguntes/{id}',[ControllerPregunta::class, 'show']); 
 Route::post('/crearPregunta',[ControllerPregunta::class, 'crearPregunta'])->name('crearPregunta');

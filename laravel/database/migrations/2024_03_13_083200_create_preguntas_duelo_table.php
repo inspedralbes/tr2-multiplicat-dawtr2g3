@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('preguntas_duelo', function (Blueprint $table) {
+        Schema::create('pregunta_duelos', function (Blueprint $table) {
             $table->id();
             $table->float('valorInicial', 2)->nullable();
             $table->string('unitatInicial')->nullable();
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->foreign('categoria')->references('id')->on('categorias')->onDelete('set null');
         });
 
-        DB::table('preguntas_duelo')->insert([
+        DB::table('pregunta_duelos')->insert([
             'tipus' => 2,
             'valorInicial' => null,
             'unitatInicial' => null,
@@ -43,7 +43,7 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
         
-        DB::table('preguntas_duelo')->insert([
+        DB::table('pregunta_duelos')->insert([
             'tipus' => 2,
             'valorInicial' => null,
             'unitatInicial' => null,
@@ -58,7 +58,7 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
         
-        DB::table('preguntas_duelo')->insert([
+        DB::table('pregunta_duelos')->insert([
             'tipus' => 2,
             'valorInicial' => null,
             'unitatInicial' => null,
@@ -73,7 +73,7 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
         
-        DB::table('preguntas_duelo')->insert([
+        DB::table('pregunta_duelos')->insert([
             'tipus' => 2,
             'valorInicial' => null,
             'unitatInicial' => null,
@@ -88,7 +88,7 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
         
-        DB::table('preguntas_duelo')->insert([
+        DB::table('pregunta_duelos')->insert([
             'tipus' => 2,
             'valorInicial' => null,
             'unitatInicial' => null,
@@ -103,7 +103,7 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
         
-        DB::table('preguntas_duelo')->insert([
+        DB::table('pregunta_duelos')->insert([
             'tipus' => 2,
             'valorInicial' => null,
             'unitatInicial' => null,
@@ -118,7 +118,7 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
         
-        DB::table('preguntas_duelo')->insert([
+        DB::table('pregunta_duelos')->insert([
             'tipus' => 2,
             'valorInicial' => null,
             'unitatInicial' => null,
@@ -133,7 +133,7 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
         
-        DB::table('preguntas_duelo')->insert([
+        DB::table('pregunta_duelos')->insert([
             'tipus' => 2,
             'valorInicial' => null,
             'unitatInicial' => null,
@@ -148,7 +148,7 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
         
-        DB::table('preguntas_duelo')->insert([
+        DB::table('pregunta_duelos')->insert([
             'tipus' => 2,
             'valorInicial' => null,
             'unitatInicial' => null,
@@ -163,7 +163,7 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
         
-        DB::table('preguntas_duelo')->insert([
+        DB::table('pregunta_duelos')->insert([
             'tipus' => 2,
             'valorInicial' => null,
             'unitatInicial' => null,
@@ -185,6 +185,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('preguntas_duelo');
+        Schema::dropIfExists('pregunta_duelos');
     }
 };
