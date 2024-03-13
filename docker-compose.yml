@@ -1,21 +1,21 @@
 services:
   math-royale-vue:
-    image: node:21-bookworm-slim
+    image: node:21
     container_name: math-royale-vue
     volumes:
       - ./vuetify-project:/usr/src/app
     working_dir: /usr/src/app
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "echo Instalant && npm install && echo acabat && npm run dev"
     ports:
       - "4000:4000"
   
   math-royale-back:
-    image: node:21-bookworm-slim
+    image: node:21
     container_name: math-royale-back
     volumes:
       - ./node:/usr/src/app
     working_dir: /usr/src/app
-    command: sh -c "npm install && node index.js"
+    command: sh -c "echo Instalant && npm install && echo acabat && node index.js"
     ports:
       - "3589:3589"
     links:
@@ -40,6 +40,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: prova1
+    volumes:
+      - math-royale-db:/var/lib/mysql:rw
 
   math-royale-adminer:
     image: adminer:4.8.1-standalone
@@ -62,4 +64,8 @@ services:
     links:
       - math-royale-mysql
     working_dir: /var/www/html/
-    command: sh -c "composer install && php artisan migrate && php artisan key:generate && php artisan serve --host=0.0.0.0"
+    command: sh -c "composer install && cp .env.develop .env && php artisan key:generate && php artisan migrate && php artisan serve --host=0.0.0.0"
+
+
+volumes:
+  math-royale-db:
