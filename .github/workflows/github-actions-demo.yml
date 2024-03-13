@@ -48,7 +48,7 @@ jobs:
       - name: Pujant laravel  
         uses: burnett01/rsync-deployments@7.0.0
         with:
-          switches: -avzr --delete
+          switches: -avzr 
           path: laravel/
           remote_path: ${{ secrets.REMOTE_TARGET }}laravel
           remote_host: ${{ secrets.REMOTE_HOST }}
