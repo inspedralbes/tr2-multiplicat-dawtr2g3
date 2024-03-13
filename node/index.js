@@ -29,7 +29,7 @@ let arrayRoomMinim = [];
 async function iniciarLobby(roomID) {
     const data = await fetchPreguntas();
     const fetchDuelo = await fetchPreguntasDuelo();
-    let preguntasDueloMal = randomArray(JSON.parse(JSON.stringify(fetchDuelo)));
+    let preguntasDueloMal = randomArray((fetchDuelo));
     let preguntasDuelo = JSON.parse(JSON.stringify(preguntasDueloMal));
     preguntasDuelo.forEach((pregunta) => {
         pregunta.respostes = randomArray(pregunta.respostes);
@@ -86,28 +86,30 @@ io.on('connection', (socket) => {
     socket.on('join', (roomID, nom) => {
 
         let partida = arrayRoom.find((room) => room.id == roomID);
-        if (partida.maxJugadors <= partida.jugadors.length) {
-            socket.emit('max jugadors');
-        } else {
-            socket.join(roomID);
-            let user = createNewUser(socket.id, nom)
-            let userMinim = createUserMinim(user);
-            arrayRoom.map((room) => {
-                if (room.id == roomID) {
-                    room.jugadors.push(user);
-                }
-            });
+        if (partida.maxJugadors) {
+            if (partida.maxJugadors <= partida.jugadors.length) {
+                socket.emit('max jugadors');
+            } else {
+                socket.join(roomID);
+                let user = createNewUser(socket.id, nom)
+                let userMinim = createUserMinim(user);
+                arrayRoom.map((room) => {
+                    if (room.id == roomID) {
+                        room.jugadors.push(user);
+                    }
+                });
 
-            arrayRoomMinim.map((room) => {
-                if (room.id == roomID) {
-                    room.jugadors.push(userMinim);
-                }
-            });
-            socket.emit('push a lobby');
-            socket.emit('info partida', arrayRoom.find((room) => room.id == roomID).nom, arrayRoom.find((room) => room.id == roomID).maxJugadors);
-            let jugadorsMinim = arrayRoomMinim.find((room) => room.id == roomID).jugadors;
-            io.to(roomID).emit('update players', jugadorsMinim);
-            io.emit('games list', arrayRoomMinim);
+                arrayRoomMinim.map((room) => {
+                    if (room.id == roomID) {
+                        room.jugadors.push(userMinim);
+                    }
+                });
+                socket.emit('push a lobby');
+                socket.emit('info partida', arrayRoom.find((room) => room.id == roomID).nom, arrayRoom.find((room) => room.id == roomID).maxJugadors);
+                let jugadorsMinim = arrayRoomMinim.find((room) => room.id == roomID).jugadors;
+                io.to(roomID).emit('update players', jugadorsMinim);
+                io.emit('games list', arrayRoomMinim);
+            }
         }
     })
 
@@ -575,7 +577,7 @@ io.on('connection', (socket) => {
                         }
                         if (jugadorsVius(llistatUsuaris).length == 1) {
                             acabarPartida(socket, roomID);
-                        } 
+                        }
                         llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
                     }
                     user.falladesConsecutives = 0;
@@ -624,7 +626,7 @@ io.on('connection', (socket) => {
         });
 
 
-        
+
 
         let preguntaEnviar = arrayPreg[user.preguntaActual];
         if (user.infoPoders.tempspregunta > 0) {
@@ -634,7 +636,7 @@ io.on('connection', (socket) => {
             user.infoPoders.tempspregunta = 0;
             socket.emit('menys temps');
         }
-        
+
         if (preguntaEnviar != undefined) {
             socket.emit('new question', preguntaEnviar);
         } else {
@@ -851,7 +853,7 @@ function getRandomPoderMort() {
 }
 
 function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
-    
+
     let preguntasDuelo = arrayRoom.find((room) => room.id == roomID).preguntasDuelo;
     let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
     llistatUsuaris.map((jugador) => {
@@ -1068,7 +1070,6 @@ function tipusTest(preguntaaModificar, index) {
  * @param {Array} array 
  */
 function randomArray(array) {
-
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
         var temp = array[i];
@@ -1091,10 +1092,9 @@ function jugadorsVius(arrayJugadors) {
 
 function matarJugador(user, start) {
     user.mort = true;
-    console.log('muerte')
     user.vida = 0;
     let tempsAra = Date.now();
-    user.temps = Math.round(Math.abs((tempsAra- start)/10))/100;
+    user.temps = Math.round(Math.abs((tempsAra - start) / 10)) / 100;
     user.poder = "";
     user.infoPoders.robarVida = 0;
 }

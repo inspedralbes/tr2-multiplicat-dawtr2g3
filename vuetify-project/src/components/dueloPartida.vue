@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="container__preguntas preguntas">
-                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
+                <Drag :respostes="game.question.respostes" :pregunta="game.question.enunciat"
                     @comprovar="(index) => answer(index)" />
             </div>
             <div v-if="divActivo != 'partida'" class="container__chat">
