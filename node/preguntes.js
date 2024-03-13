@@ -1,18 +1,15 @@
-const entorno = "dev"
-
-const dev = "http://localhost:8000/api/preguntes"
-
-const pre = "http://pretr2g3.daw.inspedralbes.cat/laravel/public/api/preguntes"
- 
+import 'dotenv/config';
 
 export async function fetchPreguntas() {
-    //En local el fetch es fa a http://localhost:8000/api/preguntes
-    //En producció cambiem a http://mathroyale.daw.inspedralbes.cat/laravel/public/api/preguntes
-    //En preproducció cambiem a http://pretr2g3.daw.inspedralbes.cat/laravel/public/api/preguntes
-    const response = await fetch('http://mathroyale.daw.inspedralbes.cat/laravel/public/api/preguntes');
+    const ruta = process.env.URL_API + 'preguntes';
+
+    console.log(ruta);
+
+    const response = await fetch(ruta);
     const data = await response.json();
     return data;
 }
+
 export function fetchPreguntasDuelo() {
     const preguntasDuelo = [
         {

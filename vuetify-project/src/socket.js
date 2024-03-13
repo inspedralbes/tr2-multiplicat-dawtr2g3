@@ -1,16 +1,13 @@
 import { io } from "socket.io-client";
 import { useAppStore } from '@/store/app';
+import { socketURL } from '../routes.js';
 
 import router from '@/router'; // Import the router from your project
 // "undefined" means the URL will be computed from the `window.location` object
-/**
- * Si estas treballant en local ferem  url =localhost:3589
- * Si estas en producció ferem url = http://mathroyale.daw.inspedralbes.cat:3589
- * Si estas en preproduccion ferem url = http://pretr2g3.daw.inspedralbes.cat:3590
- */
-const URL = "http://mathroyale.daw.inspedralbes.cat:3589";
 
-export const socket = io(URL, {
+console.log(socketURL);
+
+export const socket = io(socketURL, {
   extraHeaders: {
     "Access-Control-Allow-Origin": "*",
   },
