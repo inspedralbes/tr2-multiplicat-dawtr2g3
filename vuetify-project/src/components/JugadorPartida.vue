@@ -1,6 +1,6 @@
 <template>
     <div class="container__jugador jugador">
-        <span class="nick">{{ jugador.nick }}</span>
+        <span class="nick">{{ jugador.nick }}  {{ jugador.encertades<5?'':jugador.encertades }}</span>
         <span class="vida__jugadors">{{ jugador.vida }}/100</span>
         <div class="container__vida-jugadors">
             <img v-if="jugador.vida > 75" src="/src/assets/ilustracio-vida/full-health.png" alt=""

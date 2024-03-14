@@ -498,7 +498,7 @@ io.on('connection', (socket) => {
                                 }
 
                                 user.falladesConsecutives++;
-
+                                user.encertades = 0;
                                 if (comprovarMort(user)) {
                                     matarJugador(user, start);
                                     socket.emit('die');
