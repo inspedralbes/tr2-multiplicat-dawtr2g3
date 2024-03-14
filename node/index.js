@@ -86,29 +86,31 @@ io.on('connection', (socket) => {
     socket.on('join', (roomID, nom) => {
 
         let partida = arrayRoom.find((room) => room.id == roomID);
-        if (partida.maxJugadors) {
-            if (partida.maxJugadors <= partida.jugadors.length) {
-                socket.emit('max jugadors');
-            } else {
-                socket.join(roomID);
-                let user = createNewUser(socket.id, nom)
-                let userMinim = createUserMinim(user);
-                arrayRoom.map((room) => {
-                    if (room.id == roomID) {
-                        room.jugadors.push(user);
-                    }
-                });
+        if (partida) {
+            if (partida.maxJugadors) {
+                if (partida.maxJugadors <= partida.jugadors.length) {
+                    socket.emit('max jugadors');
+                } else {
+                    socket.join(roomID);
+                    let user = createNewUser(socket.id, nom)
+                    let userMinim = createUserMinim(user);
+                    arrayRoom.map((room) => {
+                        if (room.id == roomID) {
+                            room.jugadors.push(user);
+                        }
+                    });
 
-                arrayRoomMinim.map((room) => {
-                    if (room.id == roomID) {
-                        room.jugadors.push(userMinim);
-                    }
-                });
-                socket.emit('push a lobby');
-                socket.emit('info partida', arrayRoom.find((room) => room.id == roomID).nom, arrayRoom.find((room) => room.id == roomID).maxJugadors);
-                let jugadorsMinim = arrayRoomMinim.find((room) => room.id == roomID).jugadors;
-                io.to(roomID).emit('update players', jugadorsMinim);
-                io.emit('games list', arrayRoomMinim);
+                    arrayRoomMinim.map((room) => {
+                        if (room.id == roomID) {
+                            room.jugadors.push(userMinim);
+                        }
+                    });
+                    socket.emit('push a lobby');
+                    socket.emit('info partida', arrayRoom.find((room) => room.id == roomID).nom, arrayRoom.find((room) => room.id == roomID).maxJugadors);
+                    let jugadorsMinim = arrayRoomMinim.find((room) => room.id == roomID).jugadors;
+                    io.to(roomID).emit('update players', jugadorsMinim);
+                    io.emit('games list', arrayRoomMinim);
+                }
             }
         }
     })
@@ -199,11 +201,13 @@ io.on('connection', (socket) => {
                 llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
                 let llistatUsuarisMinim = [];
                 llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-
+                let start = arrayRoom.find((room) => room.id == roomID).start;
                 io.to(roomID).emit('update players', llistatUsuarisMinim);
-                if (jugadorsVius(llistatUsuaris).length == 1) {
-                    acabarPartida(socket, roomID);
-                    io.to(roomID).emit('finalitzar duelo');
+                if (start) {
+                    if (jugadorsVius(llistatUsuaris).length == 1) {
+                        acabarPartida(socket, roomID);
+                        io.to(roomID).emit('finalitzar duelo');
+                    }
                 }
             }
         }
