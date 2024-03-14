@@ -5,7 +5,7 @@ services:
     volumes:
       - ./vuetify-project:/usr/src/app
     working_dir: /usr/src/app
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "cp .env.develop .env.local && npm install && npm run dev"
     ports:
       - "4000:4000"
     depends_on:
@@ -19,7 +19,7 @@ services:
     volumes:
       - ./node:/usr/src/app
     working_dir: /usr/src/app
-    command: sh -c "npm install && nodemon index.js -L"
+    command: sh -c "cp .env.develop .env && npm install && nodemon index.js -L"
     ports:
       - "3589:3589"
     depends_on:
