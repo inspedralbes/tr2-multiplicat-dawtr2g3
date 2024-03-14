@@ -91,7 +91,7 @@
         </div>
         <div v-else class="duelo">
             <div class="container__preguntaDuelo preguntas">
-                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
+                <Drag :respostes="game.question.respostes" :pregunta="game.question.enunciat"
                     @comprovar="(index) => answer(index)" />
             </div>
            <div class="container__dueloUsuarios">

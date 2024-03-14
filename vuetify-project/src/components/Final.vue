@@ -9,13 +9,11 @@
           <ul class="llista-jugadors">
             <li class="jugador" v-for="(jugador, index) in perdedors">
               <span class="name-jugador">{{ jugador.nick }}</span>
-              <p class="btn-eliminar">Temps aguantat: {{ jugador.temps % 1000 / 10 }}s</p>
+              <p class="btn-eliminar">Temps aguantat: {{ Math.round(jugador.temps/60) }} min {{  Math.round((jugador.temps%60)) }}s</p>
             </li>
           </ul>
         </div>
-        <!-- <div class="jugador" v-for="(jugador, index) in perdedors">
-          <span>Jugador: {{ jugador.nick }}</span> <div>Temps aguantat: {{ jugador.temps % 1000 / 10 }}s</div>
-        </div> -->
+     
       </div>
       <div class="box-winner">
         <h2 class="title-winner">Guanyador</h2>

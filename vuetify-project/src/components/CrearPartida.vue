@@ -24,7 +24,7 @@
                 <div class="buttons-background b-left">
                     <select class="buttons-size-style" v-model="maxJugadors">
                         <option :value="0" disabled selected>nº Jugadors</option>
-                        <option v-for="n in 39" :value="n+1">{{ n+1 }}</option>
+                        <option v-for="n in 39" :value="n + 1">{{ n + 1 }}</option>
                     </select>
                 </div>
                 <!--  <div class="buttons-background b-right">
@@ -228,8 +228,10 @@ export default {
 
         crear() {
             const store = useAppStore();
-            socket.emit('create game', this.nom, this.maxJugadors, store.loginInfo.username);
-            this.$router.push('/lobby');
+            if (this.maxJugadors != 0 && this.nom != "") {
+                socket.emit('create game', this.nom, this.maxJugadors, store.loginInfo.username);
+                this.$router.push('/lobby');
+            }
         }
     },
 
