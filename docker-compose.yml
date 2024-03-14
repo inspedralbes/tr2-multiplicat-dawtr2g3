@@ -19,10 +19,12 @@ services:
     volumes:
       - ./node:/usr/src/app
     working_dir: /usr/src/app
-    command: sh -c "npm install && nodemon index.js"
+    command: sh -c "npm install && nodemon index.js -L"
     ports:
       - "3589:3589"
     depends_on:
+      - math-royale-web
+    links:
       - math-royale-web
 
   math-royale-mysql:

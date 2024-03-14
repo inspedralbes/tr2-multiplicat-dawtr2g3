@@ -12,7 +12,6 @@
     "@chenfengyuan/vue-countdown": "^2.1.2",
     "@mdi/font": "7.0.96",
     "core-js": "^3.29.0",
-    "dotenv": "^16.4.5",
     "pinia": "^2.0.0",
     "roboto-fontface": "*",
     "socket.io-client": "^4.7.2",

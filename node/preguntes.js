@@ -3,7 +3,7 @@ import 'dotenv/config';
 export async function fetchPreguntas() {
     const ruta = process.env.URL_API + 'preguntes';
 
-    console.log(ruta);
+    console.log("Ruta:", ruta);
 
     const response = await fetch(ruta);
     const data = await response.json();

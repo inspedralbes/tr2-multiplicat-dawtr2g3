@@ -1,9 +1,8 @@
 import { useAppStore } from '@/store/app';
-import { apiURL } from '../routes.js';
 
 export class CommunicationManager {
     constructor() {
-        this.fetchLink = apiURL;;
+        this.fetchLink = import.meta.env.VITE_URL_API;
         this.loggedIn = false;
         this.store = useAppStore();
     }

@@ -1,9 +1,11 @@
 import { io } from "socket.io-client";
 import { useAppStore } from '@/store/app';
-import { socketURL } from '../routes.js';
 
 import router from '@/router'; // Import the router from your project
 // "undefined" means the URL will be computed from the `window.location` object
+
+const socketURL = import.meta.env.VITE_URL_SOCKETS;
+
 
 console.log(socketURL);
 
