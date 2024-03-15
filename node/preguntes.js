@@ -19,7 +19,7 @@ export async function fetchPreguntasDuelo() {
     return data;
 }
 
-export async function fetchPreguntasNuke(){
+export async function fetchPreguntaNuke(){
     const response = await fetch(`${process.env.URL_API}preguntesNuke`);
     const data = await response.json();
     let random = Math.floor(Math.random() * (data.length-1));
