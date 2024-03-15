@@ -283,6 +283,7 @@ io.on('connection', (socket) => {
             io.to(roomID).emit('play', arrayPreg[0]);
             let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
             arrayRoomMinim.splice(index, 1);
+            console.log(arrayRoomMinim);
             io.emit('games list', arrayRoomMinim);
         }
 
