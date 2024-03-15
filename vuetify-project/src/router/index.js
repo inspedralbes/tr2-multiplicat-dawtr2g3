@@ -53,6 +53,10 @@ const router = createRouter({
       path: '/tutorial',
       name: 'Tutorial',
       component: Tutorial
+    },{
+      path: '/torneig',
+      name: 'Torneig',
+      component: TorneigVisual
     }
   ]
 })
