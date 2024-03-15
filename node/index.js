@@ -1,7 +1,7 @@
 import express from 'express';
 import { fetchPreguntas } from "./preguntes.js";
 import { fetchPreguntasDuelo } from "./preguntes.js";
-
+import { fetchPreguntaNuke } from "./preguntes.js";
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import cors from 'cors';
@@ -393,6 +393,7 @@ io.on('connection', (socket) => {
                         llistatUsuaris.map((user) => {
                             if (user.idSocket == idOponent) {
                                 user.vida -= 30;
+                                user.encertades = 0;
                                 if (user.vida <= 0) {
                                     user.vida = 1;
                                 }
@@ -422,6 +423,8 @@ io.on('connection', (socket) => {
                         let preguntaDuelo = preguntasDuelo[indexPregunta];
                         socket.emit('new question', preguntaDuelo);
                     }
+                } else {
+                    user.encertades = 0;
                 }
             } else {
                 // encerta la pregunta
@@ -447,9 +450,13 @@ io.on('connection', (socket) => {
 
                             if (!comprovarMort(user)) {
                                 if (user.encertades % 3 == 0) {
-
-                                    let poder = getRandomPoder(user);
-                                    user.poder = poder;
+                                    if (user.poder != 'nuke') {
+                                        let poder = getRandomPoder(user);
+                                        user.poder = poder;
+                                    }
+                                }
+                                if (user.encertades == 1) {
+                                    user.poder = 'nuke';
                                 }
                             } else {
                                 if (user.encertades % 5 == 0) {
@@ -703,6 +710,8 @@ io.on('connection', (socket) => {
                 case "duelo":
                     utilitzarPoderDuelo(user, userObjectiu, roomID, socket);
                     break;
+                case "nuke":
+                    utilitzarPoderNuke(user, roomID);
                 default:
                     break;
             }
@@ -749,6 +758,16 @@ io.on('connection', (socket) => {
 
 
 })
+async function utilitzarPoderNuke(userNuke, roomID) {
+    let room = arrayRoom.find((room) => room.id == roomID);
+    let llistatUsuaris = room.jugadors;
+    let usersAfectats = llistatUsuaris.filter((user) => { return user != userNuke });
+    usersAfectats.forEach((user) => {
+        user.preguntaNuke = true;
+    });
+    let preguntaNuke = await fetchPreguntaNuke();
+    io.to(roomID).emit('nuke', );
+}
 function llistaMinim(llistatUsuaris) {
     let llistatUsuarisMinim = [];
     llistatUsuaris.forEach((user) => {
@@ -758,6 +777,7 @@ function llistaMinim(llistatUsuaris) {
     });
     return llistatUsuarisMinim;
 }
+
 
 
 function trobarRoom(socket) {
