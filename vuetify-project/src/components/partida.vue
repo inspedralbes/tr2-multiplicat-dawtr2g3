@@ -5,7 +5,7 @@
         </div>
     </div>
     <div v-else v-bind:class="{ 'mort': game.mort }">
-        <div v-if="!game.duelo.enDuelo" class="container">
+        <div v-if="!game.duelo.enDuelo && !game.nuke" class="container">
             <div class="container__jugadors jugadors">
                 <div class="item-scroll">
                     <div class="container__jugador jugador" v-for="jugador in game.players">
@@ -89,7 +89,7 @@
                 </div>             
             </div>
         </div>
-        <div v-else class="duelo">
+        <div v-else-if="game.duelo.enDuelo && !game.nuke" class="duelo">
             <div class="container__preguntaDuelo preguntas">
                 <Drag :respostes="game.question.respostes" :pregunta="game.question.enunciat"
                     @comprovar="(index) => answer(index)" />
@@ -137,6 +137,35 @@
                     </div> 
             </div>
         </div> 
+        <div v-else-if="game.nuke" class="nuke">
+            <div class="container__preguntaDuelo preguntas">
+                <Drag :respostes="game.question.respostes" :pregunta="game.question.enunciat"
+                    @comprovar="(index) => answer(index)" />
+            </div>
+           <div class="container__dueloUsuarios">
+                <div class="container__usuarioDuelo usuario usuarioDuelo">
+                    <h2 class="nickUsuarioDuelo">{{ game.ownPlayer.nick }}</h2>
+                        <div class="container__avatar">
+                            <img src="../assets/avatar/avatarDerecha.png" alt="" class="avatar">
+                            <div class="barra__vidaUsuario" v-bind:class="{ 'animacioVida': animacioVida }">
+                                <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png"
+                                    alt="" class="imagen-vida">
+                                <img v-else-if="this.game.ownPlayer.vida > 50" src="/src/assets/ilustracio-vida/75_health.png"
+                                    alt="" class="imagen-vida">
+                                <img v-else-if="this.game.ownPlayer.vida > 25" src="/src/assets/ilustracio-vida/50_health.png"
+                                    alt="" class="imagen-vida">
+                                <img v-else-if="this.game.ownPlayer.vida > 0" src="/src/assets/ilustracio-vida/25_health.png"
+                                    alt="" class="imagen-vida">
+
+
+
+                                <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                   
+            </div>
+        </div>
     </div>
     <v-row justify="center">
     <v-dialog v-model="game.dialog" scrollable width="30vw">
@@ -170,6 +199,145 @@
 </v-row>
 </template>
 
+
+<script>
+import { socket } from '../socket';
+import { computed } from 'vue';
+import { useAppStore } from "../store/app.js";
+import Drag from "./Drag.vue";
+import Poder from "./Poder.vue";
+import { toHandlers } from 'vue';
+import JugadorPartida from './JugadorPartida.vue';
+import store from '@/store';
+export default {
+    data() {
+        const store = useAppStore();
+
+        return {
+            isAnimating: false,
+            divActivo: 'duelo',
+            state: {
+
+                loading: true,
+                error: false,
+            },
+            game: {
+
+                chat: computed(() => store.chat),
+                questionIndex: computed(() => store.questionIndex),
+                players: computed(() => store.players),
+                ownPlayer: computed(() => store.ownPlayer),
+                question: computed(() => store.question),
+                answer: computed(() => store.answer),
+                temps: computed(() => store.timer),
+                mort: computed(() => store.dead),
+                avatar: computed(() => store.avatar),
+                duelo: computed(() => store.duelo),
+                oponent: computed(() => this.game.players.find(player => player.idSocket == store.duelo.oponent.id)),
+                nuke: computed(() => store.nuke),
+                notFirstQuestion: false,
+                dialog: computed(() => store.dialog),
+            },
+            timerInterval: null,
+            disabled: false,
+            animacioVida: computed(() => store.animacioVida),
+        };
+    },
+    components: { Drag, Poder, JugadorPartida },
+    methods: {
+        skip() {
+            socket.emit('skip');
+            this.disabled = true;
+            setTimeout(() => {
+                this.disabled = false;
+            }, 1000);
+            this.animateButton();
+        }, animateButton() {
+
+            this.isAnimating = true;
+            setTimeout(() => {
+                this.isAnimating = false;
+            }, 1000); // same duration as the animation
+        }, utilitzarPoder() {
+            const store = useAppStore();
+
+            if (this.game.ownPlayer.poder.length > 0) {
+                let objectiu = socket.id;
+                if (this.game.mort) {
+                    store.dialog = true;
+                } else {
+                    if (this.game.ownPlayer.poder == "menysTemps" || this.game.ownPlayer.poder == "duelo") {
+                        store.dialog = true;
+                    } else {
+                        socket.emit("use power", this.game.ownPlayer.poder, objectiu);
+                    }
+                }
+            }
+        },
+
+        escollirObjectiu(id) {
+            socket.emit("use power", this.game.ownPlayer.poder, id);
+            const store = useAppStore();
+            store.dialog = false;
+        },
+        cerrarModal(){
+            const store = useAppStore();
+            store.dialog = false;
+        },
+        /**
+         * Para el temps
+         */
+        pararTemps() {
+            store.stopTImer();
+
+        },
+
+        /**
+         * respon a la pregunta
+         * @param {int} index index de la resposta
+         */
+        answer(index) {
+            console.log("hola");
+            this.game.notFirstQuestion = true;
+            const store = useAppStore();
+            store.nuke = false;
+            socket.emit('answer', this.game.question.idPregunta, index);
+
+        },
+
+        /**
+         * Envia un missatge al chat
+         */
+        enviarMissatge() {
+            const store = useAppStore();
+
+            var input = document.getElementById("inputChat");
+            socket.emit('send message', input.value, store.loginInfo.username);
+            input.value = "";
+        },
+        getHP() {
+            if (this.game.ownPlayer.vida > 75) {
+                return "../assets/ilustracio-vida/full-health.png";
+            } else if (this.game.ownPlayer.vida > 50) {
+                return "../assets/ilustracio-vida/75_health.png";
+            } else if (this.game.ownPlayer.vida > 25) {
+                return "../assets/ilustracio-vida/50_health.png";
+            } else if (this.game.ownPlayer.vida > 0) {
+                return "../assets/ilustracio-vida/25_health.png";
+            } else {
+                return "../assets/ilustracio-vida/0_health.png";
+            }
+        }
+    },
+
+    mounted() {
+        this.state.loading = false;
+    },
+
+}
+</script>
+
+
 <style lang="scss" scoped>
 
 
@@ -187,6 +355,19 @@
     grid-template-areas:
         "preguntaDuelo"
         "usuarioDuelo";
+}
+.nuke{
+    background-image: url("../assets/backgrounds/background-nuke.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: grid;
+
 }
 .container__avatarEnemigo{
     position: absolute;
@@ -670,139 +851,3 @@
     color: white;
 }
 </style>
-
-<script>
-import { socket } from '../socket';
-import { computed } from 'vue';
-import { useAppStore } from "../store/app.js";
-import Drag from "./Drag.vue";
-import Poder from "./Poder.vue";
-import { toHandlers } from 'vue';
-import JugadorPartida from './JugadorPartida.vue';
-import store from '@/store';
-export default {
-    data() {
-        const store = useAppStore();
-
-        return {
-            isAnimating: false,
-            divActivo: 'duelo',
-            state: {
-
-                loading: true,
-                error: false,
-            },
-            game: {
-
-                chat: computed(() => store.chat),
-                questionIndex: computed(() => store.questionIndex),
-                players: computed(() => store.players),
-                ownPlayer: computed(() => store.ownPlayer),
-                question: computed(() => store.question),
-                answer: computed(() => store.answer),
-                temps: computed(() => store.timer),
-                mort: computed(() => store.dead),
-                avatar: computed(() => store.avatar),
-                duelo: computed(() => store.duelo),
-                oponent: computed(() => this.game.players.find(player => player.idSocket == store.duelo.oponent.id)),
-
-                notFirstQuestion: false,
-                dialog: computed(() => store.dialog),
-            },
-            timerInterval: null,
-            disabled: false,
-            animacioVida: computed(() => store.animacioVida),
-        };
-    },
-    components: { Drag, Poder, JugadorPartida },
-    methods: {
-        skip() {
-            socket.emit('skip');
-            this.disabled = true;
-            setTimeout(() => {
-                this.disabled = false;
-            }, 1000);
-            this.animateButton();
-        }, animateButton() {
-
-            this.isAnimating = true;
-            setTimeout(() => {
-                this.isAnimating = false;
-            }, 1000); // same duration as the animation
-        }, utilitzarPoder() {
-            const store = useAppStore();
-
-            if (this.game.ownPlayer.poder.length > 0) {
-                let objectiu = socket.id;
-                if (this.game.mort) {
-                    store.dialog = true;
-                } else {
-                    if (this.game.ownPlayer.poder == "menysTemps" || this.game.ownPlayer.poder == "duelo") {
-                        store.dialog = true;
-                    } else {
-                        socket.emit("use power", this.game.ownPlayer.poder, objectiu);
-                    }
-                }
-            }
-        },
-
-        escollirObjectiu(id) {
-            socket.emit("use power", this.game.ownPlayer.poder, id);
-            const store = useAppStore();
-            store.dialog = false;
-        },
-        cerrarModal(){
-            const store = useAppStore();
-            store.dialog = false;
-        },
-        /**
-         * Para el temps
-         */
-        pararTemps() {
-            store.stopTImer();
-
-        },
-
-        /**
-         * respon a la pregunta
-         * @param {int} index index de la resposta
-         */
-        answer(index) {
-            console.log("hola");
-            this.game.notFirstQuestion = true;
-            socket.emit('answer', this.game.question.idPregunta, index);
-
-        },
-
-        /**
-         * Envia un missatge al chat
-         */
-        enviarMissatge() {
-            const store = useAppStore();
-
-            var input = document.getElementById("inputChat");
-            socket.emit('send message', input.value, store.loginInfo.username);
-            input.value = "";
-        },
-        getHP() {
-            if (this.game.ownPlayer.vida > 75) {
-                return "../assets/ilustracio-vida/full-health.png";
-            } else if (this.game.ownPlayer.vida > 50) {
-                return "../assets/ilustracio-vida/75_health.png";
-            } else if (this.game.ownPlayer.vida > 25) {
-                return "../assets/ilustracio-vida/50_health.png";
-            } else if (this.game.ownPlayer.vida > 0) {
-                return "../assets/ilustracio-vida/25_health.png";
-            } else {
-                return "../assets/ilustracio-vida/0_health.png";
-            }
-        }
-    },
-
-    mounted() {
-        this.state.loading = false;
-    },
-
-}
-</script>
-
