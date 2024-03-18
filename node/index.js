@@ -29,13 +29,7 @@ let arrayRoomMinim = [];
 async function iniciarLobby(roomID) {
     const data = await fetchPreguntas();
     const fetchDuelo = await fetchPreguntasDuelo();
-    let preguntasDueloMal = randomArray((fetchDuelo));
-    let preguntasDuelo = JSON.parse(JSON.stringify(preguntasDueloMal));
-    preguntasDuelo.forEach((pregunta) => {
-        pregunta.respostes = randomArray(pregunta.respostes);
-    });
-
-
+    let preguntasDuelo = fetchDuelo;
     let preguntasMal = data;
     randomArray(preguntasMal);
     let arrayPreg = [];
@@ -762,12 +756,16 @@ async function utilitzarPoderNuke(userNuke, roomID) {
     let room = arrayRoom.find((room) => room.id == roomID);
     let llistatUsuaris = room.jugadors;
     let usersAfectats = llistatUsuaris.filter((user) => { return user != userNuke });
-    usersAfectats.forEach((user) => {
-        user.preguntaNuke = true;
-    });
     let preguntaNuke = await fetchPreguntaNuke();
-    io.to(roomID).emit('nuke', );
+    io.to(roomID).emit('nuke');
+    setTimeout(() => {
+        usersAfectats.forEach((user) => {
+            user.preguntaNuke = true;
+            io.to(user.idSocket).emit('pregunta nuke', preguntaNuke);
+        });
+    }, 5000);
 }
+
 function llistaMinim(llistatUsuaris) {
     let llistatUsuarisMinim = [];
     llistatUsuaris.forEach((user) => {
@@ -876,9 +874,10 @@ function getRandomPoderMort() {
     return poder;
 }
 
-function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
+async function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
 
     let preguntasDuelo = arrayRoom.find((room) => room.id == roomID).preguntasDuelo;
+    preguntasDuelo = await fetchPreguntasDuelo();
     let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
     llistatUsuaris.map((jugador) => {
         if (jugador.idSocket == socket.id) {

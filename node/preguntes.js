@@ -20,8 +20,7 @@ export async function fetchPreguntasDuelo() {
 }
 
 export async function fetchPreguntaNuke(){
-    const response = await fetch(`${process.env.URL_API}preguntesNuke`);
+    const response = await fetch(`${process.env.URL_API}preguntaNuke`);
     const data = await response.json();
-    let random = Math.floor(Math.random() * (data.length-1));
-    return data[random];
+    return data;
 }
