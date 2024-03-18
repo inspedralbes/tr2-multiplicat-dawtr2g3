@@ -29,7 +29,12 @@ let arrayRoomMinim = [];
 async function iniciarLobby(roomID) {
     const data = await fetchPreguntas();
     const fetchDuelo = await fetchPreguntasDuelo();
-    let preguntasDuelo = fetchDuelo;
+    let preguntasDueloMal =JSON.parse(JSON.stringify(fetchDuelo));
+    let preguntasDuelo = JSON.parse(JSON.stringify(preguntasDueloMal));
+    preguntasDuelo.forEach((pregunta) => {
+        console.log("randomizando respuestas");
+        pregunta.respostes = randomArray(pregunta.respostes);
+    });
     let preguntasMal = data;
     randomArray(preguntasMal);
     let arrayPreg = [];
@@ -54,6 +59,7 @@ async function iniciarLobby(roomID) {
         if (room.id == roomID) {
             room.arrayPreg = arrayPreg;
             room.preguntasMal = preguntasMal;
+            room.preguntasDueloMal = preguntasDueloMal;
             room.preguntasDuelo = preguntasDuelo;
         }
     });
@@ -355,7 +361,7 @@ io.on('connection', (socket) => {
 
         let correcte = false;
         let acabat = false;
-
+        let preguntasDueloMal = arrayRoom.find((room) => room.id == trobarRoom(socket)).preguntasDueloMal;
         let roomID = trobarRoom(socket);
         let room = arrayRoom.find((room) => room.id == roomID);
         if (room != undefined) {
@@ -448,7 +454,7 @@ io.on('connection', (socket) => {
                                     }
                                 }
                                 if (user.encertades == 1) {
-                                    user.poder = 'nuke';
+                                    user.poder = 'duelo';
                                 }
                             } else {
                                 if (user.encertades % 5 == 0) {

@@ -181,6 +181,10 @@ socket.on('nuke',()=>{
 })
 socket.on('pregunta nuke',(pregunta)=>{
   console.log(pregunta);
+  const store = useAppStore();
+  store.question = pregunta;
+  store.timer = 10;
+  store.nuke = true;
 });
 
 // socket.on("get power", (poder) => {

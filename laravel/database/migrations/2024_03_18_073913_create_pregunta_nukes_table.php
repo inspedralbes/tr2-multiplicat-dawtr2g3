@@ -27,7 +27,6 @@ return new class extends Migration
         DB::table('pregunta_nukes')->insert([
             'tipus' => 2,
             
-           
             'enunciat' => '¿Cuál es el resultado de la siguiente operación: (3^4 * 5^2) / (2^3 * 5)?',
             'intermig' => null,
             'dificultat' => 3,
