@@ -176,7 +176,12 @@ socket.on("duelo enviar", (duelo) => {
   console.log(duelo);
   store.setDuelo(duelo);
 });
-
+socket.on('nuke',()=>{
+  console.log('nuke');
+})
+socket.on('pregunta nuke',(pregunta)=>{
+  console.log(pregunta);
+});
 
 // socket.on("get power", (poder) => {
 //   const store = useAppStore();

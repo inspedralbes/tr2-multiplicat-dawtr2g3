@@ -54,7 +54,6 @@ async function iniciarLobby(roomID) {
         if (room.id == roomID) {
             room.arrayPreg = arrayPreg;
             room.preguntasMal = preguntasMal;
-            room.preguntasDueloMal = preguntasDueloMal;
             room.preguntasDuelo = preguntasDuelo;
         }
     });
@@ -367,7 +366,6 @@ io.on('connection', (socket) => {
             let llistatUsuarisMinim = [];
             let idOponent;
             let preguntasDuelo = room.preguntasDuelo;
-            let preguntasDueloMal = room.preguntasDueloMal;
             let userDuelo = llistatUsuaris.find((usuari) => {
                 return usuari.idSocket == socket.id;
             });
@@ -877,7 +875,6 @@ function getRandomPoderMort() {
 async function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
 
     let preguntasDuelo = arrayRoom.find((room) => room.id == roomID).preguntasDuelo;
-    preguntasDuelo = await fetchPreguntasDuelo();
     let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
     llistatUsuaris.map((jugador) => {
         if (jugador.idSocket == socket.id) {
