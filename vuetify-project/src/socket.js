@@ -183,6 +183,7 @@ socket.on('pregunta nuke',(pregunta)=>{
   console.log(pregunta);
   const store = useAppStore();
   store.question = pregunta;
+  store.question.pregunta = store.question.enunciat
   store.timer = 10;
   store.nuke = true;
 });
