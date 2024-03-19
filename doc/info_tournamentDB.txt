@@ -1,0 +1,16 @@
+**Referent a posicions o id, qualsevol
+
+1a ronda winner: 0-7 de match       -- round_id: 0
+2a ronda winner: 8-11 de match      -- round_id: 1
+semis winner: 12-13 de match        -- round_id: 2
+finals winner: 14 de match          -- round_id: 3
+
+1a ronda loser: 15-18 de match      -- round_id: 4
+2a ronda loser: 19-22 de match      -- round_id: 5
+3a ronda loser: 23-24 de match      -- round_id: 6
+4a ronda loser: 25-26 de match      -- round_id: 7
+semis loser: 27 de match            -- round_id: 8
+finals loser: 28 de match           -- round_id: 9
+
+Grand finals round 1: 29 de match   -- round_id: 10
+Grand finals round 2: 30 de match   -- round_id: 11

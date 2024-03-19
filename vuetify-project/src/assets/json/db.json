@@ -238,6 +238,7 @@
             "status": 0,
             "opponent1": null,
             "opponent2": {
+                "socketid": "123",
                 "id": 4,
                 "position": 6
             }

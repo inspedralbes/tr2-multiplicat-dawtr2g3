@@ -23,17 +23,25 @@ export default {
   data() {
     return {
       data: {},
+      storage: new InMemoryDatabase(),
+      manager: new BracketsManager(storage),
+
     };
   },
+  methods: {
+    async rerendering() {
+
+    }
+  },
   async mounted() {
-    this.data = await fetch("./src/assets/json/db.json").then(() => {
+    this.data = await fetch("./src/assets/json/db.json")
+      .then((response) => response.json())
       window.bracketsViewer.setParticipantImages(
         this.data.participant.map((participant) => ({
           participantId: participant.id,
           imageUrl: "https://github.githubassets.com/pinned-octocat.svg",
         }))
       );
-    });
 
     this.$refs.example.innerHTML = "";
 
@@ -60,7 +68,11 @@ export default {
             }
           }
         },
-        onMatchClick: (match) => console.log("A match was clicked", match),
+        onMatchClick: async (match) => {
+          const tourneyData2 = await manager.get.currentMatches(0);
+
+          console.log("A tourney", tourneyData2);
+        },
         selector: "#example",
         participantOriginPlacement: "before",
         separatedChildCountLabel: true,
