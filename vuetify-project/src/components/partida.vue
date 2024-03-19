@@ -142,29 +142,7 @@
                 <Drag :respostes="game.question.respostes" :pregunta="game.question.enunciat"
                     @comprovar="(index) => answer(index)" />
             </div>
-           <div class="container__dueloUsuarios">
-                <div class="container__usuarioDuelo usuario usuarioDuelo">
-                    <h2 class="nickUsuarioDuelo">{{ game.ownPlayer.nick }}</h2>
-                        <div class="container__avatar">
-                            <img src="../assets/avatar/avatarDerecha.png" alt="" class="avatar">
-                            <div class="barra__vidaUsuario" v-bind:class="{ 'animacioVida': animacioVida }">
-                                <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png"
-                                    alt="" class="imagen-vida">
-                                <img v-else-if="this.game.ownPlayer.vida > 50" src="/src/assets/ilustracio-vida/75_health.png"
-                                    alt="" class="imagen-vida">
-                                <img v-else-if="this.game.ownPlayer.vida > 25" src="/src/assets/ilustracio-vida/50_health.png"
-                                    alt="" class="imagen-vida">
-                                <img v-else-if="this.game.ownPlayer.vida > 0" src="/src/assets/ilustracio-vida/25_health.png"
-                                    alt="" class="imagen-vida">
-
-
-
-                                <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
-                            </div>
-                        </div>
-                    </div>
-                   
-            </div>
+           
         </div>
     </div>
     <v-row justify="center">
@@ -357,6 +335,7 @@ export default {
         "usuarioDuelo";
 }
 .nuke{
+    position: relative;
     background-image: url("../assets/backgrounds/background-nuke.jpg");
     background-size: cover;
     background-repeat: no-repeat;
@@ -366,6 +345,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
     display: grid;
 
 }
