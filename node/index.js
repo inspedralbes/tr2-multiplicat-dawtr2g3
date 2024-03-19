@@ -475,7 +475,7 @@ io.on('connection', (socket) => {
                                 user.poder = poder;
                             }
                         }
-                        if (user.encertades == 1) {
+                        if (user.encertades == 20) {
                             user.poder = 'nuke';
                         }
                     } else {
