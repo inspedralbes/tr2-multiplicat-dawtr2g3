@@ -121,14 +121,16 @@ io.on('connection', (socket) => {
      * @param {string} nick Nom de l'usuari que crea la partida
      */
 
-    socket.on('create game', (nom, maxJugadors, nick) => {
+    socket.on('create game', (nom, maxJugadors,tipus, nick) => {
         let roomID = "Partida" + socket.id;
         socket.join(roomID);
+        console.log(tipus)
         let user = createNewUser(socket.id, nick)
         let userMinim = createUserMinim(user);
         arrayRoom.push({
             "id": roomID,
             "nom": nom,
+            "tipus": tipus,
             "maxJugadors": maxJugadors,
             "jugadors": [user],
             "arrayPreg": [],
@@ -139,6 +141,7 @@ io.on('connection', (socket) => {
         arrayRoomMinim.push({
             "id": roomID,
             "nom": nom,
+            "tipus": tipus,
             "maxJugadors": maxJugadors,
             "jugadors": [userMinim],
         })
@@ -276,14 +279,25 @@ io.on('connection', (socket) => {
     socket.on('start', () => {
         let roomID = trobarRoom(socket);
         let room = arrayRoom.find((room) => room.id == roomID);
-        let arrayPreg = arrayRoom.find((room) => room.id == roomID).arrayPreg;
-        room.start = Date.now();
-        if (arrayRoom.find(room => room.id == roomID).jugadors.length >= 2) {
-            io.to(roomID).emit('play', arrayPreg[0]);
-            let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
-            arrayRoomMinim.splice(index, 1);
-            io.emit('games list', arrayRoomMinim);
+        if(room){
+            let arrayPreg = arrayRoom.find((room) => room.id == roomID).arrayPreg;
+            if (room.jugadors.length >= 2 && room.tipus == 'royale') {
+                room.start = Date.now();
+                io.to(roomID).emit('play', arrayPreg[0]);
+                let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
+                arrayRoomMinim.splice(index, 1);
+                io.emit('games list', arrayRoomMinim);
+            }
+            
+            if(room.jugadors.length == room.maxJugadors && room.tipus == 'torneo'){
+                room.start = Date.now();
+                io.to(roomID).emit('play', arrayPreg[0]);
+                let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
+                arrayRoomMinim.splice(index, 1);
+                io.emit('games list', arrayRoomMinim);
+            }
         }
+       
 
     });
 
