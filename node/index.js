@@ -425,29 +425,28 @@ io.on('connection', (socket) => {
                     user.encertades = 0;
                 }
             } else if (user.preguntaNuke) {
-                if (user.preguntaNuke.respostes[posResp] == (user.preguntaNuke.respostes[respuestaCorrecta])) {
-                    user.preguntaNuke = undefined;
-                    
-                } else {
+                console.log(user.preguntaNukeMal.respostes[posResp]);
+                console.log(user.preguntaNuke.respostes[respuestaCorrecta]);
+                if (user.preguntaNukeMal.respostes[posResp] != (user.preguntaNuke.respostes[respuestaCorrecta])) {
                     console.log("fallada");
                     user.vida -= 55;
-                    user.preguntaNuke = undefined;
                     respostaFallada(user, roomID, socket);
 
                 }
+                user.preguntaNuke = undefined;
+                user.preguntaNukeMal = undefined;
                 let preguntaEnviar = arrayPreg[user.preguntaActual];
-                    if (preguntaEnviar != undefined) {
-                        socket.emit('new question', preguntaEnviar);
-                    } else {
-                        user.preguntaActual = 0;
-                        let preguntaEnviar = arrayPreg[0];
+                if (preguntaEnviar != undefined) {
+                    socket.emit('new question', preguntaEnviar);
+                } else {
+                    user.preguntaActual = 0;
+                    let preguntaEnviar = arrayPreg[0];
 
-                        socket.emit('new question', preguntaEnviar);
+                    socket.emit('new question', preguntaEnviar);
 
-                    }
+                }
 
-            }
-            else {
+            } else {
                 // encerta la pregunta
                 if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
                     correcte = true;
@@ -475,7 +474,7 @@ io.on('connection', (socket) => {
                                 user.poder = poder;
                             }
                         }
-                        if (user.encertades == 20) {
+                        if (user.encertades == 1) {
                             user.poder = 'nuke';
                         }
                     } else {
@@ -712,12 +711,13 @@ async function utilitzarPoderNuke(userNuke, roomID) {
     let llistatUsuaris = room.jugadors;
     let usersAfectats = llistatUsuaris.filter((user) => { return user != userNuke });
     let preguntaNuke = await fetchPreguntaNuke();
-    let preguntaNukeMal = preguntaNuke;
-    preguntaNukeMal.respostes = randomArray(preguntaNuke.respostes);
+    let preguntaNukeMal = JSON.parse(JSON.stringify(preguntaNuke)) ;
+    preguntaNukeMal.respostes = randomArray(preguntaNukeMal.respostes);
     io.to(roomID).emit('nuke');
     setTimeout(() => {
         usersAfectats.forEach((user) => {
             user.preguntaNuke = preguntaNuke;
+            user.preguntaNukeMal = preguntaNukeMal;
             io.to(user.idSocket).emit('pregunta nuke', preguntaNukeMal);
         });
     }, 5000);
@@ -961,6 +961,7 @@ function createNewUser(idSocket, nick) {
         "vida": 100,
         "skip": 1,
         "preguntaNuke": null,
+        "preguntaNukeMal": null,
         "temps": 0, //Es posa el temps quan mor el jugador, de base sera 0
         "falladesConsecutives": 0,
         "poder": "",

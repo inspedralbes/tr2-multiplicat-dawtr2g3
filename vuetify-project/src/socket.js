@@ -105,7 +105,9 @@ socket.on("check", (correcte, acabat) => {
  */
 socket.on("end", (guanyador, perdedors) => {
   router.push('/final');
+
   const store = useAppStore();
+  store.nuke = false;
   store.stopTimer();
   store.enPartida = false;
   store.timer = 20;
