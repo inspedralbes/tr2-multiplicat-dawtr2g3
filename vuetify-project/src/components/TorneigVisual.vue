@@ -1,15 +1,6 @@
 <template>
-  <div id="updateCurrentBracket"></div>
-
-  <!-- This div will be used as the root for the library. It must be **perfectly** empty to prevent a FOUC. -->
-  <!-- <div id="bracketsViewerExample" ref="bracketsViewerExample" class="brackets-viewer"></div> -->
-
-  <!-- <div id="createNewBracket"></div>
-    <script
-    type="text/javascript"
-    src="../dist/stage-form-creator.min.js"
-  ></script>
-  <div ref="ELEMENT_ID"></div> -->
+  <button @click="async() => await this.guanya1()">GUANYA 1</button>
+  <button @click="async() => await this.guanya2()">GUANYA 2</button>
 
   <div id="example" ref="example" class="brackets-viewer"></div>
 </template>
@@ -22,17 +13,36 @@ import "brackets-viewer/dist/brackets-viewer.min.css";
 import "brackets-viewer/dist/brackets-viewer.min.js";
 
 export default {
-  // components: {
-  //     Bracket
-  // },
   data() {
     return {
       data: {},
       storage: new InMemoryDatabase(),
       manager: null,
+      idModificar: null,
     };
   },
   methods: {
+    async guanya1() {
+      await this.manager.update.match({
+            id: this.idModificar,
+            opponent1: { score: 2, result: "win" },
+            opponent2: { score: 1 },
+          });
+
+          const tourneyData = await this.manager.get.stageData(0);
+          this.data = tourneyData;
+    },
+    async guanya2() {
+      await this.manager.update.match({
+            id: this.idModificar,
+            opponent1: { score: 1 },
+            opponent2: { score: 2, result: "win" },
+          });
+
+          const tourneyData = await this.manager.get.stageData(0);
+          this.data = tourneyData;
+    },
+
     async rendering() {
       await this.manager.create({
         //hardcoded
@@ -59,17 +69,19 @@ export default {
       this.$refs.example?.replaceChildren();
 
       window.bracketsViewer.onMatchClicked = async (match) => {
-        console.log(this.manager);
+        this.idModificar = match.id;
+        // console.log(this.manager);
         // try {
           // console.log(this.manager);
-          await this.manager.update.match({
-            id: match.id,
-            opponent1: { score: 5 },
-            opponent2: { score: 7, result: "win" },
-          });
-          console.log(this.manager);
+          // await this.manager.update.match({
+          //   id: match.id,
+          //   opponent1: { score: 5 },
+          //   opponent2: { score: 7, result: "win" },
+          // });
+          // console.log(this.manager);
           const tourneyData = await this.manager.get.stageData(0);
-          this.data = tourneyData;
+          console.log(tourneyData);
+          // this.data = tourneyData;
         // } catch (error) {}
       };
 
