@@ -16,6 +16,7 @@ export default {
   data() {
     return {
       data: {},
+      data2: {},
       storage: new InMemoryDatabase(),
       manager: null,
       idModificar: null,
@@ -48,7 +49,24 @@ export default {
         //hardcoded
         id: 0,
         tournamentId: 0,
-        name: "Example",
+        name: "1111111111111111",
+        type: "double_elimination",
+        number: 1,
+        seeding: Array(16)
+          .fill(0)
+          .map((e, i) => `Team ${i + 1}`),
+        settings: {
+          size: 16,
+          seedOrdering: ["natural", "natural", "reverse_half_shift", "reverse"],
+          grandFinal: "double",
+          matchesChildCount: 0,
+        },
+      });
+      await this.manager.create({
+        //hardcoded
+        id: 1,
+        tournamentId: 1,
+        name: "2222222222222222222",
         type: "double_elimination",
         number: 1,
         seeding: Array(16)
@@ -63,6 +81,8 @@ export default {
       });
       const tournamentData = await this.manager.get.stageData(0);
       this.data = tournamentData;
+      const tournamentData2 = await this.manager.get.stageData(1);
+      this.data2 = tournamentData2;
     },
 
     async rerendering() {
@@ -111,7 +131,7 @@ export default {
                   return "Semi Finals";
                 } else {
                   // Double elimination
-                  return `${t(`abbreviations.${info.groupType}`)} ESemi Finals`;
+                  return `${t(`abbreviations.${info.groupType}`)} Semi Finals`;
                 }
               }
               if (info.fractionOfFinal === 1 / 4) {
