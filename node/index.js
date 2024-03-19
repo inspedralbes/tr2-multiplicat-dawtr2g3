@@ -121,7 +121,7 @@ io.on('connection', (socket) => {
      * @param {string} nick Nom de l'usuari que crea la partida
      */
 
-    socket.on('create game', (nom, maxJugadors,tipus, nick) => {
+    socket.on('create game', (nom, maxJugadors, tipus, nick) => {
         let roomID = "Partida" + socket.id;
         socket.join(roomID);
         console.log(tipus)
@@ -279,7 +279,7 @@ io.on('connection', (socket) => {
     socket.on('start', () => {
         let roomID = trobarRoom(socket);
         let room = arrayRoom.find((room) => room.id == roomID);
-        if(room){
+        if (room) {
             let arrayPreg = arrayRoom.find((room) => room.id == roomID).arrayPreg;
             if (room.jugadors.length >= 2 && room.tipus == 'royale') {
                 room.start = Date.now();
@@ -288,16 +288,25 @@ io.on('connection', (socket) => {
                 arrayRoomMinim.splice(index, 1);
                 io.emit('games list', arrayRoomMinim);
             }
-            
-            if(room.jugadors.length == room.maxJugadors && room.tipus == 'torneo'){
+
+            if (room.jugadors.length == room.maxJugadors && room.tipus == 'torneo') {
                 room.start = Date.now();
+                room.jugadors = randomArray(room.jugadors);
+
+                let llistatUsuarisMinim = [];
+                room.jugadors.forEach((user) => {
+
+                    let userMinim = createUserMinim(user);
+                    llistatUsuarisMinim.push(userMinim);
+                })
+                io.to(roomID).emit("info room", llistatUsuarisMinim,room.jugadors)
                 io.to(roomID).emit('play', arrayPreg[0]);
                 let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
                 arrayRoomMinim.splice(index, 1);
                 io.emit('games list', arrayRoomMinim);
             }
         }
-       
+
 
     });
 
@@ -725,7 +734,7 @@ async function utilitzarPoderNuke(userNuke, roomID) {
     let llistatUsuaris = room.jugadors;
     let usersAfectats = llistatUsuaris.filter((user) => { return user != userNuke });
     let preguntaNuke = await fetchPreguntaNuke();
-    let preguntaNukeMal = JSON.parse(JSON.stringify(preguntaNuke)) ;
+    let preguntaNukeMal = JSON.parse(JSON.stringify(preguntaNuke));
     preguntaNukeMal.respostes = randomArray(preguntaNukeMal.respostes);
     io.to(roomID).emit('nuke');
     setTimeout(() => {
