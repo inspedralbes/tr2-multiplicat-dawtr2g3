@@ -21,12 +21,22 @@
                         <option v-for="item in ['Fàcil', 'Mitjà', 'Difícil']" :value="item">{{ item }}</option>
                     </select>
                 </div> -->
-                <div class="buttons-background b-left">
-                    <select class="buttons-size-style" v-model="maxJugadors">
-                        <option :value="0" disabled selected>nº Jugadors</option>
-                        <option v-for="n in 39" :value="n + 1">{{ n + 1 }}</option>
+                <div class="buttons-background b-right">
+                    <select class="buttons-size-style" @click="this.maxJugadors = 0" v-model="tipus">
+                        <option :value="''" disabled selected>Tipus de partida</option>
+                        <option  @click="this.maxJugadors = 0" :value="'royale'">Royale</option>
+                        <option  @click="this.maxJugadors = 0" :value="'torneo'">Torneo</option>
                     </select>
                 </div>
+                <div class="buttons-background b-left">
+                    <select :disabled="this.tipus == ''" class="buttons-size-style" v-model="maxJugadors">
+                        <option :value="0" disabled selected>nº Jugadors</option>
+                        <option v-if="this.tipus == '' || this.tipus == 'royale'" v-for="n in 39" :value="n + 1">{{ n + 1 }}</option>
+                        <option v-if="this.tipus == 'torneo'" v-for="i in 4" :value="Math.pow(2, i+1)">{{ Math.pow(2, i+1) }}</option>
+
+                    </select>
+                </div>
+                
                 <!--  <div class="buttons-background b-right">
                     <select class="buttons-size-style" >
                         <option  disabled selected>Limit de partida</option>
@@ -40,6 +50,51 @@
     </div>
 </template>
 
+
+
+<script>
+import { socket } from '../socket';
+import { computed } from 'vue';
+import { useAppStore } from "../store/app.js";
+import store from '@/store';
+
+import iconsHead from './iconesHead.vue';
+
+export default {
+    components: {
+        iconsHead
+    },
+    data() {
+        const store = useAppStore();
+        return {
+            nom: '',
+            maxJugadors: 0,
+            tipus: '',
+        };
+    },
+    methods: {
+
+        crear() {
+            const store = useAppStore();
+            console.log(this.tipus);
+            if (this.maxJugadors != 0 && this.nom != "" && this.tipus != "") {
+                socket.emit('create game', this.nom, this.maxJugadors,this.tipus, store.loginInfo.username);
+                this.$router.push('/lobby');
+            }
+        }
+    },
+
+    mounted() {
+    },
+    created() {
+        const store = useAppStore();
+        if (!store.loginInfo.verificat) {
+            this.$router.push('/');
+        }
+    },
+
+}
+</script>
 <style scoped>
 .page {
     width: 100vw;
@@ -203,46 +258,3 @@
     outline: none;
 }
 </style>
-
-<script>
-import { socket } from '../socket';
-import { computed } from 'vue';
-import { useAppStore } from "../store/app.js";
-import store from '@/store';
-
-import iconsHead from './iconesHead.vue';
-
-export default {
-    components: {
-        iconsHead
-    },
-    data() {
-        const store = useAppStore();
-        return {
-            nom: '',
-            maxJugadors: 0,
-
-        };
-    },
-    methods: {
-
-        crear() {
-            const store = useAppStore();
-            if (this.maxJugadors != 0 && this.nom != "") {
-                socket.emit('create game', this.nom, this.maxJugadors, store.loginInfo.username);
-                this.$router.push('/lobby');
-            }
-        }
-    },
-
-    mounted() {
-    },
-    created() {
-        const store = useAppStore();
-        if (!store.loginInfo.verificat) {
-            this.$router.push('/');
-        }
-    },
-
-}
-</script>

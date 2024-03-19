@@ -18,3 +18,10 @@ export async function fetchPreguntasDuelo() {
     });
     return data;
 }
+
+export async function fetchPreguntaNuke(){
+    const response = await fetch(`${process.env.URL_API}preguntaNuke`);
+    const data = await response.json();
+    data.respostes = JSON.parse(data.respostes);
+    return data;
+}

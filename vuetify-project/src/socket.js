@@ -105,7 +105,9 @@ socket.on("check", (correcte, acabat) => {
  */
 socket.on("end", (guanyador, perdedors) => {
   router.push('/final');
+
   const store = useAppStore();
+  store.nuke = false;
   store.stopTimer();
   store.enPartida = false;
   store.timer = 20;
@@ -176,7 +178,17 @@ socket.on("duelo enviar", (duelo) => {
   console.log(duelo);
   store.setDuelo(duelo);
 });
-
+socket.on('nuke',()=>{
+  console.log('nuke');
+})
+socket.on('pregunta nuke',(pregunta)=>{
+  console.log(pregunta);
+  const store = useAppStore();
+  store.question = pregunta;
+  store.question.pregunta = store.question.enunciat
+  store.timer = 10;
+  store.nuke = true;
+});
 
 // socket.on("get power", (poder) => {
 //   const store = useAppStore();
