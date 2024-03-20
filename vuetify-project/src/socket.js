@@ -2,6 +2,7 @@ import { io } from "socket.io-client";
 import { useAppStore } from '@/store/app';
 
 import router from '@/router'; // Import the router from your project
+import JugadorPartida from "./components/JugadorPartida.vue";
 // "undefined" means the URL will be computed from the `window.location` object
 
 const socketURL = import.meta.env.VITE_URL_SOCKETS;
@@ -192,11 +193,20 @@ socket.on('pregunta nuke',(pregunta)=>{
   store.nuke = true;
 });
 
-socket.on('tournament info', (data) => {
+socket.on('tournament info', (info) => {
   const store = useAppStore();
+
+  let { data, players } = info;
+
+  console.log(players);
+
+  data.participant.forEach((jugador, index) => {
+    jugador.name = players[index].nick;
+  });
+
   store.setTorneigInfo(data);
   router.push('/torneig');
-})
+});
 
 // socket.on("get power", (poder) => {
 //   const store = useAppStore();

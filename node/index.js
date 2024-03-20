@@ -9,7 +9,6 @@ import cors from "cors";
 import { InMemoryDatabase } from "brackets-memory-db";
 import { BracketsManager } from "brackets-manager";
 
-
 const app = express();
 //A pro 3590, a pro 3589
 const port = 3589;
@@ -18,7 +17,7 @@ const server = createServer(app);
 
 let torneig = {
   storage: new InMemoryDatabase(),
-  manager: null
+  manager: null,
 };
 
 torneig.manager = new BracketsManager(torneig.storage);
@@ -48,20 +47,12 @@ async function iniciarLobby(roomID) {
   randomArray(preguntasMal);
   let arrayPreg = [];
   preguntasMal.forEach((preguntaMal, index) => {
-    switch (preguntaMal.tipus) {
-      case 1:
-      case 2:
-        let pregunta = tipusTest(preguntaMal, index);
+    let pregunta = tipusTest(preguntaMal, index);
 
-        let arrayResp = "[" + pregunta.respostes + "]";
-        preguntasMal[index].respostes = JSON.parse(arrayResp);
-        pregunta.respostes = randomArray(JSON.parse(arrayResp));
-        arrayPreg.push(pregunta);
-        break;
-
-      default:
-        break;
-    }
+    let arrayResp = "[" + pregunta.respostes + "]";
+    preguntasMal[index].respostes = JSON.parse(arrayResp);
+    pregunta.respostes = randomArray(JSON.parse(arrayResp));
+    arrayPreg.push(pregunta);
   });
   arrayRoom.map((room) => {
     if (room.id == roomID) {
@@ -311,24 +302,150 @@ io.on("connection", (socket) => {
 
       //   if (room.jugadors.length == room.maxJugadors && room.tipus == "torneo") {
       if (room.tipus == "torneo") {
+        randomArray(room.jugadors);
+
+        room.start = Date.now();
+
+        let llistatUsuarisMinim = [];
+        room.jugadors.forEach((user) => {
+          let userMinim = createUserMinim(user);
+          llistatUsuarisMinim.push(userMinim);
+        });
+
+        /*
+        PROVES!!!!
+        */
+
+        let torneo = {
+            id: "PartidayxEpbmMqLoR-htTVAAAH",
+            nom: "asdf",
+            tipus: "torneo",
+            maxJugadors: 8,
+            jugadors: [
+              {
+                idSocket: "yxEpbmMqLoR-htTVAAAH",
+                nick: "admin",
+                encertades: 0,
+                vida: 100,
+                mort: false,
+                duelo: {
+                  enDuelo: false,
+                  encertades: 0,
+                  indexPreg: [],
+                  oponent: { id: "", encertades: "" },
+                },
+              },
+              {
+                idSocket: "vJinmMhqMgEjymCyAAAF",
+                nick: "asd",
+                encertades: 0,
+                vida: 100,
+                mort: false,
+                duelo: {
+                  enDuelo: false,
+                  encertades: 0,
+                  indexPreg: [],
+                  oponent: { id: "", encertades: "" },
+                },
+              },
+              {
+                idSocket: "KJ-wdzJ5p9_Tb31DAAAL",
+                nick: "aasd",
+                encertades: 0,
+                vida: 100,
+                mort: false,
+                duelo: {
+                  enDuelo: false,
+                  encertades: 0,
+                  indexPreg: [],
+                  oponent: { id: "", encertades: "" },
+                },
+              },
+              {
+                idSocket: "T3bLh7Mezr2qNCxLAAAO",
+                nick: "asdf",
+                encertades: 0,
+                vida: 100,
+                mort: false,
+                duelo: {
+                  enDuelo: false,
+                  encertades: 0,
+                  indexPreg: [],
+                  oponent: { id: "", encertades: "" },
+                },
+              },
+              {
+                idSocket: "Wj11CwTCeSkC_GcmAAAN",
+                nick: "asdfasf",
+                encertades: 0,
+                vida: 100,
+                mort: false,
+                duelo: {
+                  enDuelo: false,
+                  encertades: 0,
+                  indexPreg: [],
+                  oponent: { id: "", encertades: "" },
+                },
+              },
+              {
+                idSocket: "CS_h44J77QEpPyyMAAAE",
+                nick: "dfasfagf",
+                encertades: 0,
+                vida: 100,
+                mort: false,
+                duelo: {
+                  enDuelo: false,
+                  encertades: 0,
+                  indexPreg: [],
+                  oponent: { id: "", encertades: "" },
+                },
+              },
+              {
+                idSocket: "yVP3KutzoVUyHN59AAAB",
+                nick: "fgfgfgfg",
+                encertades: 0,
+                vida: 100,
+                mort: false,
+                duelo: {
+                  enDuelo: false,
+                  encertades: 0,
+                  indexPreg: [],
+                  oponent: { id: "", encertades: "" },
+                },
+              },
+              {
+                idSocket: "dd1mYp-WXdO7O9c1AAAP",
+                nick: "asdsadgdf",
+                encertades: 0,
+                vida: 100,
+                mort: false,
+                duelo: {
+                  enDuelo: false,
+                  encertades: 0,
+                  indexPreg: [],
+                  oponent: { id: "", encertades: "" },
+                },
+              },
+            ],
+            arrayPreg: null,
+            preguntasMal: null,
+            preguntasDuelo: null,
+            preguntasDueloMal: null,
+          };
+
+          /*
+          ELIMINAR QUAN DINÀMIC
+          */
+
         generarTorneig(room)
           .then(() => {
-            socket.emit("tournament info", room.dataTorneig);
+            socket.emit("tournament info", {data: room.dataTorneig, players: torneo.jugadors})
           })
           .catch((error) => {
             console.error(error);
           });
 
-        // room.start = Date.now();
-        // room.jugadors = randomArray(room.jugadors);
-
-        // let llistatUsuarisMinim = [];
-        // room.jugadors.forEach((user) => {
-        //   let userMinim = createUserMinim(user);
-        //   llistatUsuarisMinim.push(userMinim);
-        // });
-
-        // io.to(roomID).emit("info room", llistatUsuarisMinim, room.jugadors);
+        
         // io.to(roomID).emit("play", arrayPreg[0]);
         // let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
         // arrayRoomMinim.splice(index, 1);
@@ -1189,7 +1306,7 @@ function respostaFallada(user, roomID, socket) {
  */
 async function generarTorneig(room) {
   // descomentar per a dinàmic
-  // randomArray(room.jugadors);
+  
   await rendering(room);
 }
 
@@ -1349,14 +1466,14 @@ async function rendering(room) {
 }
 
 async function modificar() {
-    await this.manager.update.match({
-        id: this.idModificar,
-        opponent1: { score: 1 },
-        opponent2: { score: 2, result: "win" },
-      });
+  await this.manager.update.match({
+    id: this.idModificar,
+    opponent1: { score: 1 },
+    opponent2: { score: 2, result: "win" },
+  });
 
-      const tourneyData = await this.manager.get.stageData(0);
-      this.data = tourneyData;
+  const tourneyData = await this.manager.get.stageData(0);
+  this.data = tourneyData;
 }
 
 server.listen(port, () => {

@@ -25,6 +25,7 @@ export default {
 
       window.bracketsViewer.onMatchClicked = async (match) => {
         this.idModificar = match.id;
+        console.log(this.data);
         // console.log(this.manager);
         // try {
           // console.log(this.manager);

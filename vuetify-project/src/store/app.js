@@ -125,6 +125,9 @@ export const useAppStore = defineStore('app', {
         }
       });
     },
+    getPlayers() {
+      return this.players;
+    },
     aumentar() {
       this.questionIndex++;
     },
@@ -149,9 +152,7 @@ export const useAppStore = defineStore('app', {
     setNick(nick) {
       this.loginInfo.username = nick;
     },
-    getPlayers() {
-      return this.players;
-    },
+    
     setAnswer(newAnswer) {
       this.answer = newAnswer;
     },
