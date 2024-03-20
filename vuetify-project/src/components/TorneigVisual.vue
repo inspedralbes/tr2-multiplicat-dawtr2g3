@@ -1,91 +1,26 @@
 <template>
-  <button @click="async() => await this.guanya1()">GUANYA 1</button>
-  <button @click="async() => await this.guanya2()">GUANYA 2</button>
+  <div></div>
 
   <div id="example" ref="example" class="brackets-viewer"></div>
 </template>
 
 <script>
-import { InMemoryDatabase } from "brackets-memory-db";
-import { BracketsManager } from "brackets-manager";
+import { useAppStore } from "../store/app.js";
 
 import "brackets-viewer/dist/brackets-viewer.min.css";
 import "brackets-viewer/dist/brackets-viewer.min.js";
+import { computed } from "vue";
 
 export default {
   data() {
+    const store = useAppStore();
     return {
-      data: {},
-      data2: {},
-      storage: new InMemoryDatabase(),
-      manager: null,
-      idModificar: null,
+      data: computed(() => store.getTorneigInfo()),
     };
   },
   methods: {
-    async guanya1() {
-      await this.manager.update.match({
-            id: this.idModificar,
-            opponent1: { score: 2, result: "win" },
-            opponent2: { score: 1 },
-          });
 
-          const tourneyData = await this.manager.get.stageData(0);
-          this.data = tourneyData;
-    },
-    async guanya2() {
-      await this.manager.update.match({
-            id: this.idModificar,
-            opponent1: { score: 1 },
-            opponent2: { score: 2, result: "win" },
-          });
-
-          const tourneyData = await this.manager.get.stageData(0);
-          this.data = tourneyData;
-    },
-
-    async rendering() {
-      await this.manager.create({
-        //hardcoded
-        id: 0,
-        tournamentId: 0,
-        name: "1111111111111111",
-        type: "double_elimination",
-        number: 1,
-        seeding: Array(16)
-          .fill(0)
-          .map((e, i) => `Team ${i + 1}`),
-        settings: {
-          size: 16,
-          seedOrdering: ["natural", "natural", "reverse_half_shift", "reverse"],
-          grandFinal: "double",
-          matchesChildCount: 0,
-        },
-      });
-      await this.manager.create({
-        //hardcoded
-        id: 1,
-        tournamentId: 1,
-        name: "2222222222222222222",
-        type: "double_elimination",
-        number: 1,
-        seeding: Array(16)
-          .fill(0)
-          .map((e, i) => `Team ${i + 1}`),
-        settings: {
-          size: 16,
-          seedOrdering: ["natural", "natural", "reverse_half_shift", "reverse"],
-          grandFinal: "double",
-          matchesChildCount: 0,
-        },
-      });
-      const tournamentData = await this.manager.get.stageData(0);
-      this.data = tournamentData;
-      const tournamentData2 = await this.manager.get.stageData(1);
-      this.data2 = tournamentData2;
-    },
-
-    async rerendering() {
+    async pintar() {
       this.$refs.example?.replaceChildren();
 
       window.bracketsViewer.onMatchClicked = async (match) => {
@@ -99,8 +34,8 @@ export default {
           //   opponent2: { score: 7, result: "win" },
           // });
           // console.log(this.manager);
-          const tourneyData = await this.manager.get.stageData(0);
-          console.log(tourneyData);
+          // const tourneyData = await this.manager.get.stageData(0);
+          // console.log(tourneyData);
           // this.data = tourneyData;
         // } catch (error) {}
       };
@@ -158,82 +93,15 @@ export default {
     },
   },
   async mounted() {
-    this.manager = new BracketsManager(this.storage);
-
-    await this.rendering();
-
-    await this.rerendering();
-
-
-
-    // this.data = await fetch("./src/assets/json/db.json").then((response) =>
-    //   response.json()
-    // );
-    // window.bracketsViewer.setParticipantImages(
-    //   this.data.participant.map((participant) => ({
-    //     participantId: participant.id,
-    //     imageUrl: "https://github.githubassets.com/pinned-octocat.svg",
-    //   }))
-    // );
-
-    // await window.bracketsViewer.render(
-    //   {
-    //     stages: this.data.stage,
-    //     matches: this.data.match,
-    //     matchGames: this.data.match_game,
-    //     participants: this.data.participant,
-    //   },
-    //   {
-    //     customRoundName: (info, t) => {
-    //       // You have a reference to `t` in order to translate things.
-    //       // Returning `undefined` will fallback to the default round name in the current language.
-    //       // console.log(info);
-
-    //       if (info.fractionOfFinal === 1 / 2) {
-    //         if (info.groupType === "single-bracket") {
-    //           // Single elimination
-    //           return "Semi Finals";
-    //         } else {
-    //           // Double elimination
-    //           return `${t(`abbreviations.${info.groupType}`)} Semi Finals`;
-    //         }
-    //       }
-    //     },
-    //     onMatchClick: async (match) => {
-    //       console.log(this.manager);
-    //       await this.manager.update.match({
-    //         id: match.id,
-    //         opponent1: { score: 5 },
-    //         opponent2: { score: 7, result: "win" },
-    //       });
-    //       const tourneyData2 = await this.manager.get.currentMatches(0);
-    //       const tourneyData = await this.manager.get.stageData(0);
-
-    //       console.log("A tourney", tourneyData2);
-    //     },
-    //     selector: "#example",
-    //     participantOriginPlacement: "before",
-    //     separatedChildCountLabel: true,
-    //     showSlotsOrigin: true,
-    //     showLowerBracketSlotsOrigin: true,
-    //     highlightParticipantOnHover: true,
-    //   }
-    // );
-
-    // this.$refs.bracketsViewerExample.style.setProperty('--primary-background', '#fff0');
+    await this.pintar();
   },
   computed: {
-    // rerender() {
-    //   this.rerendering();
-    // },
-    // render() {
-    //   this.rendering();
-    // },
+
   },
   watch: {
     data: {
       handler() {
-        this.rerendering();
+        this.pintar();
       },
       deep: true,
     },

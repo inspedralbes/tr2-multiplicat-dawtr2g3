@@ -178,9 +178,11 @@ socket.on("duelo enviar", (duelo) => {
   console.log(duelo);
   store.setDuelo(duelo);
 });
+
 socket.on('nuke',()=>{
   console.log('nuke');
-})
+});
+
 socket.on('pregunta nuke',(pregunta)=>{
   console.log(pregunta);
   const store = useAppStore();
@@ -189,6 +191,12 @@ socket.on('pregunta nuke',(pregunta)=>{
   store.timer = 10;
   store.nuke = true;
 });
+
+socket.on('tournament info', (data) => {
+  const store = useAppStore();
+  store.setTorneigInfo(data);
+  router.push('/torneig');
+})
 
 // socket.on("get power", (poder) => {
 //   const store = useAppStore();

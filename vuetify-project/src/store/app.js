@@ -38,6 +38,7 @@ export const useAppStore = defineStore('app', {
         'encertades': "",
       },
     },
+    infoTorneig: null,
 
 
   }),
@@ -166,5 +167,11 @@ export const useAppStore = defineStore('app', {
     playerDead() {
       this.dead = true;
     },
+    getTorneigInfo() {
+      return this.infoTorneig;
+    },
+    setTorneigInfo(info) {
+      this.infoTorneig = info;
+    }
   },
 })
