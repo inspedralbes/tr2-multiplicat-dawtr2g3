@@ -220,6 +220,10 @@ export default {
 
         }
     },
+    beforeUnmounted() {
+        const store = useAppStore();
+        socket.emit('sortir lobby');
+    }
 
 }
 </script>

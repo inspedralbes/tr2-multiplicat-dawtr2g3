@@ -154,6 +154,67 @@ io.on('connection', (socket) => {
     /**
      * Elimina el jugador de la partida i de la llista de jugadors, si és l'últim jugador de la partida o el creador, la tanca
      */
+    socket.on('sortir lobby', () => {
+        const roomID = trobarRoom(socket);
+        if (roomID != undefined) {
+            let index = arrayRoom.findIndex((room) => room.id == roomID);
+            if (roomID == "Partida" + socket.id && index != '-1') {
+
+                io.to(roomID).emit('closed lobby');
+                let idOrig = socket.id;
+                let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+                arrayRoom.splice(index, 1);
+
+                llistatUsuaris.forEach((user) => {
+                    socket.id = user.idSocket;
+                    socket.leave(roomID);
+                });
+                socket.id = idOrig;
+
+                if (arrayRoomMinim.findIndex((room) => room.id == roomID) != undefined) {
+                    arrayRoomMinim.splice(index, 1);
+                    io.emit('games list', arrayRoomMinim);
+                }
+
+            } else if (index != '-1') {
+
+                let room = arrayRoom.find((room) => room.id == roomID);
+                let llistatUsuaris = room.jugadors;
+
+                let index = llistatUsuaris.findIndex((user) => user.idSocket == socket.id);
+                llistatUsuaris.splice(index, 1);
+
+                if (arrayRoomMinim.find((room) => room.id == roomID) != undefined) {
+                    arrayRoomMinim.map((room) => {
+                        if (room.id == roomID) {
+                            let index = room.jugadors.findIndex((idSocket) => idSocket == socket.id);
+                            room.jugadors.splice(index, 1);
+                        }
+                    });
+                    io.emit('games list', arrayRoomMinim);
+                }
+                arrayRoom.map((room) => {
+
+                    if (room.id == roomID) {
+                        room.jugadors = llistatUsuaris;
+                    }
+                });
+
+                llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+                let llistatUsuarisMinim = [];
+                llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+                let start = arrayRoom.find((room) => room.id == roomID).start;
+                io.to(roomID).emit('update players', llistatUsuarisMinim);
+                if (start) {
+                    if (jugadorsVius(llistatUsuaris).length == 1) {
+                        acabarPartida(socket, roomID);
+                        io.to(roomID).emit('finalitzar duelo');
+                    }
+                }
+            }
+        }
+    });
+
     socket.on('disconnecting', () => {
         const roomID = trobarRoom(socket);
         if (roomID != undefined) {
