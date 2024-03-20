@@ -183,11 +183,10 @@
             </v-card>
         </v-dialog>
     </v-row>
-    <div class="warning">
+    <div v-if="nukeAnimation" class="warning">
         <div class="warning-cont">
             <div class="warning-icon">&#9762;</div>
-            <div class="warning-text"><strong>Warning:</strong> This is a warning message. Please read carefully as the
-                text in here is very important to the reader.</div>
+            <div class="warning-text"><strong>Warning:</strong> Atenció, nombre ha arribat a una racha de 20 i ha activat la NUKE!</div>
         </div>
     </div>
 </template>
@@ -209,13 +208,13 @@ export default {
         return {
             isAnimating: false,
             divActivo: 'duelo',
+            nukeAnimation: computed(() => store.nukeAnimation),
             state: {
 
                 loading: true,
                 error: false,
             },
             game: {
-
                 chat: computed(() => store.chat),
                 questionIndex: computed(() => store.questionIndex),
                 players: computed(() => store.players),
@@ -856,13 +855,17 @@ export default {
 }
 .warning{
     position: absolute;
+    display: flex;
+    width: 100%;
+    margin-left: auto;
+    align-items: center;
+    margin-right: auto;
+    left: 35%;
     top: 0;
-    left: 0;
-    
 }
 .warning-cont {
   display: grid;
-  width: clamp(40%, 50%, 750px);
+  width: clamp(42%, 52%, 750px);
   grid-template-columns: auto 1fr;
   box-shadow: 0 2px 0 hsla(0, 0%, 100%, 0.5) inset;
   

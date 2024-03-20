@@ -179,7 +179,14 @@ socket.on("duelo enviar", (duelo) => {
   store.setDuelo(duelo);
 });
 socket.on('nuke',()=>{
-  console.log('nuke');
+  const store = useAppStore();
+  store.nukeAnimation = true;
+  store.stopTimer();
+  console.log(store.nukeAnimation);
+  setTimeout(() => {
+    console.log('stop animation');
+    store.nukeAnimation = false;
+  }, 5000);
 })
 socket.on('pregunta nuke',(pregunta)=>{
   console.log(pregunta);
@@ -187,6 +194,7 @@ socket.on('pregunta nuke',(pregunta)=>{
   store.question = pregunta;
   store.question.pregunta = store.question.enunciat
   store.timer = 10;
+  store.startTimer();
   store.nuke = true;
 });
 

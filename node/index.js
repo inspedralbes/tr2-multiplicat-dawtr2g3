@@ -32,7 +32,6 @@ async function iniciarLobby(roomID) {
     let preguntasDueloMal = JSON.parse(JSON.stringify(fetchDuelo));
     let preguntasDuelo = JSON.parse(JSON.stringify(preguntasDueloMal));
     preguntasDuelo.forEach((pregunta) => {
-        console.log("randomizando respuestas");
         pregunta.respostes = randomArray(pregunta.respostes);
     });
     let preguntasMal = data;
@@ -124,7 +123,7 @@ io.on('connection', (socket) => {
     socket.on('create game', (nom, maxJugadors, tipus, nick) => {
         let roomID = "Partida" + socket.id;
         socket.join(roomID);
-        console.log(tipus)
+
         let user = createNewUser(socket.id, nick)
         let userMinim = createUserMinim(user);
         arrayRoom.push({
@@ -509,10 +508,8 @@ io.on('connection', (socket) => {
                     user.encertades = 0;
                 }
             } else if (user.preguntaNuke) {
-                console.log(user.preguntaNukeMal.respostes[posResp]);
-                console.log(user.preguntaNuke.respostes[respuestaCorrecta]);
+
                 if (user.preguntaNukeMal.respostes[posResp] != (user.preguntaNuke.respostes[respuestaCorrecta])) {
-                    console.log("fallada");
                     user.vida -= 55;
                     respostaFallada(user, roomID, socket);
 
