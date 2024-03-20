@@ -178,9 +178,9 @@ socket.on("duelo enviar", (duelo) => {
   console.log(duelo);
   store.setDuelo(duelo);
 });
-socket.on('nuke',()=>{
+socket.on('nuke',(nick)=>{
   const store = useAppStore();
-  store.nukeAnimation = true;
+  store.nukeAnimation = nick;
   store.stopTimer();
   console.log(store.nukeAnimation);
   setTimeout(() => {

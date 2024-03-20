@@ -186,7 +186,7 @@
     <div v-if="nukeAnimation" class="warning">
         <div class="warning-cont">
             <div class="warning-icon">&#9762;</div>
-            <div class="warning-text"><strong>Warning:</strong> Atenció, nombre ha arribat a una racha de 20 i ha activat la NUKE!</div>
+            <div class="warning-text"><strong>Warning:</strong> Atenció, {{ nukeAnimation }} ha arribat a una racha de 20 i ha activat la NUKE!</div>
         </div>
     </div>
 </template>

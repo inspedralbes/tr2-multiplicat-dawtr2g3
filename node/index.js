@@ -555,7 +555,7 @@ io.on('connection', (socket) => {
                                 user.poder = poder;
                             }
                         }
-                        if (user.encertades == 1) {
+                        if (user.encertades == 20) {
                             user.poder = 'nuke';
                         }
                     } else {
@@ -794,7 +794,7 @@ async function utilitzarPoderNuke(userNuke, roomID) {
     let preguntaNuke = await fetchPreguntaNuke();
     let preguntaNukeMal = JSON.parse(JSON.stringify(preguntaNuke));
     preguntaNukeMal.respostes = randomArray(preguntaNukeMal.respostes);
-    io.to(roomID).emit('nuke');
+    io.to(roomID).emit('nuke',userNuke.nick);
     setTimeout(() => {
         usersAfectats.forEach((user) => {
             user.preguntaNuke = preguntaNuke;
