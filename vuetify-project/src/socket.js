@@ -204,7 +204,8 @@ socket.on('tournament info', (info) => {
 
   let { data, players } = info;
 
-  console.log(data);
+  console.log("DATA: ", data);
+  console.log("PLAYERS: ", players);
 
   data.participant.forEach((jugador, index) => {
     jugador.name = players[index].nick;
