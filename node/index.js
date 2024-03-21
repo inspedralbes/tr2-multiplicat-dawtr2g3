@@ -148,17 +148,28 @@ io.on("connection", (socket) => {
     console.log(tipus);
     let user = createNewUser(socket.id, nick);
     let userMinim = createUserMinim(user);
-    arrayRoom.push({
-      id: roomID,
-      nom: nom,
-      tipus: tipus,
-      maxJugadors: maxJugadors,
-      jugadors: [user],
-      arrayPreg: [],
-      preguntasMal: [],
-      preguntasDuelo: [],
-      preguntasDueloMal: [],
-    });
+    if (tipus == 'torneo') {
+      arrayRoom.push({
+        id: roomID,
+        nom: nom,
+        tipus: tipus,
+        maxJugadors: maxJugadors,
+        jugadors: [user],
+        arrayPreg: [],
+      });
+    } else {
+      arrayRoom.push({
+        id: roomID,
+        nom: nom,
+        tipus: tipus,
+        maxJugadors: maxJugadors,
+        jugadors: [user],
+        arrayPreg: [],
+        preguntasMal: [],
+        preguntasDuelo: [],
+        preguntasDueloMal: [],
+      });
+    }
     arrayRoomMinim.push({
       id: roomID,
       nom: nom,
