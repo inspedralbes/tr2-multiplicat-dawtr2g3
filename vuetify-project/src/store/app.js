@@ -39,6 +39,7 @@ export const useAppStore = defineStore('app', {
         'encertades': "",
       },
     },
+    infoTorneig: null,
 
 
   }),
@@ -125,6 +126,9 @@ export const useAppStore = defineStore('app', {
         }
       });
     },
+    getPlayers() {
+      return this.players;
+    },
     aumentar() {
       this.questionIndex++;
     },
@@ -149,9 +153,7 @@ export const useAppStore = defineStore('app', {
     setNick(nick) {
       this.loginInfo.username = nick;
     },
-    getPlayers() {
-      return this.players;
-    },
+    
     setAnswer(newAnswer) {
       this.answer = newAnswer;
     },
@@ -167,5 +169,11 @@ export const useAppStore = defineStore('app', {
     playerDead() {
       this.dead = true;
     },
+    getTorneigInfo() {
+      return this.infoTorneig;
+    },
+    setTorneigInfo(info) {
+      this.infoTorneig = info;
+    }
   },
 })
