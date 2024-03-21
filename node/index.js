@@ -18,6 +18,210 @@ const server = createServer(app);
 let torneig = {
   storage: new InMemoryDatabase(),
   manager: null,
+  guanyar: [
+    [2, 2, 5, 4, 5, 6, null],
+    [4, 4, 5, 5, 6, 6, 13, 9, 10, 11, 11, 12, 13, 14, null],
+    [
+      8,
+      8,
+      9,
+      9,
+      10,
+      10,
+      11,
+      11,
+      12,
+      12,
+      13,
+      13,
+      14,
+      14,
+      29,
+      19,
+      20,
+      21,
+      22,
+      23,
+      23,
+      24,
+      24,
+      25,
+      26,
+      27,
+      27,
+      28,
+      29,
+      30,
+      null,
+    ],
+    [
+      16,
+      16,
+      17,
+      17,
+      18,
+      18,
+      19,
+      19,
+      20,
+      20,
+      21,
+      21,
+      22,
+      22,
+      23,
+      23,
+      24,
+      24,
+      25,
+      25,
+      26,
+      26,
+      27,
+      27,
+      28,
+      28,
+      29,
+      29,
+      30,
+      30,
+      61,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      47,
+      48,
+      48,
+      49,
+      49,
+      50,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      55,
+      56,
+      56,
+      57,
+      58,
+      59,
+      59,
+      60,
+      61,
+      62,
+      null,
+    ],
+  ],
+  perdre: [
+    [3, 3, 4, null, null, 6, null],
+    [7, 7, 8, 8, 9, 10, 12, null, null, null, null, null, null, 14, null],
+    [
+      15,
+      15,
+      16,
+      16,
+      17,
+      17,
+      18,
+      18,
+      19,
+      20,
+      21,
+      22,
+      25,
+      26,
+      28,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      30,
+      null,
+    ],
+    [
+      31,
+      31,
+      32,
+      32,
+      33,
+      33,
+      34,
+      34,
+      35,
+      35,
+      36,
+      36,
+      37,
+      37,
+      38,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      51,
+      52,
+      53,
+      54,
+      57,
+      58,
+      60,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      62,
+      null,
+    ],
+  ],
 };
 
 torneig.manager = new BracketsManager(torneig.storage);
@@ -317,135 +521,137 @@ io.on("connection", (socket) => {
         */
 
         let torneo = {
-            id: "PartidayxEpbmMqLoR-htTVAAAH",
-            nom: "asdf",
-            tipus: "torneo",
-            maxJugadors: 8,
-            jugadors: [
-              {
-                idSocket: "yxEpbmMqLoR-htTVAAAH",
-                nick: "admin",
+          id: "PartidayxEpbmMqLoR-htTVAAAH",
+          nom: "asdf",
+          tipus: "torneo",
+          maxJugadors: 8,
+          jugadors: [
+            {
+              idSocket: "yxEpbmMqLoR-htTVAAAH",
+              nick: "admin",
+              encertades: 0,
+              vida: 100,
+              mort: false,
+              duelo: {
+                enDuelo: false,
                 encertades: 0,
-                vida: 100,
-                mort: false,
-                duelo: {
-                  enDuelo: false,
-                  encertades: 0,
-                  indexPreg: [],
-                  oponent: { id: "", encertades: "" },
-                },
+                indexPreg: [],
+                oponent: { id: "", encertades: "" },
               },
-              {
-                idSocket: "vJinmMhqMgEjymCyAAAF",
-                nick: "asd",
+            },
+            {
+              idSocket: "vJinmMhqMgEjymCyAAAF",
+              nick: "asd",
+              encertades: 0,
+              vida: 100,
+              mort: false,
+              duelo: {
+                enDuelo: false,
                 encertades: 0,
-                vida: 100,
-                mort: false,
-                duelo: {
-                  enDuelo: false,
-                  encertades: 0,
-                  indexPreg: [],
-                  oponent: { id: "", encertades: "" },
-                },
+                indexPreg: [],
+                oponent: { id: "", encertades: "" },
               },
-              {
-                idSocket: "KJ-wdzJ5p9_Tb31DAAAL",
-                nick: "aasd",
+            },
+            {
+              idSocket: "KJ-wdzJ5p9_Tb31DAAAL",
+              nick: "aasd",
+              encertades: 0,
+              vida: 100,
+              mort: false,
+              duelo: {
+                enDuelo: false,
                 encertades: 0,
-                vida: 100,
-                mort: false,
-                duelo: {
-                  enDuelo: false,
-                  encertades: 0,
-                  indexPreg: [],
-                  oponent: { id: "", encertades: "" },
-                },
+                indexPreg: [],
+                oponent: { id: "", encertades: "" },
               },
-              {
-                idSocket: "T3bLh7Mezr2qNCxLAAAO",
-                nick: "asdf",
+            },
+            {
+              idSocket: "T3bLh7Mezr2qNCxLAAAO",
+              nick: "asdf",
+              encertades: 0,
+              vida: 100,
+              mort: false,
+              duelo: {
+                enDuelo: false,
                 encertades: 0,
-                vida: 100,
-                mort: false,
-                duelo: {
-                  enDuelo: false,
-                  encertades: 0,
-                  indexPreg: [],
-                  oponent: { id: "", encertades: "" },
-                },
+                indexPreg: [],
+                oponent: { id: "", encertades: "" },
               },
-              {
-                idSocket: "Wj11CwTCeSkC_GcmAAAN",
-                nick: "asdfasf",
+            },
+            {
+              idSocket: "Wj11CwTCeSkC_GcmAAAN",
+              nick: "asdfasf",
+              encertades: 0,
+              vida: 100,
+              mort: false,
+              duelo: {
+                enDuelo: false,
                 encertades: 0,
-                vida: 100,
-                mort: false,
-                duelo: {
-                  enDuelo: false,
-                  encertades: 0,
-                  indexPreg: [],
-                  oponent: { id: "", encertades: "" },
-                },
+                indexPreg: [],
+                oponent: { id: "", encertades: "" },
               },
-              {
-                idSocket: "CS_h44J77QEpPyyMAAAE",
-                nick: "dfasfagf",
+            },
+            {
+              idSocket: "CS_h44J77QEpPyyMAAAE",
+              nick: "dfasfagf",
+              encertades: 0,
+              vida: 100,
+              mort: false,
+              duelo: {
+                enDuelo: false,
                 encertades: 0,
-                vida: 100,
-                mort: false,
-                duelo: {
-                  enDuelo: false,
-                  encertades: 0,
-                  indexPreg: [],
-                  oponent: { id: "", encertades: "" },
-                },
+                indexPreg: [],
+                oponent: { id: "", encertades: "" },
               },
-              {
-                idSocket: "yVP3KutzoVUyHN59AAAB",
-                nick: "fgfgfgfg",
+            },
+            {
+              idSocket: "yVP3KutzoVUyHN59AAAB",
+              nick: "fgfgfgfg",
+              encertades: 0,
+              vida: 100,
+              mort: false,
+              duelo: {
+                enDuelo: false,
                 encertades: 0,
-                vida: 100,
-                mort: false,
-                duelo: {
-                  enDuelo: false,
-                  encertades: 0,
-                  indexPreg: [],
-                  oponent: { id: "", encertades: "" },
-                },
+                indexPreg: [],
+                oponent: { id: "", encertades: "" },
               },
-              {
-                idSocket: "dd1mYp-WXdO7O9c1AAAP",
-                nick: "asdsadgdf",
+            },
+            {
+              idSocket: "dd1mYp-WXdO7O9c1AAAP",
+              nick: "asdsadgdf",
+              encertades: 0,
+              vida: 100,
+              mort: false,
+              duelo: {
+                enDuelo: false,
                 encertades: 0,
-                vida: 100,
-                mort: false,
-                duelo: {
-                  enDuelo: false,
-                  encertades: 0,
-                  indexPreg: [],
-                  oponent: { id: "", encertades: "" },
-                },
+                indexPreg: [],
+                oponent: { id: "", encertades: "" },
               },
-            ],
-            arrayPreg: null,
-            preguntasMal: null,
-            preguntasDuelo: null,
-            preguntasDueloMal: null,
-          };
+            },
+          ],
+          arrayPreg: null,
+          preguntasMal: null,
+          preguntasDuelo: null,
+          preguntasDueloMal: null,
+        };
 
-          /*
+        /*
           ELIMINAR QUAN DINÀMIC
           */
 
         generarTorneig(room)
           .then(() => {
-            socket.emit("tournament info", {data: room.dataTorneig, players: torneo.jugadors})
+            socket.emit("tournament info", {
+              data: room.dataTorneig,
+              players: torneo.jugadors,
+            });
           })
           .catch((error) => {
             console.error(error);
           });
 
-        
         // io.to(roomID).emit("play", arrayPreg[0]);
         // let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
         // arrayRoomMinim.splice(index, 1);
@@ -1306,7 +1512,7 @@ function respostaFallada(user, roomID, socket) {
  */
 async function generarTorneig(room) {
   // descomentar per a dinàmic
-  
+
   await rendering(room);
 }
 
@@ -1461,19 +1667,68 @@ async function rendering(room) {
   //       matchesChildCount: 0,
   //     },
   //   });
+  await modificar();
+
   const tournamentData = await torneig.manager.get.stageData(0);
+
   room.dataTorneig = tournamentData;
 }
 
+/**
+ * Et passa a la següent ronda
+ * @param {object} jugador El jugador que guanya la ronda
+ */
+
+function guanyarRonda(jugador) {
+  jugador.infoPartida.encertades = 0;
+  jugador.infoPartida.matchId = torneig.guanyar[Math.log2(jugador.infoPartida.nJugadors - 1)][jugador.infoPartida.matchId];
+
+  console.log(jugador.infoPartida.matchId);
+}
+
+/**
+ * Et mou a losers Bracket o t'elimina si ja estaves
+ * @param {object} jugador El jugador que perd la ronda
+ * @returns boolean que diu si segueix viu o no
+ */
+
+function perdreRonda(jugador) {
+  if (!jugador.infoPartida.loser) {
+    jugador.infoPartida.loser = true;
+    jugador.infoPartida.encertades = 0;
+    jugador.infoPartida.matchId = torneig.perdre[Math.log2(jugador.infoPartida.nJugadors - 1)][jugador.infoPartida.matchId];
+
+    console.log(jugador.infoPartida.matchId);
+    return false;
+  } else {
+    return true;
+  }
+}
+
 async function modificar() {
-  await this.manager.update.match({
-    id: this.idModificar,
+  await torneig.manager.update.match({
+    id: 0,
     opponent1: { score: 1 },
     opponent2: { score: 2, result: "win" },
   });
+  await torneig.manager.update.match({
+    id: 1,
+    opponent1: { score: 2, result: "win" },
+    opponent2: { score: 1 },
+  });
+  await torneig.manager.update.match({
+    id: 2,
+    opponent1: { score: 2, result: "win" },
+    opponent2: { score: 1 },
+  });
+  await torneig.manager.update.match({
+    id: 3,
+    opponent1: { score: 2 },
+    opponent2: { score: 1 },
+  });
 
-  const tourneyData = await this.manager.get.stageData(0);
-  this.data = tourneyData;
+  // const tourneyData = await torneig.manager.get.stageData(0);
+  // this.data = tourneyData;
 }
 
 server.listen(port, () => {
