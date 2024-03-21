@@ -30,8 +30,8 @@
                     </div>
                     <div class="container__imputButtom">
                         <input type="text" id="inputChat">
-                        <button @click="enviarMissatge()" class="button__chat"><img src="../assets/icono/enviar.png" alt=""
-                                class="enviar"></button>
+                        <button @click="enviarMissatge()" class="button__chat"><img src="../assets/icono/enviar.png"
+                                alt="" class="enviar"></button>
                     </div>
                 </div>
             </div>
@@ -39,37 +39,39 @@
                 <div class="container__usuario usuario">
                     <h2 class="nickUsuario">{{ game.ownPlayer.nick }}</h2>
                     <div class="container__avatar">
-                        
-                            <img v-if="game.avatar == 1" class="avatar" src="../assets/avatar/avatarVaiolet.png">
-                            <img v-else-if="game.avatar == 2" class="avatar" src="../assets/avatar/avatarCerdo.png">
-                            <img v-else-if="game.avatar == 3" class="avatar" src="../assets/avatar/avatarEric.png">
-                            <img v-else-if="game.avatar == 4" class="avatar" src="../assets/avatar/avatarGatoSuperman.png" >
-                            <img v-else-if="game.avatar == 5" class="avatar" src="../assets/avatar/avatarHamsterTrex.png">
-                            <img v-else-if="game.avatar == 6" class="avatar" src="../assets/avatar/avatarHombrePeloBlanco.png">
-                            <img v-else-if="game.avatar == 7" class="avatar" src="../assets/avatar/avatarLevie.png">
-                            <img v-else-if="game.avatar == 8" class="avatar" src="../assets/avatar/avatarMikasa.png">
-                            <img v-else-if="game.avatar == 9" class="avatar" src="../assets/avatar/avatarMujerPeloRojo.png">
-                            <img v-else-if="game.avatar == 10" class="avatar" src="../assets/avatar/avatarPerroBatman.png">
-                            <img v-else-if="game.avatar == 11" class="avatar" src="../assets/avatar/avatarPerroDJ.png">
-                            <img v-else-if="game.avatar == 12" class="avatar" src="../assets/avatar/avatarPower.png">
-                            <img v-else-if="game.avatar == 13" class="avatar" src="../assets/avatar/avatarZorro.png">
+
+                        <img v-if="game.avatar == 1" class="avatar" src="../assets/avatar/avatarVaiolet.png">
+                        <img v-else-if="game.avatar == 2" class="avatar" src="../assets/avatar/avatarCerdo.png">
+                        <img v-else-if="game.avatar == 3" class="avatar" src="../assets/avatar/avatarEric.png">
+                        <img v-else-if="game.avatar == 4" class="avatar" src="../assets/avatar/avatarGatoSuperman.png">
+                        <img v-else-if="game.avatar == 5" class="avatar" src="../assets/avatar/avatarHamsterTrex.png">
+                        <img v-else-if="game.avatar == 6" class="avatar"
+                            src="../assets/avatar/avatarHombrePeloBlanco.png">
+                        <img v-else-if="game.avatar == 7" class="avatar" src="../assets/avatar/avatarLevie.png">
+                        <img v-else-if="game.avatar == 8" class="avatar" src="../assets/avatar/avatarMikasa.png">
+                        <img v-else-if="game.avatar == 9" class="avatar" src="../assets/avatar/avatarMujerPeloRojo.png">
+                        <img v-else-if="game.avatar == 10" class="avatar" src="../assets/avatar/avatarPerroBatman.png">
+                        <img v-else-if="game.avatar == 11" class="avatar" src="../assets/avatar/avatarPerroDJ.png">
+                        <img v-else-if="game.avatar == 12" class="avatar" src="../assets/avatar/avatarPower.png">
+                        <img v-else-if="game.avatar == 13" class="avatar" src="../assets/avatar/avatarZorro.png">
                         <!-- <img src="../assets/avatar/avatarMikasa.png" alt="" class="avatar"> -->
                         <div class="barra__vida" v-bind:class="{ 'animacioVida': animacioVida }">
                             <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png"
                                 alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 50" src="/src/assets/ilustracio-vida/75_health.png"
-                                alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 25" src="/src/assets/ilustracio-vida/50_health.png"
-                                alt="" class="imagen-vida">
-                            <img v-else-if="this.game.ownPlayer.vida > 0" src="/src/assets/ilustracio-vida/25_health.png"
-                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 50"
+                                src="/src/assets/ilustracio-vida/75_health.png" alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 25"
+                                src="/src/assets/ilustracio-vida/50_health.png" alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 0"
+                                src="/src/assets/ilustracio-vida/25_health.png" alt="" class="imagen-vida">
                             <h3 v-if="!game.mort" class="numero__vida">{{ game.ownPlayer.vida }}</h3>
                         </div>
                     </div>
                 </div>
                 <div class="container__skip">
                     <div class="skip" :class="{ 'animate-arrow': isAnimating }">
-                        <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt=""  class="imagen__skip"></button>
+                        <button :disabled="disabled" @click="skip"><img src="../assets/icono/skip.png" alt=""
+                                class="imagen__skip"></button>
                     </div>
                     <div class="hoverSkip">
                         <p>
@@ -77,7 +79,7 @@
                         </p>
                     </div>
                 </div>
-                
+
                 <div class="container__poder">
                     <div class="poder">
                         <Poder :poder="game.ownPlayer.poder" @utilitzarPoder="utilitzarPoder()" />
@@ -86,7 +88,7 @@
                         <p v-if="game.ownPlayer.poder.length != 0">{{ game.ownPlayer.poder }}</p>
                         <p v-else>Poders: 0</p>
                     </div>
-                </div>             
+                </div>
             </div>
         </div>
         <div v-else-if="game.duelo.enDuelo && !game.nuke" class="duelo">
@@ -94,87 +96,99 @@
                 <Drag :respostes="game.question.respostes" :pregunta="game.question.enunciat"
                     @comprovar="(index) => answer(index)" />
             </div>
-           <div class="container__dueloUsuarios">
+            <div class="container__dueloUsuarios">
                 <div class="container__usuarioDuelo usuario usuarioDuelo">
                     <h2 class="nickUsuarioDuelo">{{ game.ownPlayer.nick }}</h2>
-                        <div class="container__avatar">
-                            <img src="../assets/avatar/avatarDerecha.png" alt="" class="avatar">
-                            <div class="barra__vidaUsuario" v-bind:class="{ 'animacioVida': animacioVida }">
-                                <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png"
-                                    alt="" class="imagen-vida">
-                                <img v-else-if="this.game.ownPlayer.vida > 50" src="/src/assets/ilustracio-vida/75_health.png"
-                                    alt="" class="imagen-vida">
-                                <img v-else-if="this.game.ownPlayer.vida > 25" src="/src/assets/ilustracio-vida/50_health.png"
-                                    alt="" class="imagen-vida">
-                                <img v-else-if="this.game.ownPlayer.vida > 0" src="/src/assets/ilustracio-vida/25_health.png"
-                                    alt="" class="imagen-vida">
+                    <div class="container__avatar">
+                        <img src="../assets/avatar/avatarDerecha.png" alt="" class="avatar">
+                        <div class="barra__vidaUsuario" v-bind:class="{ 'animacioVida': animacioVida }">
+                            <img v-if="this.game.ownPlayer.vida > 75" src="/src/assets/ilustracio-vida/full-health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 50"
+                                src="/src/assets/ilustracio-vida/75_health.png" alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 25"
+                                src="/src/assets/ilustracio-vida/50_health.png" alt="" class="imagen-vida">
+                            <img v-else-if="this.game.ownPlayer.vida > 0"
+                                src="/src/assets/ilustracio-vida/25_health.png" alt="" class="imagen-vida">
 
 
 
-                                <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
-                            </div>
+                            <h3 class="numero__vida">{{ game.ownPlayer.vida }}</h3>
                         </div>
                     </div>
-                    <div class="container__usuarioEnemigo usuario">
-                        <h2 class="nickEnemigo">{{ game.oponent.nick }}</h2>
-                        <div class="container__avatarEnemigo">
-                            <img src="../assets/avatar/avatarIzquierda.png" alt="" class="avatar">
-                            <div class="barra__vidaEnemigo" v-bind:class="{ 'animacioVida': animacioVida }">
-                                <img v-if="this.game.oponent.vida > 75" src="/src/assets/ilustracio-vida/full-health.png" alt=""
-                                    class="imagen-vida">
-                                <img v-else-if="this.game.oponent.vida > 50" src="/src/assets/ilustracio-vida/75_health.png"
-                                    alt="" class="imagen-vida">
-                                <img v-else-if="this.game.oponent.vida > 25" src="/src/assets/ilustracio-vida/50_health.png"
-                                    alt="" class="imagen-vida">
-                                <img v-else-if="this.game.oponent.vida > 0" src="/src/assets/ilustracio-vida/25_health.png"
-                                    alt="" class="imagen-vida">
+                </div>
+                <div class="container__usuarioEnemigo usuario">
+                    <h2 class="nickEnemigo">{{ game.oponent.nick }}</h2>
+                    <div class="container__avatarEnemigo">
+                        <img src="../assets/avatar/avatarIzquierda.png" alt="" class="avatar">
+                        <div class="barra__vidaEnemigo" v-bind:class="{ 'animacioVida': animacioVida }">
+                            <img v-if="this.game.oponent.vida > 75" src="/src/assets/ilustracio-vida/full-health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.oponent.vida > 50" src="/src/assets/ilustracio-vida/75_health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.oponent.vida > 25" src="/src/assets/ilustracio-vida/50_health.png"
+                                alt="" class="imagen-vida">
+                            <img v-else-if="this.game.oponent.vida > 0" src="/src/assets/ilustracio-vida/25_health.png"
+                                alt="" class="imagen-vida">
 
 
 
-                                <h3 class="numero__vidaEnemigo">{{ game.oponent.vida }}</h3>
-                            </div>
+                            <h3 class="numero__vidaEnemigo">{{ game.oponent.vida }}</h3>
                         </div>
-                    </div> 
+                    </div>
+                </div>
             </div>
-        </div> 
+        </div>
         <div v-else-if="game.nuke" class="nuke">
             <div class="container__preguntaDuelo preguntas">
                 <Drag :respostes="game.question.respostes" :pregunta="game.question.enunciat"
                     @comprovar="(index) => answer(index)" />
             </div>
-           
+
         </div>
     </div>
     <v-row justify="center">
-    <v-dialog v-model="game.dialog" scrollable width="30vw">
-        <v-card>
-            <v-card-title class="headline blue-grey white--text" style="font-size: 2rem; text-align: center; background-color: #a2d1f2;">Escull objectiu</v-card-title>
-            <v-divider></v-divider>
-            <v-card-text style="height: 25vh; padding: 20px; background-color: #c2a5df;">
-                <v-card v-for="jugador in game.players" class="mb-4" style="background-color: #b2df9b;">
-                    <div v-if="game.ownPlayer.nick != jugador.nick && !jugador.duelo.enDuelo && jugador.vida > 0 ">
-                        <v-card-text>
-                            <div style="font-size: 2rem; text-align: center; text-transform: uppercase; color: #0542b9;">{{ jugador.nick }}</div>
-                        </v-card-text>
-                        <v-row align="center" justify="center" style="padding: 2vh;">
-                            <v-btn style="font-size: 1rem;" v-if="jugador.idSocket != game.ownPlayer.idSocket  && !jugador.duelo.enDuelo && jugador.vida > 0" @click="escollirObjectiu(jugador.idSocket)">
-                                <v-icon left>mdi-account-arrow-right</v-icon>
-                                Escollir
-                            </v-btn>
-                        </v-row>
-                    </div>
-                </v-card>
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions style="background-color: #a2d1f2;">
-                <v-btn  style="background-color: #e21b3c; color: white;" variant="text" @click="cerrarModal">
-                    <v-icon left>mdi-close</v-icon>
-                    Close
-                </v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
-</v-row>
+        <v-dialog v-model="game.dialog" scrollable width="30vw">
+            <v-card>
+                <v-card-title class="headline blue-grey white--text"
+                    style="font-size: 2rem; text-align: center; background-color: #a2d1f2;">Escull
+                    objectiu</v-card-title>
+                <v-divider></v-divider>
+                <v-card-text style="height: 25vh; padding: 20px; background-color: #c2a5df;">
+                    <v-card v-for="jugador in game.players" class="mb-4" style="background-color: #b2df9b;">
+                        <div v-if="game.ownPlayer.nick != jugador.nick && !jugador.duelo.enDuelo && jugador.vida > 0">
+                            <v-card-text>
+                                <div
+                                    style="font-size: 2rem; text-align: center; text-transform: uppercase; color: #0542b9;">
+                                    {{ jugador.nick }}</div>
+                            </v-card-text>
+                            <v-row align="center" justify="center" style="padding: 2vh;">
+                                <v-btn style="font-size: 1rem;"
+                                    v-if="jugador.idSocket != game.ownPlayer.idSocket && !jugador.duelo.enDuelo && jugador.vida > 0"
+                                    @click="escollirObjectiu(jugador.idSocket)">
+                                    <v-icon left>mdi-account-arrow-right</v-icon>
+                                    Escollir
+                                </v-btn>
+                            </v-row>
+                        </div>
+                    </v-card>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions style="background-color: #a2d1f2;">
+                    <v-btn style="background-color: #e21b3c; color: white;" variant="text" @click="cerrarModal">
+                        <v-icon left>mdi-close</v-icon>
+                        Close
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </v-row>
+    <div v-if="nukeAnimation" class="warning">
+        <div class="warning-cont">
+            <div class="warning-icon">&#9762;</div>
+            <div class="warning-text"><strong>Warning:</strong> Atenció, {{ nukeAnimation }} ha arribat a una racha de 20 i ha activat la NUKE!</div>
+        </div>
+    </div>
 </template>
 
 
@@ -194,13 +208,13 @@ export default {
         return {
             isAnimating: false,
             divActivo: 'duelo',
+            nukeAnimation: computed(() => store.nukeAnimation),
             state: {
 
                 loading: true,
                 error: false,
             },
             game: {
-
                 chat: computed(() => store.chat),
                 questionIndex: computed(() => store.questionIndex),
                 players: computed(() => store.players),
@@ -258,7 +272,7 @@ export default {
             const store = useAppStore();
             store.dialog = false;
         },
-        cerrarModal(){
+        cerrarModal() {
             const store = useAppStore();
             store.dialog = false;
         },
@@ -317,8 +331,6 @@ export default {
 
 
 <style lang="scss" scoped>
-
-
 .duelo {
     background-image: url("../assets/backgrounds/background-dol-joc.png");
     background-size: cover;
@@ -334,7 +346,8 @@ export default {
         "preguntaDuelo"
         "usuarioDuelo";
 }
-.nuke{
+
+.nuke {
     position: relative;
     background-image: url("../assets/backgrounds/background-nuke.jpg");
     background-size: cover;
@@ -349,13 +362,14 @@ export default {
     display: grid;
 
 }
-.container__avatarEnemigo{
+
+.container__avatarEnemigo {
     position: absolute;
     top: 0;
     right: 0;
 }
 
-.container__avatarEnemigo img{
+.container__avatarEnemigo img {
     transform: translateX(260%) scale(1.2) translateY(20%);
 }
 
@@ -366,9 +380,10 @@ export default {
     z-index: 1;
 }
 
-.barra__vidaEnemigo img{
+.barra__vidaEnemigo img {
     transform: scaleX(-1);
 }
+
 .container__dueloUsuarios {
     grid-area: usuarioDuelo;
     display: grid;
@@ -377,6 +392,7 @@ export default {
     align-items: center;
     position: relative;
 }
+
 .container__preguntaDuelo {
     display: grid;
     grid-area: preguntaDuelo;
@@ -390,16 +406,18 @@ export default {
     margin-right: auto;
 }
 
-.usuarioDuelo{
+.usuarioDuelo {
     right: 10vh;
 }
 
-.usuarioEnemigo{
+.usuarioEnemigo {
     left: 10vh;
 }
-.missatgeUsuari{
+
+.missatgeUsuari {
     font-size: 25px;
 }
+
 .nickUsuarioDuelo {
     position: absolute;
     top: 3vh;
@@ -409,7 +427,7 @@ export default {
     font-weight: bold;
     text-align: center;
     color: #ffdd33;
-} 
+}
 
 .nickEnemigo {
     position: relative;
@@ -423,13 +441,14 @@ export default {
 }
 
 .numero__vidaEnemigo {
-    position:relative;
+    position: relative;
     left: -24vh;
     right: 0;
     font-size: 4vh;
     text-align: center;
     color: #ffdd33;
 }
+
 @keyframes animateArrow {
     0% {
         transform: translateX(0);
@@ -624,6 +643,7 @@ export default {
     border-radius: 60ch;
     position: relative;
 }
+
 //container del poder
 .container__poder {
     position: relative;
@@ -738,6 +758,7 @@ export default {
     right: 0;
     z-index: 1;
 }
+
 .barra__vidaUsuario {
     position: absolute;
     top: 8vh;
@@ -745,6 +766,7 @@ export default {
     right: 0;
     z-index: 1;
 }
+
 .numero__vida {
     position: absolute;
     top: 0;
@@ -798,6 +820,7 @@ export default {
     text-align: center;
     color: #ffdd33;
 }
+
 .imagen__skip {
     height: 11vh;
     width: 6vw;
@@ -829,5 +852,53 @@ export default {
     font-weight: bold;
     text-align: center;
     color: white;
+}
+.warning{
+    position: absolute;
+    display: flex;
+    width: 100%;
+    margin-left: auto;
+    align-items: center;
+    margin-right: auto;
+    left: 35%;
+    top: 0;
+}
+.warning-cont {
+  display: grid;
+  width: clamp(42%, 52%, 750px);
+  grid-template-columns: auto 1fr;
+  box-shadow: 0 2px 0 hsla(0, 0%, 100%, 0.5) inset;
+  
+  --dgn-clr-1: hsla(61, 100%, 50%, 0.25); /* Diagonal Color 1 */
+  --dgn-clr-2:  hsla(0, 0%, 0%, 0.25);/* Diagonal Color 2 */
+  --bkg-clr-1: rgb(255, 251, 0); /* Background Color 1 */
+  --bkg-clr-2: rgb(0, 0, 0); /* background Color 2 */
+  
+  background:
+    repeating-linear-gradient(135deg, var(--dgn-clr-1), var(--dgn-clr-1) 15px, var(--dgn-clr-2) 10px, var(--dgn-clr-2) 50px),
+    linear-gradient(0deg, var(--bkg-clr-1), var(--bkg-clr-2));
+  
+  background-size: 150%, cover;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 10px;
+  animation: wrng 1.25s linear infinite;
+}
+.warning-icon {
+  font-size: 5rem;
+  place-self: center;
+  padding: 0 0.3em;
+}
+.warning-text {
+  align-self: center;
+  padding-right: 1em;
+  font-family: Segoe UI, Helvetica, sans-serif;
+  font-size: 1.1rem;
+  text-shadow: 2px 2px 4px hsla(0, 0%, 0%, 0.7);
+}
+
+@keyframes wrng {
+  from {background-position: 0 0;}
+  to {background-position: -208px 0;}
 }
 </style>

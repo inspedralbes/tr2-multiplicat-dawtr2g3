@@ -9,6 +9,7 @@ export const useAppStore = defineStore('app', {
       token: '',
       verificat: false,
     },
+    nukeAnimation: false,
     guanyador: {},
     perdedors: [],
     partides: [],
