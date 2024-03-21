@@ -288,19 +288,41 @@ io.on("connection", (socket) => {
           socket.emit("max jugadors");
         } else {
           socket.join(roomID);
-          let user = createNewUser(socket.id, nom);
-          let userMinim = createUserMinim(user);
-          arrayRoom.map((room) => {
-            if (room.id == roomID) {
-              room.jugadors.push(user);
-            }
-          });
+          let user;
+          let userMinim;
+          if (partida.tipus != 'torneo') {
+            user = createNewUser(socket.id, nom);
+            userMinim = createUserMinim(user);
 
-          arrayRoomMinim.map((room) => {
-            if (room.id == roomID) {
-              room.jugadors.push(userMinim);
-            }
-          });
+            arrayRoom.map((room) => {
+              if (room.id == roomID) {
+                room.jugadors.push(user);
+              }
+            });
+
+            arrayRoomMinim.map((room) => {
+              if (room.id == roomID) {
+                room.jugadors.push(userMinim);
+              }
+            });
+          } else {
+            user = createUserTorneig(socket.id, nom);
+
+            arrayRoom.map((room) => {
+              if (room.id == roomID) {
+                room.jugadors.push(user);
+              }
+            });
+
+
+            arrayRoomMinim.map((room) => {
+              if (room.id == roomID) {
+                room.jugadors.push(user);
+              }
+            });
+          }
+
+
           socket.emit("push a lobby");
           socket.emit(
             "info partida",
@@ -330,17 +352,28 @@ io.on("connection", (socket) => {
     console.log(tipus);
     let user = createNewUser(socket.id, nick);
     let userMinim = createUserMinim(user);
-    arrayRoom.push({
-      id: roomID,
-      nom: nom,
-      tipus: tipus,
-      maxJugadors: maxJugadors,
-      jugadors: [user],
-      arrayPreg: [],
-      preguntasMal: [],
-      preguntasDuelo: [],
-      preguntasDueloMal: [],
-    });
+    if (tipus == 'torneo') {
+      arrayRoom.push({
+        id: roomID,
+        nom: nom,
+        tipus: tipus,
+        maxJugadors: maxJugadors,
+        jugadors: [user],
+        arrayPreg: [],
+      });
+    } else {
+      arrayRoom.push({
+        id: roomID,
+        nom: nom,
+        tipus: tipus,
+        maxJugadors: maxJugadors,
+        jugadors: [user],
+        arrayPreg: [],
+        preguntasMal: [],
+        preguntasDuelo: [],
+        preguntasDueloMal: [],
+      });
+    }
     arrayRoomMinim.push({
       id: roomID,
       nom: nom,
@@ -358,80 +391,80 @@ io.on("connection", (socket) => {
     io.emit("games list", arrayRoomMinim);
   });
 
-    /**
-     * Elimina el jugador de la partida i de la llista de jugadors, si és l'últim jugador de la partida o el creador, la tanca
-     */
-    socket.on('sortir lobby', () => {
-        const roomID = trobarRoom(socket);
-        if (roomID != undefined) {
-            let index = arrayRoom.findIndex((room) => room.id == roomID);
-            if (roomID == "Partida" + socket.id && index != '-1') {
+  /**
+   * Elimina el jugador de la partida i de la llista de jugadors, si és l'últim jugador de la partida o el creador, la tanca
+   */
+  socket.on('sortir lobby', () => {
+    const roomID = trobarRoom(socket);
+    if (roomID != undefined) {
+      let index = arrayRoom.findIndex((room) => room.id == roomID);
+      if (roomID == "Partida" + socket.id && index != '-1') {
 
-                io.to(roomID).emit('closed lobby');
-                let idOrig = socket.id;
-                let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-                arrayRoom.splice(index, 1);
+        io.to(roomID).emit('closed lobby');
+        let idOrig = socket.id;
+        let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        arrayRoom.splice(index, 1);
 
-                llistatUsuaris.forEach((user) => {
-                    socket.id = user.idSocket;
-                    socket.leave(roomID);
-                });
-                socket.id = idOrig;
+        llistatUsuaris.forEach((user) => {
+          socket.id = user.idSocket;
+          socket.leave(roomID);
+        });
+        socket.id = idOrig;
 
-                if (arrayRoomMinim.findIndex((room) => room.id == roomID) != undefined) {
-                    arrayRoomMinim.splice(index, 1);
-                    io.emit('games list', arrayRoomMinim);
-                }
-
-            } else if (index != '-1') {
-
-                let room = arrayRoom.find((room) => room.id == roomID);
-                let llistatUsuaris = room.jugadors;
-
-                let index = llistatUsuaris.findIndex((user) => user.idSocket == socket.id);
-                llistatUsuaris.splice(index, 1);
-
-                if (arrayRoomMinim.find((room) => room.id == roomID) != undefined) {
-                    arrayRoomMinim.map((room) => {
-                        if (room.id == roomID) {
-                            let index = room.jugadors.findIndex((idSocket) => idSocket == socket.id);
-                            room.jugadors.splice(index, 1);
-                        }
-                    });
-                    io.emit('games list', arrayRoomMinim);
-                }
-                arrayRoom.map((room) => {
-
-                    if (room.id == roomID) {
-                        room.jugadors = llistatUsuaris;
-                    }
-                });
-
-                llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-                let llistatUsuarisMinim = [];
-                llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-                let start = arrayRoom.find((room) => room.id == roomID).start;
-                io.to(roomID).emit('update players', llistatUsuarisMinim);
-                if (start) {
-                    if (jugadorsVius(llistatUsuaris).length == 1) {
-                        acabarPartida(socket, roomID);
-                        io.to(roomID).emit('finalitzar duelo');
-                    }
-                }
-            }
+        if (arrayRoomMinim.findIndex((room) => room.id == roomID) != undefined) {
+          arrayRoomMinim.splice(index, 1);
+          io.emit('games list', arrayRoomMinim);
         }
-    });
 
-    socket.on('disconnecting', () => {
-        const roomID = trobarRoom(socket);
-        if (roomID != undefined) {
-            let index = arrayRoom.findIndex((room) => room.id == roomID);
-            if (roomID == "Partida" + socket.id && index != '-1') {
+      } else if (index != '-1') {
 
-                io.to(roomID).emit('closed lobby');
-                let idOrig = socket.id;
-                let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-                arrayRoom.splice(index, 1);
+        let room = arrayRoom.find((room) => room.id == roomID);
+        let llistatUsuaris = room.jugadors;
+
+        let index = llistatUsuaris.findIndex((user) => user.idSocket == socket.id);
+        llistatUsuaris.splice(index, 1);
+
+        if (arrayRoomMinim.find((room) => room.id == roomID) != undefined) {
+          arrayRoomMinim.map((room) => {
+            if (room.id == roomID) {
+              let index = room.jugadors.findIndex((idSocket) => idSocket == socket.id);
+              room.jugadors.splice(index, 1);
+            }
+          });
+          io.emit('games list', arrayRoomMinim);
+        }
+        arrayRoom.map((room) => {
+
+          if (room.id == roomID) {
+            room.jugadors = llistatUsuaris;
+          }
+        });
+
+        llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        let llistatUsuarisMinim = [];
+        llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+        let start = arrayRoom.find((room) => room.id == roomID).start;
+        io.to(roomID).emit('update players', llistatUsuarisMinim);
+        if (start) {
+          if (jugadorsVius(llistatUsuaris).length == 1) {
+            acabarPartida(socket, roomID);
+            io.to(roomID).emit('finalitzar duelo');
+          }
+        }
+      }
+    }
+  });
+
+  socket.on('disconnecting', () => {
+    const roomID = trobarRoom(socket);
+    if (roomID != undefined) {
+      let index = arrayRoom.findIndex((room) => room.id == roomID);
+      if (roomID == "Partida" + socket.id && index != '-1') {
+
+        io.to(roomID).emit('closed lobby');
+        let idOrig = socket.id;
+        let llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+        arrayRoom.splice(index, 1);
 
         llistatUsuaris.forEach((user) => {
           socket.id = user.idSocket;
@@ -786,12 +819,15 @@ io.on("connection", (socket) => {
    * @param {int} posResp Posició de la resposta
    */
   socket.on("answer", (idPreg, posResp) => {
-    
+
     let correcte = false;
     let acabat = false;
     let roomID = trobarRoom(socket);
     let room = arrayRoom.find((room) => room.id == roomID);
     if (room != undefined) {
+      if (room.tipus == 'torneo') {
+
+      } else {
         let preguntasDueloMal = arrayRoom.find((room) => room.id == trobarRoom(socket)).preguntasDueloMal;
         let arrayPreg = room.arrayPreg;
         let preguntasMal = room.preguntasMal;
@@ -801,141 +837,142 @@ io.on("connection", (socket) => {
         let idOponent;
         let preguntasDuelo = room.preguntasDuelo;
         let user = llistatUsuaris.find((usuari) => {
-            return usuari.idSocket == socket.id;
+          return usuari.idSocket == socket.id;
         });
         let mort = false;
         if (user.duelo.enDuelo) {
 
-            if (preguntasDuelo[user.duelo.encertades].respostes[posResp] == (preguntasDueloMal[user.duelo.encertades].respostes[respuestaCorrecta])) {
-                correcte = true;
-                user.duelo.encertades++;
+          if (preguntasDuelo[user.duelo.encertades].respostes[posResp] == (preguntasDueloMal[user.duelo.encertades].respostes[respuestaCorrecta])) {
+            correcte = true;
+            user.duelo.encertades++;
 
-                if (user.duelo.encertades == 3) {
-                    let duelo = findRoomDuelo(socket);
-                    io.to(duelo).emit('finalitzar duelo');
+            if (user.duelo.encertades == 3) {
+              let duelo = findRoomDuelo(socket);
+              io.to(duelo).emit('finalitzar duelo');
 
-                    idOponent = user.duelo.oponent.id;
+              idOponent = user.duelo.oponent.id;
 
-                    llistatUsuaris.map((user) => {
-                        if (user.idSocket == idOponent) {
-                            user.vida -= 30;
-                            user.encertades = 0;
-                            if (user.vida <= 0) {
-                                user.vida = 1;
-                            }
+              llistatUsuaris.map((user) => {
+                if (user.idSocket == idOponent) {
+                  user.vida -= 30;
+                  user.encertades = 0;
+                  if (user.vida <= 0) {
+                    user.vida = 1;
+                  }
 
-                        }
-                    });
-
-
-
-
-                    arrayRoom.map((room) => {
-                        if (room.id == roomID) {
-                            room.jugadors = llistatUsuaris;
-                        }
-                    });
-
-                    llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
-                    llistatUsuaris.forEach((user) => {
-
-                        let userMinim = createUserMinim(user);
-                        llistatUsuarisMinim.push(userMinim);
-                    })
-                    io.to(roomID).emit("update players", llistatUsuarisMinim)
-
-                } else {
-                    let indexPregunta = user.duelo.encertades;
-                    let preguntaDuelo = preguntasDuelo[indexPregunta];
-                    socket.emit('new question', preguntaDuelo);
                 }
+              });
+
+
+
+
+              arrayRoom.map((room) => {
+                if (room.id == roomID) {
+                  room.jugadors = llistatUsuaris;
+                }
+              });
+
+              llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
+              llistatUsuaris.forEach((user) => {
+
+                let userMinim = createUserMinim(user);
+                llistatUsuarisMinim.push(userMinim);
+              })
+              io.to(roomID).emit("update players", llistatUsuarisMinim)
+
             } else {
-                user.encertades = 0;
+              let indexPregunta = user.duelo.encertades;
+              let preguntaDuelo = preguntasDuelo[indexPregunta];
+              socket.emit('new question', preguntaDuelo);
             }
+          } else {
+            user.encertades = 0;
+          }
         } else if (user.preguntaNuke) {
 
-            if (user.preguntaNukeMal.respostes[posResp] != (user.preguntaNuke.respostes[respuestaCorrecta])) {
-                user.vida -= 55;
-                respostaFallada(user, roomID, socket);
+          if (user.preguntaNukeMal.respostes[posResp] != (user.preguntaNuke.respostes[respuestaCorrecta])) {
+            user.vida -= 55;
+            respostaFallada(user, roomID, socket);
 
-            }
-            user.preguntaNuke = undefined;
-            user.preguntaNukeMal = undefined;
-            let preguntaEnviar = arrayPreg[user.preguntaActual];
-            if (preguntaEnviar != undefined) {
-                socket.emit('new question', preguntaEnviar);
-            } else {
-                user.preguntaActual = 0;
-                let preguntaEnviar = arrayPreg[0];
+          }
+          user.preguntaNuke = undefined;
+          user.preguntaNukeMal = undefined;
+          let preguntaEnviar = arrayPreg[user.preguntaActual];
+          if (preguntaEnviar != undefined) {
+            socket.emit('new question', preguntaEnviar);
+          } else {
+            user.preguntaActual = 0;
+            let preguntaEnviar = arrayPreg[0];
 
-                socket.emit('new question', preguntaEnviar);
+            socket.emit('new question', preguntaEnviar);
 
-            }
+          }
 
         } else {
-            // encerta la pregunta
-            if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
-                correcte = true;
+          // encerta la pregunta
+          if (arrayPreg[idPreg].respostes[posResp] == (preguntasMal[idPreg].respostes[respuestaCorrecta])) {
+            correcte = true;
 
 
 
-                user.encertades++;
-                user.falladesConsecutives = 0;
-                user.preguntaActual++;
-                user.falladesConsecutives = 0;
-                if (user.infoPoders.robarVida > 0) {
-                    if (!user.vida <= 0) {
-                        user.vida += 10;
-                        if (user.vida > 100) {
-                            user.vida = 100;
-                        }
-                    }
-                    user.infoPoders.robarVida--;
+            user.encertades++;
+            user.falladesConsecutives = 0;
+            user.preguntaActual++;
+            user.falladesConsecutives = 0;
+            if (user.infoPoders.robarVida > 0) {
+              if (!user.vida <= 0) {
+                user.vida += 10;
+                if (user.vida > 100) {
+                  user.vida = 100;
                 }
-
-                if (!comprovarMort(user)) {
-                    if (user.encertades % 3 == 0) {
-                        if (user.poder != 'nuke') {
-                            let poder = getRandomPoder(user);
-                            user.poder = poder;
-                        }
-                    }
-                    if (user.encertades == 20) {
-                        user.poder = 'nuke';
-                    }
-                } else {
-                    if (user.encertades % 5 == 0) {
-
-                        let poder = getRandomPoderMort(user);
-                        user.poder = poder;
-                    }
-
-                };
-
-                llistatUsuaris.forEach((user) => {
-
-                    let userMinim = createUserMinim(user);
-                    llistatUsuarisMinim.push(userMinim);
-                })
-
-                arrayRoom.map((room) => {
-                    if (room.id == roomID) {
-                        room.jugadors = llistatUsuaris;
-                    }
-                });
-
-                llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
-
-                io.to(roomID).emit("update players", llistatUsuarisMinim)
-                socket.emit('new question', arrayPreg[user.preguntaActual]);
-
-
-            } else {
-                respostaFallada(user, roomID, socket);
+              }
+              user.infoPoders.robarVida--;
             }
+
+            if (!comprovarMort(user)) {
+              if (user.encertades % 3 == 0) {
+                if (user.poder != 'nuke') {
+                  let poder = getRandomPoder(user);
+                  user.poder = poder;
+                }
+              }
+              if (user.encertades == 20) {
+                user.poder = 'nuke';
+              }
+            } else {
+              if (user.encertades % 5 == 0) {
+
+                let poder = getRandomPoderMort(user);
+                user.poder = poder;
+              }
+
+            };
+
+            llistatUsuaris.forEach((user) => {
+
+              let userMinim = createUserMinim(user);
+              llistatUsuarisMinim.push(userMinim);
+            })
+
+            arrayRoom.map((room) => {
+              if (room.id == roomID) {
+                room.jugadors = llistatUsuaris;
+              }
+            });
+
+            llistatUsuaris.sort((a, b) => { return b.vida - a.vida });
+
+            io.to(roomID).emit("update players", llistatUsuarisMinim)
+            socket.emit('new question', arrayPreg[user.preguntaActual]);
+
+
+          } else {
+            respostaFallada(user, roomID, socket);
+          }
         }
+      }
     }
-})
+  })
 
   /**
    * Salta la pregunta actual si l'usuari té skips disponibles, si no, li resta vida
@@ -1129,20 +1166,20 @@ io.on("connection", (socket) => {
   });
 });
 async function utilitzarPoderNuke(userNuke, roomID) {
-    let room = arrayRoom.find((room) => room.id == roomID);
-    let llistatUsuaris = room.jugadors;
-    let usersAfectats = llistatUsuaris.filter((user) => { return user != userNuke });
-    let preguntaNuke = await fetchPreguntaNuke();
-    let preguntaNukeMal = JSON.parse(JSON.stringify(preguntaNuke));
-    preguntaNukeMal.respostes = randomArray(preguntaNukeMal.respostes);
-    io.to(roomID).emit('nuke',userNuke.nick);
-    setTimeout(() => {
-        usersAfectats.forEach((user) => {
-            user.preguntaNuke = preguntaNuke;
-            user.preguntaNukeMal = preguntaNukeMal;
-            io.to(user.idSocket).emit('pregunta nuke', preguntaNukeMal);
-        });
-    }, 5000);
+  let room = arrayRoom.find((room) => room.id == roomID);
+  let llistatUsuaris = room.jugadors;
+  let usersAfectats = llistatUsuaris.filter((user) => { return user != userNuke });
+  let preguntaNuke = await fetchPreguntaNuke();
+  let preguntaNukeMal = JSON.parse(JSON.stringify(preguntaNuke));
+  preguntaNukeMal.respostes = randomArray(preguntaNukeMal.respostes);
+  io.to(roomID).emit('nuke', userNuke.nick);
+  setTimeout(() => {
+    usersAfectats.forEach((user) => {
+      user.preguntaNuke = preguntaNuke;
+      user.preguntaNukeMal = preguntaNukeMal;
+      io.to(user.idSocket).emit('pregunta nuke', preguntaNukeMal);
+    });
+  }, 5000);
 }
 
 function llistaMinim(llistatUsuaris) {
@@ -1574,7 +1611,31 @@ async function generarTorneig(room) {
 
   await rendering(room);
 }
+function createUserTorneig(id, nick) {
+  let roomID = trobarRoom(id);
+  let room = arrayRoom.find((room) => room.id == roomID);
+  if (room) {
+    return {
+      idSocket: id,
+      nick: nick,
+      mort: false,
+      avatar: 1,
+      loser: false,
+      nMaxjugadors: room.maxJugadors,
+      infoPartida: {
+        matchID: "",
+        encertades: 0,
+      },
+      oponent: {
+        id: "",
+        nick: "",
+        avatar: 1,
+        encertades: "",
+      },
 
+    };
+  };
+}
 async function rendering(room) {
   let torneo = {
     id: "PartidayxEpbmMqLoR-htTVAAAH",
