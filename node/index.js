@@ -241,31 +241,54 @@ let arrayRoom = [];
 let arrayRoomMinim = [];
 async function iniciarLobby(roomID) {
   const data = await fetchPreguntas();
-  const fetchDuelo = await fetchPreguntasDuelo();
-  let preguntasDueloMal = JSON.parse(JSON.stringify(fetchDuelo));
-  let preguntasDuelo = JSON.parse(JSON.stringify(preguntasDueloMal));
-  preguntasDuelo.forEach((pregunta) => {
-    pregunta.respostes = randomArray(pregunta.respostes);
-  });
-  let preguntasMal = data;
-  randomArray(preguntasMal);
-  let arrayPreg = [];
-  preguntasMal.forEach((preguntaMal, index) => {
-    let pregunta = tipusTest(preguntaMal, index);
+  let room = arrayRoom.find((room) => room.id == roomID);
 
-    let arrayResp = "[" + pregunta.respostes + "]";
-    preguntasMal[index].respostes = JSON.parse(arrayResp);
-    pregunta.respostes = randomArray(JSON.parse(arrayResp));
-    arrayPreg.push(pregunta);
-  });
-  arrayRoom.map((room) => {
-    if (room.id == roomID) {
-      room.arrayPreg = arrayPreg;
-      room.preguntasMal = preguntasMal;
-      room.preguntasDueloMal = preguntasDueloMal;
-      room.preguntasDuelo = preguntasDuelo;
-    }
-  });
+  if (room.tipus == "royale") {
+    const fetchDuelo = await fetchPreguntasDuelo();
+    let preguntasDueloMal = JSON.parse(JSON.stringify(fetchDuelo));
+    let preguntasDuelo = JSON.parse(JSON.stringify(preguntasDueloMal));
+    preguntasDuelo.forEach((pregunta) => {
+      pregunta.respostes = randomArray(pregunta.respostes);
+    });
+    let preguntasMal = data;
+    randomArray(preguntasMal);
+    let arrayPreg = [];
+    preguntasMal.forEach((preguntaMal, index) => {
+      let pregunta = tipusTest(preguntaMal, index);
+
+      let arrayResp = "[" + pregunta.respostes + "]";
+      preguntasMal[index].respostes = JSON.parse(arrayResp);
+      pregunta.respostes = randomArray(JSON.parse(arrayResp));
+      arrayPreg.push(pregunta);
+    });
+    arrayRoom.map((room) => {
+      if (room.id == roomID) {
+        room.arrayPreg = arrayPreg;
+        room.preguntasMal = preguntasMal;
+        room.preguntasDueloMal = preguntasDueloMal;
+        room.preguntasDuelo = preguntasDuelo;
+      }
+    });
+  } else if (room.tipus == "torneo") {
+    let preguntasMal = data;
+    randomArray(preguntasMal);
+    let arrayPreg = [];
+    preguntasMal.forEach((preguntaMal, index) => {
+      let pregunta = tipusTest(preguntaMal, index);
+
+      let arrayResp = "[" + pregunta.respostes + "]";
+      preguntasMal[index].respostes = JSON.parse(arrayResp);
+      pregunta.respostes = randomArray(JSON.parse(arrayResp));
+      arrayPreg.push(pregunta);
+    });
+
+    arrayRoom.map((room) => {
+      if (room.id == roomID) {
+        room.arrayPreg = arrayPreg;
+        room.preguntasMal = preguntasMal;
+      }
+    });
+  }
 }
 
 io.on("connection", (socket) => {
@@ -306,7 +329,7 @@ io.on("connection", (socket) => {
               }
             });
           } else {
-            user = createUserTorneig(socket.id, nom);
+            user = createUserTorneig(socket.id, nom, partida.maxJugadors);
 
             arrayRoom.map((room) => {
               if (room.id == roomID) {
@@ -356,10 +379,22 @@ io.on("connection", (socket) => {
         nom: nom,
         tipus: tipus,
         maxJugadors: maxJugadors,
-        jugadors: [user],
-        arrayPreg: [],
+        professor: socket.id,
+        jugadors: [],
       });
+      arrayRoomMinim.push({
+        id: roomID,
+        nom: nom,
+        tipus: tipus,
+        maxJugadors: maxJugadors,
+        jugadors: [],
+      });
+      io.to(socket.id).emit("update players", []);
+
     } else {
+      let user = createNewUser(socket.id, nick);
+      let userMinim = createUserMinim(user);
+      
       arrayRoom.push({
         id: roomID,
         nom: nom,
@@ -371,16 +406,17 @@ io.on("connection", (socket) => {
         preguntasDuelo: [],
         preguntasDueloMal: [],
       });
+      arrayRoomMinim.push({
+        id: roomID,
+        nom: nom,
+        tipus: tipus,
+        maxJugadors: maxJugadors,
+        jugadors: [userMinim],
+      });
+      io.to(socket.id).emit("update players", [userMinim]);
     }
-    arrayRoomMinim.push({
-      id: roomID,
-      nom: nom,
-      tipus: tipus,
-      maxJugadors: maxJugadors,
-      jugadors: [userMinim],
-    });
+
     iniciarLobby(roomID);
-    io.to(socket.id).emit("update players", [userMinim]);
     socket.emit(
       "info partida",
       arrayRoom.find((room) => room.id == roomID).nom,
@@ -1608,29 +1644,28 @@ async function generarTorneig(room) {
 
   await rendering(room);
 }
-function createUserTorneig(id, nick) {
-  let roomID = trobarRoom(id);
-  let room = arrayRoom.find((room) => room.id == roomID);
-  if (room) {
-    return {
-      idSocket: id,
-      nick: nick,
-      mort: false,
-      avatar: 1,
+function createUserTorneig(id, nick, maxJugadors) {
+
+  return {
+    idSocket: id,
+    nick: nick,
+    mort: false,
+    avatar: 1,
+    infoPartida: {
+      matchID: "",
+      encertades: 0,
       loser: false,
-      nMaxjugadors: room.maxJugadors,
-      infoPartida: {
-        matchID: "",
-        encertades: 0,
-      },
-      oponent: {
-        id: "",
-        nick: "",
-        avatar: 1,
-        encertades: "",
-      },
-    };
-  }
+      nJugadors: maxJugadors,
+    },
+    oponent: {
+      id: "",
+      nick: "",
+      avatar: 1,
+      encertades: "",
+    },
+
+
+  };
 }
 async function rendering(room) {
   let torneo = {
