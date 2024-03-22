@@ -169,8 +169,7 @@ io.on("connection", (socket) => {
     let roomID = "Partida" + socket.id;
     socket.join(roomID);
     console.log(tipus);
-    let user = createNewUser(socket.id, nick);
-    let userMinim = createUserMinim(user);
+
     if (tipus == 'torneo') {
       arrayRoom.push({
         id: roomID,
@@ -190,6 +189,9 @@ io.on("connection", (socket) => {
       io.to(socket.id).emit("update players", []);
 
     } else {
+      let user = createNewUser(socket.id, nick);
+      let userMinim = createUserMinim(user);
+      
       arrayRoom.push({
         id: roomID,
         nom: nom,
