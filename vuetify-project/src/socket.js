@@ -204,15 +204,24 @@ socket.on('tournament info', (info) => {
 
   let { data, players } = info;
 
-  console.log(players);
+  console.log("DATA: ", data);
+  console.log("PLAYERS: ", players);
 
   data.participant.forEach((jugador, index) => {
     jugador.name = players[index].nick;
   });
 
   store.setTorneigInfo(data);
-  router.push('/torneig');
+  router.push('/torneigProfe');
 });
+
+socket.on("new matchup", (arrayUsers) => {
+  const store = useAppStore();
+  let myself = arrayUsers.find(user => user.idSocket == socket.id);
+  store.setOwnPlayer(myself);
+
+  router.push('/torneig');
+})
 
 // socket.on("get power", (poder) => {
 //   const store = useAppStore();

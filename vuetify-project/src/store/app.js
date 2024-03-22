@@ -17,7 +17,7 @@ export const useAppStore = defineStore('app', {
     nomPartida: '',
     maxJugadors: 0,
     players: [],
-    ownPlayer: [],
+    ownPlayer: null,
     question: null,
     answer: null,
     timer: 20,
@@ -125,6 +125,12 @@ export const useAppStore = defineStore('app', {
           this.ownPlayer = player;
         }
       });
+    },
+    getOwnPlayer() {
+      return this.ownPlayer;
+    },
+    setOwnPlayer(player) {
+      this.ownPlayer = player;
     },
     getPlayers() {
       return this.players;

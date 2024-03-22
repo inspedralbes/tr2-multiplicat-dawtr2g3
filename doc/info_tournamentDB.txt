@@ -16,3 +16,10 @@ Grand finals round 1: 29 de match   -- round_id: 10
 Grand finals round 2: 30 de match   -- round_id: 11
 
 El que s'ha de proporcionar per a crear-lo és l'array de rooms
+
+Estats de partits:
+ - 0: no hi ha ningú dins
+ - 1: 1 sol jugador, partida no preparada
+ - 2: 2 jugadors, preparada per a començar
+ - 3: jugant, no acabada
+ - 4: partida acabada
