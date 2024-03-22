@@ -217,7 +217,7 @@ socket.on('tournament info', (info) => {
 
 socket.on("new matchup", (arrayUsers) => {
   const store = useAppStore();
-  let myself = arrayUsers.find(user => user.id == socket.id);
+  let myself = arrayUsers.find(user => user.idSocket == socket.id);
   store.setOwnPlayer(myself);
 
   router.push('/torneig');

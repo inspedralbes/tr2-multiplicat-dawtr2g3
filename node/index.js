@@ -372,7 +372,7 @@ io.on("connection", (socket) => {
     socket.join(roomID);
     console.log(tipus);
     let user = createNewUser(socket.id, nick);
-    let userMinim = createUserMinim(user);
+
     if (tipus == "torneo") {
       arrayRoom.push({
         id: roomID,
@@ -390,11 +390,8 @@ io.on("connection", (socket) => {
         jugadors: [],
       });
       io.to(socket.id).emit("update players", []);
-
     } else {
-      // let user = createNewUser(socket.id, nick);
-      // let userMinim = createUserMinim(user);
-      
+      let userMinim = createUserMinim(user);
       arrayRoom.push({
         id: roomID,
         nom: nom,
@@ -480,13 +477,15 @@ io.on("connection", (socket) => {
 
         llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
         let llistatUsuarisMinim = [];
-        llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-        let start = arrayRoom.find((room) => room.id == roomID).start;
-        io.to(roomID).emit("update players", llistatUsuarisMinim);
-        if (start) {
-          if (jugadorsVius(llistatUsuaris).length == 1) {
-            acabarPartida(socket, roomID);
-            io.to(roomID).emit("finalitzar duelo");
+        if (room.tipus != "torneo") {
+          llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+          let start = arrayRoom.find((room) => room.id == roomID).start;
+          io.to(roomID).emit("update players", llistatUsuarisMinim);
+          if (start) {
+            if (jugadorsVius(llistatUsuaris).length == 1) {
+              acabarPartida(socket, roomID);
+              io.to(roomID).emit("finalitzar duelo");
+            }
           }
         }
       }
@@ -636,8 +635,8 @@ io.on("connection", (socket) => {
         io.emit("games list", arrayRoomMinim);
       }
 
-      //   if (room.jugadors.length == room.maxJugadors && room.tipus == "torneo") {
-      if (room.tipus == "torneo") {
+      if (room.jugadors.length == room.maxJugadors && room.tipus == "torneo") {
+        // if (room.tipus == "torneo") {
         randomArray(room.jugadors);
 
         room.start = Date.now();
@@ -646,128 +645,127 @@ io.on("connection", (socket) => {
         PROVES!!!!
         */
 
-        let torneo = {
-          id: "PartidaggmQeoGBqe7xkHS4AAAB",
-          nom: "asdf",
-          tipus: "torneo",
-          maxJugadors: 8,
-          professor: "ggmQeoGBqe7xkHS4AAAB",
-          jugadors: [
-            {
-              idSocket: "jaBLhOhL9A2xqHaYAAAK",
-              nick: "asd",
-              mort: false,
-              avatar: 1,
-              infoPartida: {
-                matchID: -1,
-                encertades: 0,
-                loser: false,
-                nJugadors: 8,
-              },
-              oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-            },
-            {
-              idSocket: "PdmoCzCLFAbDX24oAAAJ",
-              nick: "dd",
-              mort: false,
-              avatar: 1,
-              infoPartida: {
-                matchID: -1,
-                encertades: 0,
-                loser: false,
-                nJugadors: 8,
-              },
-              oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-            },
-            {
-              idSocket: "CZEZWoZEYd3NQ45EAAAI",
-              nick: "fff",
-              mort: false,
-              avatar: 1,
-              infoPartida: {
-                matchID: -1,
-                encertades: 0,
-                loser: false,
-                nJugadors: 8,
-              },
-              oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-            },
-            {
-              idSocket: "z_WhulnlV8LKwcINAAAN",
-              nick: "ghghgh",
-              mort: false,
-              avatar: 1,
-              infoPartida: {
-                matchID: -1,
-                encertades: 0,
-                loser: false,
-                nJugadors: 8,
-              },
-              oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-            },
-            {
-              idSocket: "iw599HBJzHyiR3N6AAAL",
-              nick: "gggg",
-              mort: false,
-              avatar: 1,
-              infoPartida: {
-                matchID: -1,
-                encertades: 0,
-                loser: false,
-                nJugadors: 8,
-              },
-              oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-            },
-            {
-              idSocket: "T5bAW1AXR39s15zLAAAF",
-              nick: "asdf",
-              mort: false,
-              avatar: 1,
-              infoPartida: {
-                matchID: -1,
-                encertades: 0,
-                loser: false,
-                nJugadors: 8,
-              },
-              oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-            },
-            {
-              idSocket: "RGSWs5A01ztJciPUAAAR",
-              nick: "ddd",
-              mort: false,
-              avatar: 1,
-              infoPartida: {
-                matchID: -1,
-                encertades: 0,
-                loser: false,
-                nJugadors: 8,
-              },
-              oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-            },
-            {
-              idSocket: "lYTSOj_X4OOm9cd4AAAP",
-              nick: "fdfdf",
-              mort: false,
-              avatar: 1,
-              infoPartida: {
-                matchID: -1,
-                encertades: 0,
-                loser: false,
-                nJugadors: 8,
-              },
-              oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-            },
-          ],
-        };
+        // let torneo = {
+        //   id: "PartidaggmQeoGBqe7xkHS4AAAB",
+        //   nom: "asdf",
+        //   tipus: "torneo",
+        //   maxJugadors: 8,
+        //   professor: "ggmQeoGBqe7xkHS4AAAB",
+        //   jugadors: [
+        //     {
+        //       idSocket: "jaBLhOhL9A2xqHaYAAAK",
+        //       nick: "asd",
+        //       mort: false,
+        //       avatar: 1,
+        //       infoPartida: {
+        //         matchID: -1,
+        //         encertades: 0,
+        //         loser: false,
+        //         nJugadors: 8,
+        //       },
+        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
+        //     },
+        //     {
+        //       idSocket: "PdmoCzCLFAbDX24oAAAJ",
+        //       nick: "dd",
+        //       mort: false,
+        //       avatar: 1,
+        //       infoPartida: {
+        //         matchID: -1,
+        //         encertades: 0,
+        //         loser: false,
+        //         nJugadors: 8,
+        //       },
+        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
+        //     },
+        //     {
+        //       idSocket: "CZEZWoZEYd3NQ45EAAAI",
+        //       nick: "fff",
+        //       mort: false,
+        //       avatar: 1,
+        //       infoPartida: {
+        //         matchID: -1,
+        //         encertades: 0,
+        //         loser: false,
+        //         nJugadors: 8,
+        //       },
+        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
+        //     },
+        //     {
+        //       idSocket: "z_WhulnlV8LKwcINAAAN",
+        //       nick: "ghghgh",
+        //       mort: false,
+        //       avatar: 1,
+        //       infoPartida: {
+        //         matchID: -1,
+        //         encertades: 0,
+        //         loser: false,
+        //         nJugadors: 8,
+        //       },
+        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
+        //     },
+        //     {
+        //       idSocket: "iw599HBJzHyiR3N6AAAL",
+        //       nick: "gggg",
+        //       mort: false,
+        //       avatar: 1,
+        //       infoPartida: {
+        //         matchID: -1,
+        //         encertades: 0,
+        //         loser: false,
+        //         nJugadors: 8,
+        //       },
+        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
+        //     },
+        //     {
+        //       idSocket: "T5bAW1AXR39s15zLAAAF",
+        //       nick: "asdf",
+        //       mort: false,
+        //       avatar: 1,
+        //       infoPartida: {
+        //         matchID: -1,
+        //         encertades: 0,
+        //         loser: false,
+        //         nJugadors: 8,
+        //       },
+        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
+        //     },
+        //     {
+        //       idSocket: "RGSWs5A01ztJciPUAAAR",
+        //       nick: "ddd",
+        //       mort: false,
+        //       avatar: 1,
+        //       infoPartida: {
+        //         matchID: -1,
+        //         encertades: 0,
+        //         loser: false,
+        //         nJugadors: 8,
+        //       },
+        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
+        //     },
+        //     {
+        //       idSocket: "lYTSOj_X4OOm9cd4AAAP",
+        //       nick: "fdfdf",
+        //       mort: false,
+        //       avatar: 1,
+        //       infoPartida: {
+        //         matchID: -1,
+        //         encertades: 0,
+        //         loser: false,
+        //         nJugadors: 8,
+        //       },
+        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
+        //     },
+        //   ],
+        // };
 
         /*
         ELIMINAR QUAN DINÀMIC ^
         */
 
-          room.jugadors.forEach((user, index) => {
-            user.infoPartida.matchID = Math.floor(index/2);
-          });
-
+        room.jugadors.forEach((user, index) => {
+          user.infoPartida.matchID = Math.floor(index / 2);
+        });
 
         // generarTorneig(room)
         generarTorneig(room)
@@ -776,6 +774,7 @@ io.on("connection", (socket) => {
               data: room.dataTorneig,
               players: room.jugadors,
             });
+            matchUpPlayersRound1(room)
             socket.to(roomID).emit("new matchup", room.jugadors);
           })
           .catch((error) => {
@@ -1646,7 +1645,6 @@ async function generarTorneig(data) {
   return await rendering(data);
 }
 function createUserTorneig(id, nick, maxJugadors) {
-
   return {
     idSocket: id,
     nick: nick,
@@ -1664,8 +1662,6 @@ function createUserTorneig(id, nick, maxJugadors) {
       avatar: 1,
       encertades: "",
     },
-
-
   };
 }
 async function rendering(data) {
@@ -1688,7 +1684,7 @@ async function rendering(data) {
 
   const tournamentData = await torneig.manager.get.stageData(0);
 
-  data.dataTorneig =  tournamentData;
+  data.dataTorneig = tournamentData;
 }
 
 /**
@@ -1702,7 +1698,6 @@ function guanyarRonda(jugador) {
     torneig.guanyar[Math.log2(jugador.infoPartida.nJugadors) - 2][
       jugador.infoPartida.matchID
     ];
-
 }
 
 /**
@@ -1759,7 +1754,6 @@ async function modificar(data) {
   // guanyarRonda(data.jugadors[6]);
   // perdreRonda(data.jugadors[7]);
 
-  
   // await torneig.manager.update.match({
   //   id: 4,
   //   opponent1: { score: 0 },
@@ -1768,6 +1762,28 @@ async function modificar(data) {
 
   const tourneyData = await torneig.manager.get.stageData(0);
   data.dataTorneig = tourneyData;
+}
+
+function matchUpPlayersRound1(room) {
+  let limit = room.dataTorneig.participant.length/2;
+  for (let index = 0; index < limit; index++) {
+    let indexPlayer1 = room.dataTorneig.match[index].opponent1.id;
+    let indexPlayer2 = room.dataTorneig.match[index].opponent2.id;
+
+    let socketPlayer1 = room.dataTorneig.participant[indexPlayer1].name;
+    let socketPlayer2 = room.dataTorneig.participant[indexPlayer2].name;
+
+    let player1 = room.jugadors.find((jugador) => jugador.idSocket == socketPlayer1);
+    let player2 = room.jugadors.find((jugador) => jugador.idSocket == socketPlayer2);
+
+    player1.oponent.id = player2.idSocket;
+    player1.oponent.nick = player2.nick;
+    player1.oponent.avatar = player2.avatar;
+
+    player2.oponent.id = player1.idSocket;
+    player2.oponent.nick = player1.nick;
+    player2.oponent.avatar = player1.avatar;
+  }
 }
 
 server.listen(port, () => {
