@@ -212,8 +212,16 @@ socket.on('tournament info', (info) => {
   });
 
   store.setTorneigInfo(data);
-  router.push('/torneig');
+  router.push('/torneigProfe');
 });
+
+socket.on("new matchup", (arrayUsers) => {
+  const store = useAppStore();
+  let myself = arrayUsers.find(user => user.id == socket.id);
+  store.setOwnPlayer(myself);
+
+  router.push('/torneig');
+})
 
 // socket.on("get power", (poder) => {
 //   const store = useAppStore();

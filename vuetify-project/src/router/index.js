@@ -9,6 +9,7 @@ import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
 import Tutorial from "../components/Tutorial.vue";
 import TorneigVisual from "../components/TorneigVisual.vue";
+import Torneig from "../components/Torneig.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -55,9 +56,13 @@ const router = createRouter({
       name: 'Tutorial',
       component: Tutorial
     },{
+      path: '/torneigProfe',
+      name: 'TorneigProfe',
+      component: TorneigVisual
+    },{
       path: '/torneig',
       name: 'Torneig',
-      component: TorneigVisual
+      component: Torneig
     }
   ]
 })
