@@ -38,7 +38,7 @@ let arrayRoomMinim = [];
 async function iniciarLobby(roomID) {
   const data = await fetchPreguntas();
   let room = arrayRoom.find((room) => room.id == roomID);
-  
+
   if (room.tipus == "royale") {
     const fetchDuelo = await fetchPreguntasDuelo();
     let preguntasDueloMal = JSON.parse(JSON.stringify(fetchDuelo));
@@ -77,7 +77,7 @@ async function iniciarLobby(roomID) {
       pregunta.respostes = randomArray(JSON.parse(arrayResp));
       arrayPreg.push(pregunta);
     });
-    
+
     arrayRoom.map((room) => {
       if (room.id == roomID) {
         room.arrayPreg = arrayPreg;
@@ -432,11 +432,7 @@ io.on("connection", (socket) => {
 
         room.start = Date.now();
 
-        let llistatUsuarisMinim = [];
-        room.jugadors.forEach((user) => {
-          let userMinim = createUserMinim(user);
-          llistatUsuarisMinim.push(userMinim);
-        });
+
 
         /*
         PROVES!!!!
