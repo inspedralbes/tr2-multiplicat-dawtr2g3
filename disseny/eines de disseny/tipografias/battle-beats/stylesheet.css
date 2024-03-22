@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Battle Beasts';
+    src: url('BattleBeastsNormal.woff2') format('woff2'),
+        url('BattleBeastsNormal.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

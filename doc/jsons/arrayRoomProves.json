@@ -1,0 +1,116 @@
+{
+  "id": "PartidayxEpbmMqLoR-htTVAAAH",
+  "nom": "asdf",
+  "tipus": "torneo",
+  "maxJugadors": 8,
+  "jugadors": [
+    {
+      "idSocket": "yxEpbmMqLoR-htTVAAAH",
+      "nick": "admin",
+      "encertades": 0,
+      "vida": 100,
+      "mort": false,
+      "duelo": {
+        "enDuelo": false,
+        "encertades": 0,
+        "indexPreg": [],
+        "oponent": { "id": "", "encertades": "" }
+      }
+    },
+    {
+      "idSocket": "vJinmMhqMgEjymCyAAAF",
+      "nick": "asd",
+      "encertades": 0,
+      "vida": 100,
+      "mort": false,
+      "duelo": {
+        "enDuelo": false,
+        "encertades": 0,
+        "indexPreg": [],
+        "oponent": { "id": "", "encertades": "" }
+      }
+    },
+    {
+      "idSocket": "KJ-wdzJ5p9_Tb31DAAAL",
+      "nick": "aasd",
+      "encertades": 0,
+      "vida": 100,
+      "mort": false,
+      "duelo": {
+        "enDuelo": false,
+        "encertades": 0,
+        "indexPreg": [],
+        "oponent": { "id": "", "encertades": "" }
+      }
+    },
+    {
+      "idSocket": "T3bLh7Mezr2qNCxLAAAO",
+      "nick": "asdf",
+      "encertades": 0,
+      "vida": 100,
+      "mort": false,
+      "duelo": {
+        "enDuelo": false,
+        "encertades": 0,
+        "indexPreg": [],
+        "oponent": { "id": "", "encertades": "" }
+      }
+    },
+    {
+      "idSocket": "Wj11CwTCeSkC_GcmAAAN",
+      "nick": "asdfasf",
+      "encertades": 0,
+      "vida": 100,
+      "mort": false,
+      "duelo": {
+        "enDuelo": false,
+        "encertades": 0,
+        "indexPreg": [],
+        "oponent": { "id": "", "encertades": "" }
+      }
+    },
+    {
+      "idSocket": "CS_h44J77QEpPyyMAAAE",
+      "nick": "dfasfagf",
+      "encertades": 0,
+      "vida": 100,
+      "mort": false,
+      "duelo": {
+        "enDuelo": false,
+        "encertades": 0,
+        "indexPreg": [],
+        "oponent": { "id": "", "encertades": "" }
+      }
+    },
+    {
+      "idSocket": "yVP3KutzoVUyHN59AAAB",
+      "nick": "fgfgfgfg",
+      "encertades": 0,
+      "vida": 100,
+      "mort": false,
+      "duelo": {
+        "enDuelo": false,
+        "encertades": 0,
+        "indexPreg": [],
+        "oponent": { "id": "", "encertades": "" }
+      }
+    },
+    {
+      "idSocket": "dd1mYp-WXdO7O9c1AAAP",
+      "nick": "asdsadgdf",
+      "encertades": 0,
+      "vida": 100,
+      "mort": false,
+      "duelo": {
+        "enDuelo": false,
+        "encertades": 0,
+        "indexPreg": [],
+        "oponent": { "id": "", "encertades": "" }
+      }
+    }
+  ],
+  "arrayPreg": null,
+  "preguntasMal": null,
+  "preguntasDuelo": null,
+  "preguntasDueloMal": null
+}

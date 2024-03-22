@@ -1,0 +1,3 @@
+En front es .env.* a .env.local
+
+En back es .env.* a .env

@@ -1,0 +1,21 @@
+{
+    "idPregunta": 0,
+    "pregunta": "",
+    "categoria": "",
+    "tipus": "",
+    "temps": 0,
+    "parametres": {
+        "respostes": [
+            "Appear weak when you are strong, and strong when you are weak.",
+            "The supreme art of war is to subdue the enemy without fighting.",
+            "If you know the enemy and know yourself, you need not fear the result of a hundred battles.",
+            "In the midst of chaos, there is also opportunity."
+        ],
+        "unitats": {
+            "valorInicial": 0,
+            "unitatInicial": "",
+            "unitatFinal": ""
+        }
+        
+    }
+}
