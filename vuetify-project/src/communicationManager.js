@@ -2,7 +2,8 @@ import { useAppStore } from '@/store/app';
 
 export class CommunicationManager {
     constructor() {
-        this.fetchLink = import.meta.env.VITE_URL_API;
+        // this.fetchLink = import.meta.env.VITE_URL_API;
+        this.fetchLink = "http://mathroyale.daw.inspedralbes.cat/laravel/public/api/";
         this.loggedIn = false;
         this.store = useAppStore();
     }

@@ -5,7 +5,8 @@ import router from '@/router'; // Import the router from your project
 import JugadorPartida from "./components/JugadorPartida.vue";
 // "undefined" means the URL will be computed from the `window.location` object
 
-const socketURL = import.meta.env.VITE_URL_SOCKETS;
+// const socketURL = import.meta.env.VITE_URL_SOCKETS;
+const socketURL = "http://mathroyale.daw.inspedralbes.cat:3589";
 
 
 console.log(socketURL);
