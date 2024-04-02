@@ -34,6 +34,16 @@ socket.on('finalitzar duelo', () => {
   socket.emit('sortir duelo');
 });
 
+socket.on('start match', (question) => {
+  const store = useAppStore();
+  store.stopTimer();
+  store.setQuestion(question);
+  store.timer = question.temps;
+  store.startTimer();
+  store.pantallaTorneig = "partida";
+  store.canvi = true;
+});
+
 /**
  * Modifica l'array d'usuaris
  */

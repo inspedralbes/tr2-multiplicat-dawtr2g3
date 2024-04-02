@@ -30,6 +30,7 @@ export const useAppStore = defineStore('app', {
     tutorial: false,
     enPartida: false,
     dialog: false,
+    pantallaTorneig: null,
     duelo: {
       "enDuelo": false,
       "encertades": 0,
