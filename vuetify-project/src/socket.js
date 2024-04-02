@@ -219,7 +219,7 @@ socket.on("new matchup", (arrayUsers) => {
   const store = useAppStore();
   let myself = arrayUsers.find(user => user.idSocket == socket.id);
   store.setOwnPlayer(myself);
-
+  store.setTourneigState("matchup");
   router.push('/torneig');
 })
 

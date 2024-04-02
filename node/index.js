@@ -303,7 +303,7 @@ io.on("connection", (socket) => {
    * @param {string} roomID Identificador de la partida
    * @param {string} nom Nom de l'usuari que entra a la partida
    */
-  socket.on("join", (roomID, nom) => {
+  socket.on("join", (roomID, nom, avatar) => {
     let partida = arrayRoom.find((room) => room.id == roomID);
     if (partida) {
       if (partida.maxJugadors) {
@@ -329,7 +329,7 @@ io.on("connection", (socket) => {
               }
             });
           } else {
-            user = createUserTorneig(socket.id, nom, partida.maxJugadors);
+            user = createUserTorneig(socket.id, nom, partida.maxJugadors, avatar);
 
             arrayRoom.map((room) => {
               if (room.id == roomID) {
@@ -641,133 +641,10 @@ io.on("connection", (socket) => {
 
         room.start = Date.now();
 
-        /*
-        PROVES!!!!
-        */
-
-        // let torneo = {
-        //   id: "PartidaggmQeoGBqe7xkHS4AAAB",
-        //   nom: "asdf",
-        //   tipus: "torneo",
-        //   maxJugadors: 8,
-        //   professor: "ggmQeoGBqe7xkHS4AAAB",
-        //   jugadors: [
-        //     {
-        //       idSocket: "jaBLhOhL9A2xqHaYAAAK",
-        //       nick: "asd",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "PdmoCzCLFAbDX24oAAAJ",
-        //       nick: "dd",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "CZEZWoZEYd3NQ45EAAAI",
-        //       nick: "fff",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "z_WhulnlV8LKwcINAAAN",
-        //       nick: "ghghgh",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "iw599HBJzHyiR3N6AAAL",
-        //       nick: "gggg",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "T5bAW1AXR39s15zLAAAF",
-        //       nick: "asdf",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "RGSWs5A01ztJciPUAAAR",
-        //       nick: "ddd",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "lYTSOj_X4OOm9cd4AAAP",
-        //       nick: "fdfdf",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //   ],
-        // };
-
-        /*
-        ELIMINAR QUAN DINÀMIC ^
-        */
-
         room.jugadors.forEach((user, index) => {
           user.infoPartida.matchID = Math.floor(index / 2);
         });
 
-        // generarTorneig(room)
         generarTorneig(room)
           .then(() => {
             socket.emit("tournament info", {
@@ -1644,12 +1521,12 @@ function respostaFallada(user, roomID, socket) {
 async function generarTorneig(data) {
   return await rendering(data);
 }
-function createUserTorneig(id, nick, maxJugadors) {
+function createUserTorneig(id, nick, maxJugadors, avatar) {
   return {
     idSocket: id,
     nick: nick,
     mort: false,
-    avatar: 1,
+    avatar: avatar,
     infoPartida: {
       matchID: -1,
       encertades: 0,

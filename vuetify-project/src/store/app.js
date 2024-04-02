@@ -40,6 +40,7 @@ export const useAppStore = defineStore('app', {
       },
     },
     infoTorneig: null,
+    stateTorneig: "esperant",
 
 
   }),
@@ -91,6 +92,9 @@ export const useAppStore = defineStore('app', {
 
     setAvatar(avatar) {
       this.avatar = avatar;
+    },
+    getAvatar() {
+      return this.avatar;
     },
     stopTimer() {
       clearInterval(this.timerInterval);
@@ -180,6 +184,12 @@ export const useAppStore = defineStore('app', {
     },
     setTorneigInfo(info) {
       this.infoTorneig = info;
-    }
+    },
+    getTourneigState() {
+      return this.stateTorneig;
+    },
+    setTourneigState(state) {
+      this.stateTorneig = state;
+    },
   },
 })
