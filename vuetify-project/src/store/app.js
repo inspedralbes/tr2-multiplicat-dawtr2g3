@@ -53,7 +53,7 @@ export const useAppStore = defineStore('app', {
     },
     getPantalla(){
       return this.pantallaTorneig;
-    }
+    },
 
     sumarVictoria() {
       this.victories++;
