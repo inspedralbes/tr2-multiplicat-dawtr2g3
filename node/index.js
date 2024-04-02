@@ -652,14 +652,15 @@ io.on("connection", (socket) => {
               opponent1: { score: player.encertades, result: "win" },
               opponent2: { score: player.oponent.encertades },
             });
+            comprovarRonda(room.dataTorneig.match);
           } else {
             torneig.manager.update.match({
               id: partida.id,
               opponent1: { score: player.oponent.encertades },
-              opponent2: { score: player.encertades, result: "win"},
+              opponent2: { score: player.encertades, result: "win" },
             });
           }
-        }else{
+        } else {
           if (match.oponent1.name == socket.id) {
             torneig.manager.update.match({
               id: partida.id,
@@ -676,7 +677,7 @@ io.on("connection", (socket) => {
         }
 
 
-       
+
 
       } else {
         socket.emit("resposta incorrecta");
@@ -737,6 +738,7 @@ io.on("connection", (socket) => {
             });
             matchUpPlayersRound1(room)
             console.log(room.dataTorneig);
+            socket.emit("round started");
             socket.to(roomID).emit("new matchup", room.jugadors);
           })
           .catch((error) => {
@@ -1689,7 +1691,7 @@ async function modificar(data) {
   //   opponent1: { score: 1 },
   //   opponent2: { score: 2, result: "win" },
   // });
-  
+
   // guanyarRonda(data.jugadors[1]);
   // perdreRonda(data.jugadors[0]);
 
@@ -1749,6 +1751,15 @@ function matchUpPlayersRound1(room) {
   }
 }
 
+function comprovarRonda(matches) {
+  let acabat = true;
+  matches.forEach(match => {
+    if (match.status == 3) {
+      return false;
+    }
+  });
+  return true;
+}
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
