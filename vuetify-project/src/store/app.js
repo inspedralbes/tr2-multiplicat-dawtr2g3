@@ -51,6 +51,9 @@ export const useAppStore = defineStore('app', {
     setOpponent(opponent) {
       this.opponent = opponent;
     },
+    getPantalla(){
+      return this.pantallaTorneig;
+    }
 
     sumarVictoria() {
       this.victories++;
