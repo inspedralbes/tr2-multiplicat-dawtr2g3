@@ -621,11 +621,74 @@ io.on("connection", (socket) => {
   /**
    * Inicia la partida
    */
+  socket.on("answer torneig", (idPreg, posResp) => {
+    let roomID = trobarRoom(socket);
+    let room = arrayRoom.find((room) => room.id == roomID);
+    if (room) {
+      let arrayPreg = room.arrayPreg;
+      let preguntasMal = room.preguntasMal;
+      let jugadors = room.jugadors;
+      let player = jugadors.find((jugador) => jugador.idSocket == socket.id);
+      let oponent = jugadors.find((jugador) => jugador.idSocket == player.oponent.id);
+      if (arrayPreg[idPreg].respostes[posResp] == preguntasMal[idPreg].respostes[respuestaCorrecta]) {
+        let match = null;
+        room.dataTorneig.match.forEach((partida) => {
+          if (partida.status == 3) {
+            if (oponent1.name == socket.id || oponent2.name == socket.id) {
+              match = partida;
+              return;
+            }
+          }
+        });
+
+        player.encertades++;
+        oponent.oponent.encertades++;
+        if (player.encertades == 5) {
+          guanyarRonda(player);
+          perdreRonda(oponent);
+          if (match.oponent1.name == socket.id) {
+            torneig.manager.update.match({
+              id: partida.id,
+              opponent1: { score: player.encertades, result: "win" },
+              opponent2: { score: player.oponent.encertades },
+            });
+          } else {
+            torneig.manager.update.match({
+              id: partida.id,
+              opponent1: { score: player.oponent.encertades },
+              opponent2: { score: player.encertades, result: "win"},
+            });
+          }
+        }else{
+          if (match.oponent1.name == socket.id) {
+            torneig.manager.update.match({
+              id: partida.id,
+              opponent1: { score: player.encertades },
+              opponent2: { score: player.oponent.encertades },
+            });
+          } else {
+            torneig.manager.update.match({
+              id: partida.id,
+              opponent1: { score: player.oponent.encertades },
+              opponent2: { score: player.encertades },
+            });
+          }
+        }
+
+
+       
+
+      } else {
+        socket.emit("resposta incorrecta");
+      }
+
+    }
+  });
   socket.on("start round", () => {
     let roomID = trobarRoom(socket);
     let room = arrayRoom.find((room) => room.id == roomID);
     if (room) {
-      let arrayPreg = arrayRoom.find((room) => room.id == roomID).arrayPreg;
+      let arrayPreg = room.arrayPreg;
       room.dataTorneig.match.forEach(partida => {
         if (partida.status == 2) {
           partida.status = 3;
@@ -634,7 +697,7 @@ io.on("connection", (socket) => {
             opponent1: { score: 0 },
             opponent2: { score: 0 },
           });
-          
+
           io.to(oponent1.name).emit("start match", arrayPreg[0]);
           io.to(oponent2.name).emit("start match", arrayPreg[0]);
         }
@@ -1559,7 +1622,7 @@ function createUserTorneig(id, nick, maxJugadors) {
       id: "",
       nick: "",
       avatar: 1,
-      encertades: "",
+      encertades: 0,
     },
   };
 }
