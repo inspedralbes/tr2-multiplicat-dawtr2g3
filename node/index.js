@@ -621,7 +621,27 @@ io.on("connection", (socket) => {
   /**
    * Inicia la partida
    */
+  socket.on("start round", () => {
+    let roomID = trobarRoom(socket);
+    let room = arrayRoom.find((room) => room.id == roomID);
+    if (room) {
+      let arrayPreg = arrayRoom.find((room) => room.id == roomID).arrayPreg;
+      room.dataTorneig.match.forEach(partida => {
+        if (partida.status == 2) {
+          partida.status = 3;
+          torneig.manager.update.match({
+            id: partida.id,
+            opponent1: { score: 0 },
+            opponent2: { score: 0 },
+          });
+          
+          io.to(oponent1.name).emit("start match", arrayPreg[0]);
+          io.to(oponent2.name).emit("start match", arrayPreg[0]);
+        }
+      });
 
+    }
+  });
   socket.on("start", () => {
     let roomID = trobarRoom(socket);
     let room = arrayRoom.find((room) => room.id == roomID);
@@ -641,128 +661,6 @@ io.on("connection", (socket) => {
 
         room.start = Date.now();
 
-        /*
-        PROVES!!!!
-        */
-
-        // let torneo = {
-        //   id: "PartidaggmQeoGBqe7xkHS4AAAB",
-        //   nom: "asdf",
-        //   tipus: "torneo",
-        //   maxJugadors: 8,
-        //   professor: "ggmQeoGBqe7xkHS4AAAB",
-        //   jugadors: [
-        //     {
-        //       idSocket: "jaBLhOhL9A2xqHaYAAAK",
-        //       nick: "asd",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "PdmoCzCLFAbDX24oAAAJ",
-        //       nick: "dd",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "CZEZWoZEYd3NQ45EAAAI",
-        //       nick: "fff",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "z_WhulnlV8LKwcINAAAN",
-        //       nick: "ghghgh",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "iw599HBJzHyiR3N6AAAL",
-        //       nick: "gggg",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "T5bAW1AXR39s15zLAAAF",
-        //       nick: "asdf",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "RGSWs5A01ztJciPUAAAR",
-        //       nick: "ddd",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //     {
-        //       idSocket: "lYTSOj_X4OOm9cd4AAAP",
-        //       nick: "fdfdf",
-        //       mort: false,
-        //       avatar: 1,
-        //       infoPartida: {
-        //         matchID: -1,
-        //         encertades: 0,
-        //         loser: false,
-        //         nJugadors: 8,
-        //       },
-        //       oponent: { id: "", nick: "", avatar: 1, encertades: "" },
-        //     },
-        //   ],
-        // };
-
-        /*
-        ELIMINAR QUAN DINÀMIC ^
-        */
-
         room.jugadors.forEach((user, index) => {
           user.infoPartida.matchID = Math.floor(index / 2);
         });
@@ -775,6 +673,7 @@ io.on("connection", (socket) => {
               players: room.jugadors,
             });
             matchUpPlayersRound1(room)
+            console.log(room.dataTorneig);
             socket.to(roomID).emit("new matchup", room.jugadors);
           })
           .catch((error) => {
@@ -880,7 +779,7 @@ io.on("connection", (socket) => {
           if (
             preguntasDuelo[user.duelo.encertades].respostes[posResp] ==
             preguntasDueloMal[user.duelo.encertades].respostes[
-              respuestaCorrecta
+            respuestaCorrecta
             ]
           ) {
             correcte = true;
@@ -1696,7 +1595,7 @@ function guanyarRonda(jugador) {
   jugador.infoPartida.encertades = 0;
   jugador.infoPartida.matchID =
     torneig.guanyar[Math.log2(jugador.infoPartida.nJugadors) - 2][
-      jugador.infoPartida.matchID
+    jugador.infoPartida.matchID
     ];
 }
 
@@ -1712,7 +1611,7 @@ function perdreRonda(jugador) {
     jugador.infoPartida.encertades = 0;
     jugador.infoPartida.matchID =
       torneig.perdre[Math.log2(jugador.infoPartida.nJugadors) - 2][
-        jugador.infoPartida.matchID
+      jugador.infoPartida.matchID
       ];
 
     return false;
@@ -1727,8 +1626,8 @@ async function modificar(data) {
     opponent1: { score: 1 },
     opponent2: { score: 2, result: "win" },
   });
-  guanyarRonda(data.jugadors[1]);
-  perdreRonda(data.jugadors[0]);
+  // guanyarRonda(data.jugadors[1]);
+  // perdreRonda(data.jugadors[0]);
 
   // await torneig.manager.update.match({
   //   id: 1,
@@ -1765,7 +1664,7 @@ async function modificar(data) {
 }
 
 function matchUpPlayersRound1(room) {
-  let limit = room.dataTorneig.participant.length/2;
+  let limit = room.dataTorneig.participant.length / 2;
   for (let index = 0; index < limit; index++) {
     let indexPlayer1 = room.dataTorneig.match[index].opponent1.id;
     let indexPlayer2 = room.dataTorneig.match[index].opponent2.id;
