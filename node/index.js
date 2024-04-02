@@ -652,7 +652,10 @@ io.on("connection", (socket) => {
               opponent1: { score: player.encertades, result: "win" },
               opponent2: { score: player.oponent.encertades },
             });
-            comprovarRonda(room.dataTorneig.match);
+            if(comprovarRonda(room.dataTorneig.match)){
+              io.to(room.professor).emit("ronda acabada");
+            }
+            
           } else {
             torneig.manager.update.match({
               id: partida.id,
