@@ -1684,11 +1684,12 @@ function perdreRonda(jugador) {
 }
 
 async function modificar(data) {
-  await torneig.manager.update.match({
-    id: 0,
-    opponent1: { score: 1 },
-    opponent2: { score: 2, result: "win" },
-  });
+  // await torneig.manager.update.match({
+  //   id: 0,
+  //   opponent1: { score: 1 },
+  //   opponent2: { score: 2, result: "win" },
+  // });
+  
   // guanyarRonda(data.jugadors[1]);
   // perdreRonda(data.jugadors[0]);
 
