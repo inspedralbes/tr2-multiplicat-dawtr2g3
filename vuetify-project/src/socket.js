@@ -209,6 +209,7 @@ socket.on('tournament info', (info) => {
 
   data.participant.forEach((jugador, index) => {
     jugador.name = players[index].nick;
+    jugador.avatar = players[index].avatar;
   });
 
   store.setTorneigInfo(data);
