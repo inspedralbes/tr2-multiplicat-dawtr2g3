@@ -1366,12 +1366,12 @@ function createUserMinim(user) {
     poder: user.poder,
     mort: user.mort,
     duelo: {
-      enDuelo: user.duelo.enDuelo,
-      encertades: user.duelo.encertades,
-      indexPreg: user.duelo.indexPreg,
+      enDuelo: user.duelo.enDuelo || false,
+      encertades: user.duelo.encertades || 0,
+      indexPreg: user.duelo.indexPreg || 0,
       oponent: {
-        id: user.duelo.oponent.id,
-        encertades: user.duelo.oponent.encertades,
+        id: user.duelo.oponent.id || "",
+        encertades: user.duelo.oponent.encertades || 0,
       },
     },
     infoPoders: {

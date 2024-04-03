@@ -1,9 +1,7 @@
 <template>
   <div>
-    <div v-if="state=='esperant'">
-      <h1>Esperant al següent partit: {{ ownPlayer.nick }}</h1>
-    </div>
-    <div v-else-if="state=='matchup'" class="pantallaVersus">
+    
+    <div  class="pantallaVersus">
       
       <div class="avatarJugador">
         <img v-if="ownPlayer.avatar == 1" class="avatar" src="../assets/avatar/avatarVaiolet.png" alt="icono avatar">
@@ -27,7 +25,7 @@
       </div>
     
       
-      <div class="avatarOponent">
+      <div v-if="state=='matchup'" class="avatarOponent">
         <h1>{{ ownPlayer.oponent.nick }}</h1>
 
         <img v-if="ownPlayer.oponent.avatar == 1" class="avatar" src="../assets/avatar/avatarVaiolet.png" alt="icono avatar">
@@ -45,9 +43,13 @@
         <img v-else-if="ownPlayer.oponent.avatar == 13" class="avatar" src="../assets/avatar/avatarZorro.png" alt="icono avatar">
       </div>
 
-      <div class="esperant">
+      <div v-if="state=='esperant'" class="esperant">
+        <h2>Esperant contrincant<span v-for="dot in dots" :key="dot.id">.</span></h2>
+      </div>
+      <div v-else class="esperant">
         <h2>Esperant al professor<span v-for="dot in dots" :key="dot.id">.</span></h2>
       </div>
+      
     </div>    
 
   </div>
@@ -72,9 +74,6 @@ export default {
 
   },
   mounted() {
-    setTimeout(() => {
-      console.log(this.ownPlayer)
-    }, 500)
     setInterval(() => {
       this.dots = (this.dots + 1) % 4;
     }, 1000)
