@@ -1,15 +1,9 @@
 <template>
    
         <div class="container">
-            <div class="container__jugadors jugadors">
-                <div class="item-scroll">
-                    <div class="container__jugador jugador" v-for="jugador in game.players">
-                        <JugadorPartida :jugador="jugador" />
-                    </div>
-                </div>
-            </div>
+            
             <div class="container__preguntas preguntas">
-                <Drag :respostes="game.question.respostes" :pregunta="game.question.enunciat"
+                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
                     @comprovar="(index) => answer(index)" />
             </div>
             <div class="container__chat">
@@ -398,7 +392,7 @@ export default {
                 temps: computed(() => store.timer),
                 mort: computed(() => store.dead),
                 avatar: computed(() => store.avatar),
-                oponent: computed(() => players.find(player => player.idSocket == store.oponent)),
+                oponent: computed(() => store.ownPlayer.oponent),
 
                 notFirstQuestion: false,
                 dialog: false,

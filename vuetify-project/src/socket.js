@@ -33,6 +33,15 @@ socket.on('finalitzar duelo', () => {
 
   socket.emit('sortir duelo');
 });
+socket.on('win', () => {
+  const store = useAppStore();
+  store.pantallaTorneig = "esperant";
+});
+
+socket.on('lose', () => {
+  const store = useAppStore();
+  store.pantallaTorneig = "esperant";
+});
 
 socket.on('start match', (question) => {
   const store = useAppStore();
