@@ -621,7 +621,6 @@ io.on("connection", (socket) => {
 
           io.to(roomID).emit("update players", llistatUsuaris);
         }
-        io.to(roomID).emit("update players", llistatUsuarisMinim);
         if (jugadorsVius(llistatUsuaris).length == 1) {
           acabarPartida(socket, roomID);
           io.to(roomID).emit("finalitzar duelo");
@@ -648,12 +647,16 @@ io.on("connection", (socket) => {
             player1 = room.dataTorneig.participant.find(jugador => jugador.id == partida.opponent1.id);
             player2 = room.dataTorneig.participant.find(jugador => jugador.id == partida.opponent2.id);
             if (player1.name == socket.id || player2.name == socket.id) {
+              console.log('player1');
+              console.log(player1);
+              console.log('player2');
+              console.log(player2);
               match = partida;
               return;
             }
           }
         });
-        if (player1 && player2) {
+        if (player1 && player2 && match) {
           let jugador1 = jugadors.find(jugador => jugador.idSocket == player1.name);
           let jugador2 = jugadors.find(jugador => jugador.idSocket == player2.name);
 

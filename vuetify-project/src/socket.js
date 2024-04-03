@@ -34,13 +34,15 @@ socket.on('finalitzar duelo', () => {
   socket.emit('sortir duelo');
 });
 socket.on('win', () => {
+  console.log("Has guanyat");
   const store = useAppStore();
-  store.pantallaTorneig = "esperant";
+  store.setTourneigState("esperant");
 });
 
 socket.on('lose', () => {
+  console.log("Has perdut");
   const store = useAppStore();
-  store.pantallaTorneig = "esperant";
+  store.setTourneigState("esperant");
 });
 
 socket.on('start match', (question) => {
@@ -49,7 +51,7 @@ socket.on('start match', (question) => {
   store.setQuestion(question);
   store.timer = question.temps;
   store.startTimer();
-  store.pantallaTorneig = "partida";
+  store.setTourneigState("partida");
   store.canvi = true;
 });
 

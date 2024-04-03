@@ -1,7 +1,7 @@
 <template>
   <div>
     
-    <div  class="pantallaVersus">
+    <div v-if="state != 'partida'" class="pantallaVersus">
       
       <div class="avatarJugador">
         <img v-if="ownPlayer.avatar == 1" class="avatar" src="../assets/avatar/avatarVaiolet.png" alt="icono avatar">
@@ -51,9 +51,9 @@
       </div>
       
     </div>    
-
+    <partidaTorneig v-else />
   </div>
-  <partidaTorneig v-if="pantalla == 'partida'" />
+  
 </template>
 
 <script>
@@ -67,7 +67,6 @@ export default {
     const store = useAppStore();
     return {
       state: computed(() => store.getTourneigState()),
-      pantalla: computed(() => store.getPantalla()),
       ownPlayer: computed(() => store.getOwnPlayer()),
       dots: 0,
     };
