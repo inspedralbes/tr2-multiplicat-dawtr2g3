@@ -543,10 +543,16 @@ io.on("connection", (socket) => {
         });
 
         llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-        let llistatUsuarisMinim = [];
-        llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+
+        if (room.tipus != "torneo") {
+          let llistatUsuarisMinim = [];
+          llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+          io.to(roomID).emit("update players", llistatUsuarisMinim);
+        } else {
+
+          io.to(roomID).emit("update players", llistatUsuaris);
+        }
         let start = arrayRoom.find((room) => room.id == roomID).start;
-        io.to(roomID).emit("update players", llistatUsuarisMinim);
         if (start) {
           if (jugadorsVius(llistatUsuaris).length == 1) {
             acabarPartida(socket, roomID);
@@ -607,9 +613,14 @@ io.on("connection", (socket) => {
         });
 
         llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-        let llistatUsuarisMinim = [];
-        llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+        if (room.tipus != "torneo") {
+          let llistatUsuarisMinim = [];
+          llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+          io.to(roomID).emit("update players", llistatUsuarisMinim);
+        } else {
 
+          io.to(roomID).emit("update players", llistatUsuaris);
+        }
         io.to(roomID).emit("update players", llistatUsuarisMinim);
         if (jugadorsVius(llistatUsuaris).length == 1) {
           acabarPartida(socket, roomID);
@@ -621,7 +632,140 @@ io.on("connection", (socket) => {
   /**
    * Inicia la partida
    */
+  socket.on("answer torneig", async (idPreg, posResp) => {
+    let roomID = trobarRoom(socket);
+    let room = arrayRoom.find((room) => room.id == roomID);
+    if (room) {
+      let arrayPreg = room.arrayPreg;
+      let preguntasMal = room.preguntasMal;
+      let jugadors = room.jugadors;
+      let player1;
+      let player2;
+      if (arrayPreg[idPreg].respostes[posResp] == preguntasMal[idPreg].respostes[respuestaCorrecta]) {
+        let match = null;
+        room.dataTorneig.match.forEach((partida) => {
+          if (partida.status == 3) {
+            player1 = room.dataTorneig.participant.find(jugador => jugador.id == partida.opponent1.id);
+            player2 = room.dataTorneig.participant.find(jugador => jugador.id == partida.opponent2.id);
+            if (player1.name == socket.id || player2.name == socket.id) {
+              match = partida;
+              return;
+            }
+          }
+        });
+        if (player1 && player2) {
+          let jugador1 = jugadors.find(jugador => jugador.idSocket == player1.name);
+          let jugador2 = jugadors.find(jugador => jugador.idSocket == player2.name);
 
+          console.log('jugador1');
+          console.log(jugador1);
+          console.log('jugador2');
+          console.log(jugador2);
+          if (jugador1 && jugador2) {
+            if (jugador1.idSocket == socket.id) {
+              jugador1.infoPartida.encertades++;
+              jugador2.oponent.encertades++;
+              await torneig.manager.update.match({
+                id: match.id,
+                opponent1: { score: jugador1.infoPartida.encertades },
+                opponent2: { score: jugador1.oponent.encertades },
+              });
+              if (jugador1.infoPartida.encertades == 5) {
+                match.status = 4;
+                await torneig.manager.update.match({
+                  id: match.id,
+                  opponent1: { score: jugador1.infoPartida.encertades, result: "win" },
+                  opponent2: { score: jugador1.oponent.encertades },
+                });
+                guanyarRonda(jugador1);
+                perdreRonda(jugador2);
+
+                if (comprovarRonda(room.dataTorneig.match)) {
+                  io.to(room.professor).emit("end round");
+                }
+              } else {
+                socket.emit("new question", arrayPreg[jugador1.infoPartida.encertades]);
+
+              }
+              const tournamentData = await torneig.manager.get.stageData(0);
+              room.dataTorneig = tournamentData;
+              io.to(room.professor).emit("tournament info", {
+                data: room.dataTorneig,
+                players: room.jugadors,
+              });
+
+            } else {
+
+              jugador2.infoPartida.encertades++;
+              jugador1.oponent.encertades++;
+              await torneig.manager.update.match({
+                id: match.id,
+                opponent1: { score: jugador2.oponent.encertades },
+                opponent2: { score: jugador2.infoPartida.encertades },
+              });
+              if (jugador2.infoPartida.encertades == 5) {
+                match.status = 4;
+
+                await torneig.manager.update.match({
+                  id: match.id,
+                  opponent1: { score: jugador2.oponent.encertades },
+                  opponent2: { score: jugador2.infoPartida.encertades, result: "win" },
+                });
+                guanyarRonda(jugador2);
+                perdreRonda(jugador1);
+                if (comprovarRonda(room.dataTorneig.match)) {
+                  io.to(room.professor).emit("end round");
+                }
+              } else {
+                socket.emit("new question", arrayPreg[jugador2.infoPartida.encertades]);
+              }
+              const tournamentData = await torneig.manager.get.stageData(0);
+              room.dataTorneig = tournamentData;
+              io.to(room.professor).emit("tournament info", {
+                data: room.dataTorneig,
+                players: room.jugadors,
+              });
+            }
+
+
+          }
+        }
+
+
+
+      } else {
+        socket.emit("resposta incorrecta");
+      }
+
+    }
+  });
+
+  socket.on("start round", () => {
+    console.log("start round");
+    let roomID = trobarRoom(socket);
+    let room = arrayRoom.find((room) => room.id == roomID);
+    if (room) {
+      let arrayPreg = room.arrayPreg;
+      room.dataTorneig.match.forEach(partida => {
+        if (partida.status == 2) {
+          partida.status = 3;
+          torneig.manager.update.match({
+            id: partida.id,
+            opponent1: { score: 0 },
+            opponent2: { score: 0 },
+          });
+          console.log("partida");
+
+          let player1 = room.dataTorneig.participant.find(jugador => jugador.id == partida.opponent1.id);
+          let player2 = room.dataTorneig.participant.find(jugador => jugador.id == partida.opponent2.id);
+          console.log(JSON.stringify(partida));
+          io.to(player1.name).emit("start match", arrayPreg[0]);
+          io.to(player2.name).emit("start match", arrayPreg[0]);
+        }
+      });
+
+    }
+  });
   socket.on("start", () => {
     let roomID = trobarRoom(socket);
     let room = arrayRoom.find((room) => room.id == roomID);
@@ -652,6 +796,8 @@ io.on("connection", (socket) => {
               players: room.jugadors,
             });
             matchUpPlayersRound1(room)
+            console.log(room.dataTorneig);
+            socket.emit("round started");
             socket.to(roomID).emit("new matchup", room.jugadors);
           })
           .catch((error) => {
@@ -757,7 +903,7 @@ io.on("connection", (socket) => {
           if (
             preguntasDuelo[user.duelo.encertades].respostes[posResp] ==
             preguntasDueloMal[user.duelo.encertades].respostes[
-              respuestaCorrecta
+            respuestaCorrecta
             ]
           ) {
             correcte = true;
@@ -1066,8 +1212,12 @@ io.on("connection", (socket) => {
         llistatUsuaris.sort((a, b) => {
           return b.vida - a.vida;
         });
-        llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-        io.to(roomID).emit("update players", llistatUsuarisMinim);
+        if (room.tipus == "torneo") {
+          io.to(roomID).emit("update players", llistatUsuaris);
+        } else {
+          llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+          io.to(roomID).emit("update players", llistatUsuarisMinim);
+        }
       }
     }
   });
@@ -1537,7 +1687,7 @@ function createUserTorneig(id, nick, maxJugadors, avatar) {
       id: "",
       nick: "",
       avatar: 1,
-      encertades: "",
+      encertades: 0,
     },
   };
 }
@@ -1573,8 +1723,9 @@ function guanyarRonda(jugador) {
   jugador.infoPartida.encertades = 0;
   jugador.infoPartida.matchID =
     torneig.guanyar[Math.log2(jugador.infoPartida.nJugadors) - 2][
-      jugador.infoPartida.matchID
+    jugador.infoPartida.matchID
     ];
+    io.to(jugador.idSocket).emit("win");
 }
 
 /**
@@ -1589,9 +1740,9 @@ function perdreRonda(jugador) {
     jugador.infoPartida.encertades = 0;
     jugador.infoPartida.matchID =
       torneig.perdre[Math.log2(jugador.infoPartida.nJugadors) - 2][
-        jugador.infoPartida.matchID
+      jugador.infoPartida.matchID
       ];
-
+    io.to(jugador.idSocket).emit("lose");
     return false;
   } else {
     return true;
@@ -1599,13 +1750,14 @@ function perdreRonda(jugador) {
 }
 
 async function modificar(data) {
-  await torneig.manager.update.match({
-    id: 0,
-    opponent1: { score: 1 },
-    opponent2: { score: 2, result: "win" },
-  });
-  guanyarRonda(data.jugadors[1]);
-  perdreRonda(data.jugadors[0]);
+  // await torneig.manager.update.match({
+  //   id: 0,
+  //   opponent1: { score: 1 },
+  //   opponent2: { score: 2, result: "win" },
+  // });
+
+  // guanyarRonda(data.jugadors[1]);
+  // perdreRonda(data.jugadors[0]);
 
   // await torneig.manager.update.match({
   //   id: 1,
@@ -1642,7 +1794,7 @@ async function modificar(data) {
 }
 
 function matchUpPlayersRound1(room) {
-  let limit = room.dataTorneig.participant.length/2;
+  let limit = room.dataTorneig.participant.length / 2;
   for (let index = 0; index < limit; index++) {
     let indexPlayer1 = room.dataTorneig.match[index].opponent1.id;
     let indexPlayer2 = room.dataTorneig.match[index].opponent2.id;
@@ -1663,6 +1815,15 @@ function matchUpPlayersRound1(room) {
   }
 }
 
+function comprovarRonda(matches) {
+  let acabat = true;
+  matches.forEach(match => {
+    if (match.status == 3) {
+      return false;
+    }
+  });
+  return true;
+}
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

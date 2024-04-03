@@ -53,12 +53,13 @@
     </div>    
 
   </div>
+  <partidaTorneig v-if="pantalla == 'partida'" />
 </template>
 
 <script>
 import { useAppStore } from "../store/app.js";
 import { computed } from "vue";
-
+import partidaTorneig from "./PartidaTorneig.vue";
 
 export default {
   name: "Torneig",
@@ -66,9 +67,13 @@ export default {
     const store = useAppStore();
     return {
       state: computed(() => store.getTourneigState()),
+      pantalla: computed(() => store.getPantalla()),
       ownPlayer: computed(() => store.getOwnPlayer()),
       dots: 0,
     };
+  },
+  components: {
+    partidaTorneig,
   },
   methods: {
 

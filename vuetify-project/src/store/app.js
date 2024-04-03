@@ -30,13 +30,14 @@ export const useAppStore = defineStore('app', {
     tutorial: false,
     enPartida: false,
     dialog: false,
+    pantallaTorneig: null,
     duelo: {
-      "enDuelo": false,
-      "encertades": 0,
-      "indexPreg": [],
-      "oponent": {
-        'id': "",
-        'encertades': "",
+      enDuelo: false,
+      encertades: 0,
+      indexPreg: [],
+      oponent: {
+        id: "",
+        encertades: "",
       },
     },
     infoTorneig: null,
@@ -50,6 +51,9 @@ export const useAppStore = defineStore('app', {
     },
     setOpponent(opponent) {
       this.opponent = opponent;
+    },
+    getPantalla(){
+      return this.pantallaTorneig;
     },
 
     sumarVictoria() {
