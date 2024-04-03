@@ -8,6 +8,7 @@
             <img v-else-if="poder == 'vida'" src="../assets/poderes/curar.png" alt="" class="power">
             <img v-else-if="poder == 'robarVida'" src="../assets/poderes/robarVida.png" alt="" class="power">
             <img v-else-if="poder == 'salt'" src="../assets/poderes/saltar.png" alt="" class="power">
+            <img v-else-if="poder == 'nuke'" src="../assets/poderes/nuke.png" alt="" class="power">
             <img v-else src="../assets/icono/power.png" alt="" class="power">
         </v-btn>
     </div>
