@@ -1,11 +1,6 @@
 <template>
-    <div v-if="state.loading">
-        <div class="spinner-grow text-primary" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
-    <div v-else>
-        <div v-if="!game.duelo" class="container">
+   
+        <div class="container">
             <div class="container__jugadors jugadors">
                 <div class="item-scroll">
                     <div class="container__jugador jugador" v-for="jugador in game.players">
@@ -17,7 +12,7 @@
                 <Drag :respostes="game.question.respostes" :pregunta="game.question.enunciat"
                     @comprovar="(index) => answer(index)" />
             </div>
-            <div v-if="divActivo != 'partida'" class="container__chat">
+            <div class="container__chat">
                 <div class="chat">
                     <div class="container__missatge">
                         <div class="missatge" v-for="missatge in game.chat">
@@ -83,7 +78,7 @@
                 </div>
             </div>
         </div>
-        <div v-else class="duelo">
+        <div class="duelo">
             <div class="container__preguntaDuelo">
                 <p class="cantidadPreguntas"><span>{{ game.questionIndex + 1 }}</span> /3 PREGUNTES
                     
@@ -188,7 +183,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <style lang="scss" scoped>
@@ -408,7 +402,6 @@ export default {
 
                 notFirstQuestion: false,
                 dialog: false,
-                duelo: true,
             },
             timerInterval: null,
             disabled: false,

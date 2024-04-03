@@ -32,12 +32,12 @@ export const useAppStore = defineStore('app', {
     dialog: false,
     pantallaTorneig: null,
     duelo: {
-      "enDuelo": false,
-      "encertades": 0,
-      "indexPreg": [],
-      "oponent": {
-        'id': "",
-        'encertades': "",
+      enDuelo: false,
+      encertades: 0,
+      indexPreg: [],
+      oponent: {
+        id: "",
+        encertades: "",
       },
     },
     infoTorneig: null,
