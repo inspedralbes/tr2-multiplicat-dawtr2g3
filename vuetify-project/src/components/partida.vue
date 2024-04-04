@@ -91,7 +91,7 @@
                 </div>
             </div>
         </div>
-        <div v-else-if="game.duelo.enDuelo && !game.nuke" class="duelo">
+        <div v-else-if="game.duelo.enDuelo && !game.nuke && !game.animacionDuelo" class="duelo">
             <div class="container__preguntaDuelo preguntas">
                 <Drag :respostes="game.question.respostes" :pregunta="game.question.enunciat"
                     @comprovar="(index) => answer(index)" />
@@ -145,6 +145,9 @@
                     @comprovar="(index) => answer(index)" />
             </div>
 
+        </div>
+        <div v-else-if="animacionDuelo">
+            <AnimacioDuelo />
         </div>
     </div>
     <v-row justify="center">
@@ -201,6 +204,7 @@ import Poder from "./Poder.vue";
 import { toHandlers } from 'vue';
 import JugadorPartida from './JugadorPartida.vue';
 import store from '@/store';
+import AnimacioDuelo from './AnimacioDuelo.vue'; 
 export default {
     data() {
         const store = useAppStore();
@@ -229,6 +233,7 @@ export default {
                 nuke: computed(() => store.nuke),
                 notFirstQuestion: false,
                 dialog: computed(() => store.dialog),
+                animacionDuelo: computed(() => store.animacionDuelo),
             },
             timerInterval: null,
             disabled: false,

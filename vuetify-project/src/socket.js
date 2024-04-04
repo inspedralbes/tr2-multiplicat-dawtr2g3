@@ -158,7 +158,7 @@ socket.on('info partida', (nom, maxJugadors) => {
   const store = useAppStore();
   store.setInfoPartida(nom, maxJugadors);
 })
-socket.on('push a lobby',()=>{
+socket.on('push a lobby', () => {
   router.push('/lobby');
 
 });
@@ -181,11 +181,16 @@ socket.on("duelo recibir", (duelo) => {
   //Triger animacion de recibir duelo
   const store = useAppStore();
   store.dialog = false;
+
   console.log("recibir duelo");
   console.log(store.ownPlayer)
-  socket.emit("duelo entrar",store.ownPlayer.idSocket,duelo.oponent.id)
+  socket.emit("duelo entrar", store.ownPlayer.idSocket, duelo.oponent.id)
   console.log(duelo);
   store.setDuelo(duelo);
+  store.animacionDuelo = true;
+  setTimeout(() => {
+    store.animacionDuelo = false;
+  }, 3000);
   console.log(socket.rooms);
 });
 
@@ -195,12 +200,16 @@ socket.on("duelo enviar", (duelo) => {
   console.log("enviar duelo");
   console.log(store.ownPlayer)
 
-  socket.emit("duelo entrar",duelo.oponent.id,store.ownPlayer.idSocket);
+  socket.emit("duelo entrar", duelo.oponent.id, store.ownPlayer.idSocket);
 
   console.log(duelo);
   store.setDuelo(duelo);
+  store.animacionDuelo = true;
+  setTimeout(() => {
+    store.animacionDuelo = false;
+  }, 3000);
 });
-socket.on('nuke',(nick)=>{
+socket.on('nuke', (nick) => {
   const store = useAppStore();
   store.nukeAnimation = nick;
   store.stopTimer();
@@ -210,7 +219,7 @@ socket.on('nuke',(nick)=>{
     store.nukeAnimation = false;
   }, 5000);
 })
-socket.on('pregunta nuke',(pregunta)=>{
+socket.on('pregunta nuke', (pregunta) => {
   console.log(pregunta);
   const store = useAppStore();
   store.question = pregunta;

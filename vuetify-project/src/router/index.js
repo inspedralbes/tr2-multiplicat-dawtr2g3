@@ -10,6 +10,7 @@ import Register from "../components/Register.vue";
 import Tutorial from "../components/Tutorial.vue";
 import TorneigVisual from "../components/TorneigVisual.vue";
 import Torneig from "../components/Torneig.vue";
+import AnimacioDuelo from "../components/AnimacioDuelo.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -63,7 +64,12 @@ const router = createRouter({
       path: '/torneig',
       name: 'Torneig',
       component: Torneig
+    },{
+      path: '/dueloanimacio',
+      name: 'DueloAnimacio',
+      component: AnimacioDuelo
     }
+
   ]
 })
 
