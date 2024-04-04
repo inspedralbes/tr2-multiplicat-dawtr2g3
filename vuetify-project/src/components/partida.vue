@@ -146,7 +146,7 @@
             </div>
 
         </div>
-        <div v-else-if="animacionDuelo">
+        <div v-else-if="game.animacionDuelo">
             <AnimacioDuelo />
         </div>
     </div>
@@ -240,7 +240,7 @@ export default {
             animacioVida: computed(() => store.animacioVida),
         };
     },
-    components: { Drag, Poder, JugadorPartida },
+    components: { Drag, Poder, JugadorPartida, AnimacioDuelo },
     methods: {
         skip() {
             socket.emit('skip');

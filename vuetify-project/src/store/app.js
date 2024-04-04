@@ -39,6 +39,7 @@ export const useAppStore = defineStore('app', {
         id: "",
         encertades: "",
         avatar: "",
+        nick: "",
       },
     },
     infoTorneig: null,

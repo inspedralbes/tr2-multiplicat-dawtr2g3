@@ -134,6 +134,8 @@ socket.on("end", (guanyador, perdedors) => {
   store.enPartida = false;
   store.timer = 20;
   store.dead = false;
+  store.duelo = {};
+  store.animacionDuelo = false;
   store.setQuestionIndex(-1);
   store.setGuanyador(guanyador);
   store.setPerdedors(perdedors);

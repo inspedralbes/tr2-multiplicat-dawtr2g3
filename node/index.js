@@ -242,52 +242,53 @@ let arrayRoomMinim = [];
 async function iniciarLobby(roomID) {
   const data = await fetchPreguntas();
   let room = arrayRoom.find((room) => room.id == roomID);
+  if (room) {
+    if (room.tipus == "royale") {
+      const fetchDuelo = await fetchPreguntasDuelo();
+      let preguntasDueloMal = JSON.parse(JSON.stringify(fetchDuelo));
+      let preguntasDuelo = JSON.parse(JSON.stringify(preguntasDueloMal));
+      preguntasDuelo.forEach((pregunta) => {
+        pregunta.respostes = randomArray(pregunta.respostes);
+      });
+      let preguntasMal = data;
+      randomArray(preguntasMal);
+      let arrayPreg = [];
+      preguntasMal.forEach((preguntaMal, index) => {
+        let pregunta = tipusTest(preguntaMal, index);
 
-  if (room.tipus == "royale") {
-    const fetchDuelo = await fetchPreguntasDuelo();
-    let preguntasDueloMal = JSON.parse(JSON.stringify(fetchDuelo));
-    let preguntasDuelo = JSON.parse(JSON.stringify(preguntasDueloMal));
-    preguntasDuelo.forEach((pregunta) => {
-      pregunta.respostes = randomArray(pregunta.respostes);
-    });
-    let preguntasMal = data;
-    randomArray(preguntasMal);
-    let arrayPreg = [];
-    preguntasMal.forEach((preguntaMal, index) => {
-      let pregunta = tipusTest(preguntaMal, index);
+        let arrayResp = "[" + pregunta.respostes + "]";
+        preguntasMal[index].respostes = JSON.parse(arrayResp);
+        pregunta.respostes = randomArray(JSON.parse(arrayResp));
+        arrayPreg.push(pregunta);
+      });
+      arrayRoom.map((room) => {
+        if (room.id == roomID) {
+          room.arrayPreg = arrayPreg;
+          room.preguntasMal = preguntasMal;
+          room.preguntasDueloMal = preguntasDueloMal;
+          room.preguntasDuelo = preguntasDuelo;
+        }
+      });
+    } else if (room.tipus == "torneo") {
+      let preguntasMal = data;
+      randomArray(preguntasMal);
+      let arrayPreg = [];
+      preguntasMal.forEach((preguntaMal, index) => {
+        let pregunta = tipusTest(preguntaMal, index);
 
-      let arrayResp = "[" + pregunta.respostes + "]";
-      preguntasMal[index].respostes = JSON.parse(arrayResp);
-      pregunta.respostes = randomArray(JSON.parse(arrayResp));
-      arrayPreg.push(pregunta);
-    });
-    arrayRoom.map((room) => {
-      if (room.id == roomID) {
-        room.arrayPreg = arrayPreg;
-        room.preguntasMal = preguntasMal;
-        room.preguntasDueloMal = preguntasDueloMal;
-        room.preguntasDuelo = preguntasDuelo;
-      }
-    });
-  } else if (room.tipus == "torneo") {
-    let preguntasMal = data;
-    randomArray(preguntasMal);
-    let arrayPreg = [];
-    preguntasMal.forEach((preguntaMal, index) => {
-      let pregunta = tipusTest(preguntaMal, index);
+        let arrayResp = "[" + pregunta.respostes + "]";
+        preguntasMal[index].respostes = JSON.parse(arrayResp);
+        pregunta.respostes = randomArray(JSON.parse(arrayResp));
+        arrayPreg.push(pregunta);
+      });
 
-      let arrayResp = "[" + pregunta.respostes + "]";
-      preguntasMal[index].respostes = JSON.parse(arrayResp);
-      pregunta.respostes = randomArray(JSON.parse(arrayResp));
-      arrayPreg.push(pregunta);
-    });
-
-    arrayRoom.map((room) => {
-      if (room.id == roomID) {
-        room.arrayPreg = arrayPreg;
-        room.preguntasMal = preguntasMal;
-      }
-    });
+      arrayRoom.map((room) => {
+        if (room.id == roomID) {
+          room.arrayPreg = arrayPreg;
+          room.preguntasMal = preguntasMal;
+        }
+      });
+    }
   }
 }
 
@@ -314,7 +315,7 @@ io.on("connection", (socket) => {
           let user;
           let userMinim;
           if (partida.tipus != "torneo") {
-            user = createNewUser(socket.id, nom,avatar);
+            user = createNewUser(socket.id, nom, avatar);
             userMinim = createUserMinim(user);
 
             arrayRoom.map((room) => {
@@ -1362,6 +1363,7 @@ async function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
     if (jugador.idSocket == socket.id) {
       jugador.duelo.enDuelo = true;
       jugador.duelo.oponent.id = userObjectiu.idSocket;
+      jugador.duelo.oponent.nick = userObjectiu.nick;
       jugador.duelo.oponent.encertades = 0;
       jugador.duelo.oponent.avatar = userObjectiu.avatar;
       user.duelo = jugador.duelo;
@@ -1371,6 +1373,7 @@ async function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
       jugador.duelo.oponent.id = user.idSocket;
       jugador.duelo.oponent.encertades = 0;
       jugador.duelo.oponent.avatar = user.avatar;
+      jugador.duelo.oponent.nick = user.nick;
       userObjectiu.duelo = jugador.duelo;
     }
   });
@@ -1473,7 +1476,7 @@ function comprovarMort(user) {
  * @param {string} nick nom del jugador
  * @returns Objecte que conté la informació de l'usuari
  */
-function createNewUser(idSocket, nick,avatarID) {
+function createNewUser(idSocket, nick, avatarID) {
   let user = {
     idSocket: idSocket,
     nick: nick,
@@ -1496,6 +1499,7 @@ function createNewUser(idSocket, nick,avatarID) {
         id: "",
         encertades: "",
         avatar: "",
+        nick: "",
       },
     },
     infoPoders: {
@@ -1531,6 +1535,7 @@ function createUserMinim(user) {
         id: user.duelo.oponent.id || "",
         encertades: user.duelo.oponent.encertades || 0,
         avatar: user.duelo.oponent.avatar || "",
+        nick: user.duelo.oponent.nick || "",
       },
     },
     infoPoders: {
@@ -1734,7 +1739,7 @@ function guanyarRonda(jugador) {
     torneig.guanyar[Math.log2(jugador.infoPartida.nJugadors) - 2][
     jugador.infoPartida.matchID
     ];
-    io.to(jugador.idSocket).emit("win");
+  io.to(jugador.idSocket).emit("win");
 }
 
 /**
