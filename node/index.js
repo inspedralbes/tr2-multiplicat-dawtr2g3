@@ -636,8 +636,7 @@ io.on("connection", (socket) => {
   socket.on("answer torneig", async (idPreg, posResp) => {
     let roomID = trobarRoom(socket);
     let room = arrayRoom.find((room) => room.id == roomID);
-    console.log("socket");
-    console.log(socket.id);
+
     
     if (room) {
       let arrayPreg = room.arrayPreg;
@@ -656,15 +655,13 @@ io.on("connection", (socket) => {
         while (!foundMatch && i < room.dataTorneig.match.length) {
           const partida = room.dataTorneig.match[i];
           if (partida.status == 3) {
-            console.log(partida);
             player1 = room.dataTorneig.participant.find(
               (jugador) => jugador.id == partida.opponent1.id
             );
             player2 = room.dataTorneig.participant.find(
               (jugador) => jugador.id == partida.opponent2.id
             );
-            console.log("player 1: ", player1);
-            console.log("player 2: ", player2);
+
             if (player1.name == socket.id || player2.name == socket.id) {
               foundMatch = true;
               match = partida;
@@ -679,20 +676,15 @@ io.on("connection", (socket) => {
           let jugador2 = jugadors.find(
             (jugador) => jugador.idSocket == player2.name
           );
-          console.log("Socket: ", socket.id);
+          // console.log("Socket: ", socket.id);
 
-          console.log("Id 1: ", player1.name);
-          console.log("Nom 1: ", jugador1.nick);
+          // console.log("Id 1: ", player1.name);
+          // console.log("Nom 1: ", jugador1.nick);
 
-          console.log("Id 2: ", player2.name);
-          console.log("Nom 2: ", jugador2.nick);
+          // console.log("Id 2: ", player2.name);
+          // console.log("Nom 2: ", jugador2.nick);
 
-          console.log("Match: ", match.id);
-
-          // console.log("jugador1");
-          // console.log(jugador1);
-          // console.log("jugador2");
-          // console.log(jugador2);
+          // console.log("Match: ", match.id);
           if (jugador1 && jugador2) {
             if (jugador1.idSocket == socket.id) {
               jugador1.infoPartida.encertades++;
@@ -712,10 +704,7 @@ io.on("connection", (socket) => {
                   },
                   opponent2: { score: jugador1.oponent.encertades },
                 });
-                room.dataTorneig = await torneig.manager.get.stageData(0);
-                if (room.dataTorneig == undefined) {
-                  console.log("se fue a la puta");
-                }
+                room.dataTorneig = await torneig.manager.get.tournamentData(room.id);
                 guanyarRonda(jugador1, room);
                 perdreRonda(jugador2, room);
 
@@ -728,7 +717,7 @@ io.on("connection", (socket) => {
                   arrayPreg[jugador1.infoPartida.encertades]
                 );
               }
-              const tournamentData = await torneig.manager.get.stageData(0);
+              const tournamentData = await torneig.manager.get.tournamentData(room.id);
               room.dataTorneig = tournamentData;
               io.to(room.professor).emit("tournament info", {
                 data: room.dataTorneig,
@@ -753,10 +742,7 @@ io.on("connection", (socket) => {
                     result: "win",
                   },
                 });
-                room.dataTorneig = await torneig.manager.get.stageData(0);
-                if (room.dataTorneig == undefined) {
-                  console.log("se fue a la puta");
-                }
+                room.dataTorneig = await torneig.manager.get.tournamentData(room.id);
                 guanyarRonda(jugador2, room);
                 perdreRonda(jugador1, room);
                 if (comprovarRonda(room.dataTorneig.match)) {
@@ -768,7 +754,7 @@ io.on("connection", (socket) => {
                   arrayPreg[jugador2.infoPartida.encertades]
                 );
               }
-              const tournamentData = await torneig.manager.get.stageData(0);
+              const tournamentData = await torneig.manager.get.tournamentData(room.id);
               room.dataTorneig = tournamentData;
               io.to(room.professor).emit("tournament info", {
                 data: room.dataTorneig,
@@ -784,7 +770,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("start round", () => {
-    // console.log("start round");
     let roomID = trobarRoom(socket);
     let room = arrayRoom.find((room) => room.id == roomID);
     if (room) {
@@ -1747,7 +1732,7 @@ async function rendering(data) {
       matchesChildCount: 0,
     },
   });
-  const tournamentData = await torneig.manager.get.stageData(0);
+  const tournamentData = await torneig.manager.get.tournamentData(data.id);
 
   data.dataTorneig = tournamentData;
 }
@@ -1766,12 +1751,9 @@ function guanyarRonda(jugador, room) {
 
   io.to(jugador.idSocket).emit("win");
 
-  // let torneigData = await torneig.manager.get.stageData(0);
 
-  // console.log(torneigData.matches);
 
   if (room.dataTorneig.match[jugador.infoPartida.matchID].status == 2) {
-    console.log("fer matchmake");
     matchMake(jugador.infoPartida.matchID, room);
   }
 }
@@ -1792,21 +1774,21 @@ function perdreRonda(jugador, room) {
       ];
     io.to(jugador.idSocket).emit("lose");
 
-    // let torneigData = await torneig.manager.get.stageData(0);
 
     if (room.dataTorneig.match[jugador.infoPartida.matchID].status == 2) {
-      console.log("fer matchmake");
       matchMake(jugador.infoPartida.matchID, room);
     }
 
     return false;
   } else {
+    io.to(jugador.idSocket).emit("lose tournament");
+
     return true;
   }
 }
 
 async function modificar(data) {
-  const tourneyData = await torneig.manager.get.stageData(0);
+  const tourneyData = await torneig.manager.get.tournamentData(data.id);
   data.dataTorneig = tourneyData;
 }
 
@@ -1827,6 +1809,7 @@ function comprovarRonda(matches) {
 }
 
 function matchMake(matchID, room) {
+  console.log(room.dataTorneig);
   let indexPlayer1 = room.dataTorneig.match[matchID].opponent1.id;
   let indexPlayer2 = room.dataTorneig.match[matchID].opponent2.id;
 
@@ -1853,7 +1836,6 @@ function matchMake(matchID, room) {
   player2.infoPartida.encertades = 0;
   player2.oponent.encertades = 0;
 
-  console.log("fent emits matchmaking");
 
   io.to(socketPlayer1).emit("new matchup", room.jugadors);
   io.to(socketPlayer2).emit("new matchup", room.jugadors);

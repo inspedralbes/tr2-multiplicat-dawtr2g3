@@ -242,7 +242,12 @@ socket.on("new matchup", (arrayUsers) => {
   store.setOwnPlayer(myself);
   store.setTourneigState("matchup");
   router.push('/torneig');
-})
+});
+
+socket.on("lose tournament", () => {
+  router.push('/perdut');
+
+});
 
 // socket.on("get power", (poder) => {
 //   const store = useAppStore();
