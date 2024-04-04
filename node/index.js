@@ -15,216 +15,7 @@ const port = 3589;
 app.use(cors());
 const server = createServer(app);
 
-let torneig = {
-  storage: new InMemoryDatabase(),
-  manager: null,
-  guanyar: [
-    [2, 2, 5, 4, 5, 6, null],
-    [4, 4, 5, 5, 6, 6, 13, 9, 10, 11, 11, 12, 13, 14, null],
-    [
-      8,
-      8,
-      9,
-      9,
-      10,
-      10,
-      11,
-      11,
-      12,
-      12,
-      13,
-      13,
-      14,
-      14,
-      29,
-      19,
-      20,
-      21,
-      22,
-      23,
-      23,
-      24,
-      24,
-      25,
-      26,
-      27,
-      27,
-      28,
-      29,
-      30,
-      null,
-    ],
-    [
-      16,
-      16,
-      17,
-      17,
-      18,
-      18,
-      19,
-      19,
-      20,
-      20,
-      21,
-      21,
-      22,
-      22,
-      23,
-      23,
-      24,
-      24,
-      25,
-      25,
-      26,
-      26,
-      27,
-      27,
-      28,
-      28,
-      29,
-      29,
-      30,
-      30,
-      61,
-      39,
-      40,
-      41,
-      42,
-      43,
-      44,
-      45,
-      46,
-      47,
-      47,
-      48,
-      48,
-      49,
-      49,
-      50,
-      50,
-      51,
-      52,
-      53,
-      54,
-      55,
-      55,
-      56,
-      56,
-      57,
-      58,
-      59,
-      59,
-      60,
-      61,
-      62,
-      null,
-    ],
-  ],
-  perdre: [
-    [3, 3, 4, null, null, 6, null],
-    [7, 7, 8, 8, 9, 10, 12, null, null, null, null, null, null, 14, null],
-    [
-      15,
-      15,
-      16,
-      16,
-      17,
-      17,
-      18,
-      18,
-      19,
-      20,
-      21,
-      22,
-      25,
-      26,
-      28,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      30,
-      null,
-    ],
-    [
-      31,
-      31,
-      32,
-      32,
-      33,
-      33,
-      34,
-      34,
-      35,
-      35,
-      36,
-      36,
-      37,
-      37,
-      38,
-      38,
-      39,
-      40,
-      41,
-      42,
-      43,
-      44,
-      45,
-      46,
-      51,
-      52,
-      53,
-      54,
-      57,
-      58,
-      60,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      62,
-      null,
-    ],
-  ],
-};
 
-torneig.manager = new BracketsManager(torneig.storage);
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -378,12 +169,224 @@ io.on("connection", (socket) => {
     let user = createNewUser(socket.id, nick);
 
     if (tipus == "torneo") {
+      let torneig = {
+        storage: new InMemoryDatabase(),
+        manager: null,
+        guanyar: [
+          [2, 2, 5, 4, 5, 6, null],
+          [4, 4, 5, 5, 6, 6, 13, 9, 10, 11, 11, 12, 13, 14, null],
+          [
+            8,
+            8,
+            9,
+            9,
+            10,
+            10,
+            11,
+            11,
+            12,
+            12,
+            13,
+            13,
+            14,
+            14,
+            29,
+            19,
+            20,
+            21,
+            22,
+            23,
+            23,
+            24,
+            24,
+            25,
+            26,
+            27,
+            27,
+            28,
+            29,
+            30,
+            null,
+          ],
+          [
+            16,
+            16,
+            17,
+            17,
+            18,
+            18,
+            19,
+            19,
+            20,
+            20,
+            21,
+            21,
+            22,
+            22,
+            23,
+            23,
+            24,
+            24,
+            25,
+            25,
+            26,
+            26,
+            27,
+            27,
+            28,
+            28,
+            29,
+            29,
+            30,
+            30,
+            61,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            47,
+            48,
+            48,
+            49,
+            49,
+            50,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            55,
+            56,
+            56,
+            57,
+            58,
+            59,
+            59,
+            60,
+            61,
+            62,
+            null,
+          ],
+        ],
+        perdre: [
+          [3, 3, 4, null, null, 6, null],
+          [7, 7, 8, 8, 9, 10, 12, null, null, null, null, null, null, 14, null],
+          [
+            15,
+            15,
+            16,
+            16,
+            17,
+            17,
+            18,
+            18,
+            19,
+            20,
+            21,
+            22,
+            25,
+            26,
+            28,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            30,
+            null,
+          ],
+          [
+            31,
+            31,
+            32,
+            32,
+            33,
+            33,
+            34,
+            34,
+            35,
+            35,
+            36,
+            36,
+            37,
+            37,
+            38,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            51,
+            52,
+            53,
+            54,
+            57,
+            58,
+            60,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            62,
+            null,
+          ],
+        ],
+      };
+      
+      torneig.manager = new BracketsManager(torneig.storage);
+
       arrayRoom.push({
         id: roomID,
         nom: nom,
         tipus: tipus,
         maxJugadors: maxJugadors,
         professor: socket.id,
+        torneig: torneig,
         jugadors: [],
       });
       arrayRoomMinim.push({
@@ -689,14 +692,14 @@ io.on("connection", (socket) => {
             if (jugador1.idSocket == socket.id) {
               jugador1.infoPartida.encertades++;
               jugador2.oponent.encertades++;
-              await torneig.manager.update.match({
+              await room.torneig.manager.update.match({
                 id: match.id,
                 opponent1: { score: jugador1.infoPartida.encertades },
                 opponent2: { score: jugador1.oponent.encertades },
               });
               if (jugador1.infoPartida.encertades == 5) {
                 match.status = 4;
-                await torneig.manager.update.match({
+                await room.torneig.manager.update.match({
                   id: match.id,
                   opponent1: {
                     score: jugador1.infoPartida.encertades,
@@ -704,7 +707,7 @@ io.on("connection", (socket) => {
                   },
                   opponent2: { score: jugador1.oponent.encertades },
                 });
-                room.dataTorneig = await torneig.manager.get.tournamentData(room.id);
+                room.dataTorneig = await room.torneig.manager.get.tournamentData(room.id);
                 guanyarRonda(jugador1, room);
                 perdreRonda(jugador2, room);
 
@@ -717,7 +720,7 @@ io.on("connection", (socket) => {
                   arrayPreg[jugador1.infoPartida.encertades]
                 );
               }
-              const tournamentData = await torneig.manager.get.tournamentData(room.id);
+              const tournamentData = await room.torneig.manager.get.tournamentData(room.id);
               room.dataTorneig = tournamentData;
               io.to(room.professor).emit("tournament info", {
                 data: room.dataTorneig,
@@ -726,7 +729,7 @@ io.on("connection", (socket) => {
             } else {
               jugador2.infoPartida.encertades++;
               jugador1.oponent.encertades++;
-              await torneig.manager.update.match({
+              await room.torneig.manager.update.match({
                 id: match.id,
                 opponent1: { score: jugador2.oponent.encertades },
                 opponent2: { score: jugador2.infoPartida.encertades },
@@ -734,7 +737,7 @@ io.on("connection", (socket) => {
               if (jugador2.infoPartida.encertades == 5) {
                 match.status = 4;
 
-                await torneig.manager.update.match({
+                await room.torneig.manager.update.match({
                   id: match.id,
                   opponent1: { score: jugador2.oponent.encertades },
                   opponent2: {
@@ -742,7 +745,7 @@ io.on("connection", (socket) => {
                     result: "win",
                   },
                 });
-                room.dataTorneig = await torneig.manager.get.tournamentData(room.id);
+                room.dataTorneig = await room.torneig.manager.get.tournamentData(room.id);
                 guanyarRonda(jugador2, room);
                 perdreRonda(jugador1, room);
                 if (comprovarRonda(room.dataTorneig.match)) {
@@ -754,7 +757,7 @@ io.on("connection", (socket) => {
                   arrayPreg[jugador2.infoPartida.encertades]
                 );
               }
-              const tournamentData = await torneig.manager.get.tournamentData(room.id);
+              const tournamentData = await room.torneig.manager.get.tournamentData(room.id);
               room.dataTorneig = tournamentData;
               io.to(room.professor).emit("tournament info", {
                 data: room.dataTorneig,
@@ -777,7 +780,7 @@ io.on("connection", (socket) => {
       room.dataTorneig.match.forEach((partida) => {
         if (partida.status == 2) {
           partida.status = 3;
-          torneig.manager.update.match({
+          room.torneig.manager.update.match({
             id: partida.id,
             opponent1: { score: 0 },
             opponent2: { score: 0 },
@@ -1718,7 +1721,7 @@ function createUserTorneig(id, nick, maxJugadors, avatar) {
   };
 }
 async function rendering(data) {
-  await torneig.manager.create({
+  await data.torneig.manager.create({
     id: data.id,
     tournamentId: data.id,
     name: data.nom,
@@ -1732,7 +1735,7 @@ async function rendering(data) {
       matchesChildCount: 0,
     },
   });
-  const tournamentData = await torneig.manager.get.tournamentData(data.id);
+  const tournamentData = await data.torneig.manager.get.tournamentData(data.id);
 
   data.dataTorneig = tournamentData;
 }
@@ -1745,7 +1748,7 @@ async function rendering(data) {
 function guanyarRonda(jugador, room) {
   jugador.infoPartida.encertades = 0;
   jugador.infoPartida.matchID =
-    torneig.guanyar[Math.log2(jugador.infoPartida.nJugadors) - 2][
+    room.torneig.guanyar[Math.log2(jugador.infoPartida.nJugadors) - 2][
       jugador.infoPartida.matchID
     ];
 
@@ -1769,7 +1772,7 @@ function perdreRonda(jugador, room) {
     jugador.infoPartida.loser = true;
     jugador.infoPartida.encertades = 0;
     jugador.infoPartida.matchID =
-      torneig.perdre[Math.log2(jugador.infoPartida.nJugadors) - 2][
+      room.torneig.perdre[Math.log2(jugador.infoPartida.nJugadors) - 2][
         jugador.infoPartida.matchID
       ];
     io.to(jugador.idSocket).emit("lose");
@@ -1788,7 +1791,7 @@ function perdreRonda(jugador, room) {
 }
 
 async function modificar(data) {
-  const tourneyData = await torneig.manager.get.tournamentData(data.id);
+  const tourneyData = await data.torneig.manager.get.tournamentData(data.id);
   data.dataTorneig = tourneyData;
 }
 
