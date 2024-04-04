@@ -30,6 +30,7 @@ export const useAppStore = defineStore('app', {
     tutorial: false,
     enPartida: false,
     dialog: false,
+    animacionDuelo: false,
     duelo: {
       enDuelo: false,
       encertades: 0,
@@ -37,6 +38,8 @@ export const useAppStore = defineStore('app', {
       oponent: {
         id: "",
         encertades: "",
+        avatar: "",
+        nick: "",
       },
     },
     infoTorneig: null,

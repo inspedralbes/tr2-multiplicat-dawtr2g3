@@ -1388,13 +1388,17 @@ async function utilitzarPoderDuelo(user, userObjectiu, roomID, socket) {
     if (jugador.idSocket == socket.id) {
       jugador.duelo.enDuelo = true;
       jugador.duelo.oponent.id = userObjectiu.idSocket;
+      jugador.duelo.oponent.nick = userObjectiu.nick;
       jugador.duelo.oponent.encertades = 0;
+      jugador.duelo.oponent.avatar = userObjectiu.avatar;
       user.duelo = jugador.duelo;
     }
     if (jugador.idSocket == userObjectiu.idSocket) {
       jugador.duelo.enDuelo = true;
       jugador.duelo.oponent.id = user.idSocket;
       jugador.duelo.oponent.encertades = 0;
+      jugador.duelo.oponent.avatar = user.avatar;
+      jugador.duelo.oponent.nick = user.nick;
       userObjectiu.duelo = jugador.duelo;
     }
   });
@@ -1497,7 +1501,7 @@ function comprovarMort(user) {
  * @param {string} nick nom del jugador
  * @returns Objecte que conté la informació de l'usuari
  */
-function createNewUser(idSocket, nick) {
+function createNewUser(idSocket, nick, avatarID) {
   let user = {
     idSocket: idSocket,
     nick: nick,
@@ -1505,6 +1509,7 @@ function createNewUser(idSocket, nick) {
     encertades: 0,
     vida: 100,
     skip: 1,
+    avatar: avatarID,
     preguntaNuke: null,
     preguntaNukeMal: null,
     temps: 0, //Es posa el temps quan mor el jugador, de base sera 0
@@ -1518,6 +1523,8 @@ function createNewUser(idSocket, nick) {
       oponent: {
         id: "",
         encertades: "",
+        avatar: "",
+        nick: "",
       },
     },
     infoPoders: {
@@ -1544,6 +1551,7 @@ function createUserMinim(user) {
     falladesConsecutives: user.falladesConsecutives,
     poder: user.poder,
     mort: user.mort,
+    avatar: user.avatar,
     duelo: {
       enDuelo: user.duelo.enDuelo || false,
       encertades: user.duelo.encertades || 0,
@@ -1551,6 +1559,8 @@ function createUserMinim(user) {
       oponent: {
         id: user.duelo.oponent.id || "",
         encertades: user.duelo.oponent.encertades || 0,
+        avatar: user.duelo.oponent.avatar || "",
+        nick: user.duelo.oponent.nick || "",
       },
     },
     infoPoders: {
