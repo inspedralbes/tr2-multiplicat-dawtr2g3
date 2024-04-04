@@ -1762,6 +1762,10 @@ function guanyarRonda(jugador, room) {
       jugador.infoPartida.matchID
     ];
 
+  if (jugador.infoPartida.matchID == null) {
+    acabarPartida(jugador.idSocket, room.id);
+  }
+
   io.to(jugador.idSocket).emit("win");
 
 
@@ -1798,11 +1802,6 @@ function perdreRonda(jugador, room) {
 
     return true;
   }
-}
-
-async function modificar(data) {
-  const tourneyData = await data.torneig.manager.get.tournamentData(data.id);
-  data.dataTorneig = tourneyData;
 }
 
 function matchUpPlayersRound1(room) {
