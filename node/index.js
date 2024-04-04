@@ -375,7 +375,6 @@ io.on("connection", (socket) => {
   socket.on("create game", (nom, maxJugadors, tipus, nick) => {
     let roomID = "Partida" + socket.id;
     socket.join(roomID);
-    console.log(tipus);
     let user = createNewUser(socket.id, nick);
 
     if (tipus == "torneo") {
@@ -637,6 +636,9 @@ io.on("connection", (socket) => {
   socket.on("answer torneig", async (idPreg, posResp) => {
     let roomID = trobarRoom(socket);
     let room = arrayRoom.find((room) => room.id == roomID);
+    console.log("socket");
+    console.log(socket.id);
+    
     if (room) {
       let arrayPreg = room.arrayPreg;
       let preguntasMal = room.preguntasMal;
@@ -648,15 +650,13 @@ io.on("connection", (socket) => {
         preguntasMal[idPreg].respostes[respuestaCorrecta]
       ) {
         let match = null;
-        room.dataTorneig.match.forEach((partida) => {
+        let foundMatch = false;
+        let i = 0;
+        
+        while (!foundMatch && i < room.dataTorneig.match.length) {
+          const partida = room.dataTorneig.match[i];
           if (partida.status == 3) {
-            console.log("partida: ");
             console.log(partida);
-            console.log(
-              "Players: ",
-              partida.opponent1.id,
-              partida.opponent2.id
-            );
             player1 = room.dataTorneig.participant.find(
               (jugador) => jugador.id == partida.opponent1.id
             );
@@ -666,17 +666,12 @@ io.on("connection", (socket) => {
             console.log("player 1: ", player1);
             console.log("player 2: ", player2);
             if (player1.name == socket.id || player2.name == socket.id) {
-              console.log("trobat!!!!!");
-              // console.log("player1");
-              // console.log(player1);
-              // console.log("player2");
-              // console.log(player2);
+              foundMatch = true;
               match = partida;
-              return;
             }
           }
-          console.log("--------------------");
-        });
+          i++;
+        }
         if (player1 && player2 && match) {
           let jugador1 = jugadors.find(
             (jugador) => jugador.idSocket == player1.name
@@ -802,7 +797,6 @@ io.on("connection", (socket) => {
             opponent1: { score: 0 },
             opponent2: { score: 0 },
           });
-          // console.log("partida");
 
           let player1 = room.dataTorneig.participant.find(
             (jugador) => jugador.id == partida.opponent1.id
@@ -810,7 +804,6 @@ io.on("connection", (socket) => {
           let player2 = room.dataTorneig.participant.find(
             (jugador) => jugador.id == partida.opponent2.id
           );
-          // console.log(JSON.stringify(partida));
           io.to(player1.name).emit("start match", arrayPreg[0]);
           io.to(player2.name).emit("start match", arrayPreg[0]);
         }
