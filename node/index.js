@@ -650,21 +650,32 @@ io.on("connection", (socket) => {
         let match = null;
         room.dataTorneig.match.forEach((partida) => {
           if (partida.status == 3) {
+            console.log("partida: ");
+            console.log(partida);
+            console.log(
+              "Players: ",
+              partida.opponent1.id,
+              partida.opponent2.id
+            );
             player1 = room.dataTorneig.participant.find(
               (jugador) => jugador.id == partida.opponent1.id
             );
             player2 = room.dataTorneig.participant.find(
               (jugador) => jugador.id == partida.opponent2.id
             );
+            console.log("player 1: ", player1);
+            console.log("player 2: ", player2);
             if (player1.name == socket.id || player2.name == socket.id) {
-              console.log("player1");
-              console.log(player1);
-              console.log("player2");
-              console.log(player2);
+              console.log("trobat!!!!!");
+              // console.log("player1");
+              // console.log(player1);
+              // console.log("player2");
+              // console.log(player2);
               match = partida;
               return;
             }
           }
+          console.log("--------------------");
         });
         if (player1 && player2 && match) {
           let jugador1 = jugadors.find(
@@ -673,11 +684,20 @@ io.on("connection", (socket) => {
           let jugador2 = jugadors.find(
             (jugador) => jugador.idSocket == player2.name
           );
+          console.log("Socket: ", socket.id);
 
-          console.log("jugador1");
-          console.log(jugador1);
-          console.log("jugador2");
-          console.log(jugador2);
+          console.log("Id 1: ", player1.name);
+          console.log("Nom 1: ", jugador1.nick);
+
+          console.log("Id 2: ", player2.name);
+          console.log("Nom 2: ", jugador2.nick);
+
+          console.log("Match: ", match.id);
+
+          // console.log("jugador1");
+          // console.log(jugador1);
+          // console.log("jugador2");
+          // console.log(jugador2);
           if (jugador1 && jugador2) {
             if (jugador1.idSocket == socket.id) {
               jugador1.infoPartida.encertades++;
@@ -697,8 +717,12 @@ io.on("connection", (socket) => {
                   },
                   opponent2: { score: jugador1.oponent.encertades },
                 });
-                guanyarRonda(jugador1);
-                perdreRonda(jugador2);
+                room.dataTorneig = await torneig.manager.get.stageData(0);
+                if (room.dataTorneig == undefined) {
+                  console.log("se fue a la puta");
+                }
+                guanyarRonda(jugador1, room);
+                perdreRonda(jugador2, room);
 
                 if (comprovarRonda(room.dataTorneig.match)) {
                   io.to(room.professor).emit("end round");
@@ -734,8 +758,12 @@ io.on("connection", (socket) => {
                     result: "win",
                   },
                 });
-                guanyarRonda(jugador2);
-                perdreRonda(jugador1);
+                room.dataTorneig = await torneig.manager.get.stageData(0);
+                if (room.dataTorneig == undefined) {
+                  console.log("se fue a la puta");
+                }
+                guanyarRonda(jugador2, room);
+                perdreRonda(jugador1, room);
                 if (comprovarRonda(room.dataTorneig.match)) {
                   io.to(room.professor).emit("end round");
                 }
@@ -761,7 +789,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("start round", () => {
-    console.log("start round");
+    // console.log("start round");
     let roomID = trobarRoom(socket);
     let room = arrayRoom.find((room) => room.id == roomID);
     if (room) {
@@ -774,7 +802,7 @@ io.on("connection", (socket) => {
             opponent1: { score: 0 },
             opponent2: { score: 0 },
           });
-          console.log("partida");
+          // console.log("partida");
 
           let player1 = room.dataTorneig.participant.find(
             (jugador) => jugador.id == partida.opponent1.id
@@ -782,7 +810,7 @@ io.on("connection", (socket) => {
           let player2 = room.dataTorneig.participant.find(
             (jugador) => jugador.id == partida.opponent2.id
           );
-          console.log(JSON.stringify(partida));
+          // console.log(JSON.stringify(partida));
           io.to(player1.name).emit("start match", arrayPreg[0]);
           io.to(player2.name).emit("start match", arrayPreg[0]);
         }
@@ -819,9 +847,6 @@ io.on("connection", (socket) => {
               players: room.jugadors,
             });
             matchUpPlayersRound1(room);
-            console.log(room.dataTorneig);
-            socket.emit("round started");
-            socket.to(roomID).emit("new matchup", room.jugadors);
           })
           .catch((error) => {
             console.error(error);
@@ -1729,9 +1754,6 @@ async function rendering(data) {
       matchesChildCount: 0,
     },
   });
-
-  await modificar(data);
-
   const tournamentData = await torneig.manager.get.stageData(0);
 
   data.dataTorneig = tournamentData;
@@ -1742,16 +1764,22 @@ async function rendering(data) {
  * @param {object} jugador El jugador que guanya la ronda
  */
 
-function guanyarRonda(jugador) {
+function guanyarRonda(jugador, room) {
   jugador.infoPartida.encertades = 0;
   jugador.infoPartida.matchID =
     torneig.guanyar[Math.log2(jugador.infoPartida.nJugadors) - 2][
       jugador.infoPartida.matchID
     ];
+
   io.to(jugador.idSocket).emit("win");
 
-  if (torneig.manager.get.stageData(0).matches[jugador.infoPartida.matchID].status == 2){
-    // matchMake(jugador.idSocket, jugador.infoPartida.matchID);
+  // let torneigData = await torneig.manager.get.stageData(0);
+
+  // console.log(torneigData.matches);
+
+  if (room.dataTorneig.match[jugador.infoPartida.matchID].status == 2) {
+    console.log("fer matchmake");
+    matchMake(jugador.infoPartida.matchID, room);
   }
 }
 
@@ -1761,7 +1789,7 @@ function guanyarRonda(jugador) {
  * @returns boolean que diu si segueix viu o no
  */
 
-function perdreRonda(jugador) {
+function perdreRonda(jugador, room) {
   if (!jugador.infoPartida.loser) {
     jugador.infoPartida.loser = true;
     jugador.infoPartida.encertades = 0;
@@ -1770,6 +1798,14 @@ function perdreRonda(jugador) {
         jugador.infoPartida.matchID
       ];
     io.to(jugador.idSocket).emit("lose");
+
+    // let torneigData = await torneig.manager.get.stageData(0);
+
+    if (room.dataTorneig.match[jugador.infoPartida.matchID].status == 2) {
+      console.log("fer matchmake");
+      matchMake(jugador.infoPartida.matchID, room);
+    }
+
     return false;
   } else {
     return true;
@@ -1777,45 +1813,6 @@ function perdreRonda(jugador) {
 }
 
 async function modificar(data) {
-  // await torneig.manager.update.match({
-  //   id: 0,
-  //   opponent1: { score: 1 },
-  //   opponent2: { score: 2, result: "win" },
-  // });
-
-  // guanyarRonda(data.jugadors[1]);
-  // perdreRonda(data.jugadors[0]);
-
-  // await torneig.manager.update.match({
-  //   id: 1,
-  //   opponent1: { score: 2, result: "win" },
-  //   opponent2: { score: 1 },
-  // });
-  // guanyarRonda(data.jugadors[2]);
-  // perdreRonda(data.jugadors[3]);
-
-  // await torneig.manager.update.match({
-  //   id: 2,
-  //   opponent1: { score: 2, result: "win" },
-  //   opponent2: { score: 1 },
-  // });
-  // guanyarRonda(data.jugadors[4]);
-  // perdreRonda(data.jugadors[5]);
-
-  // await torneig.manager.update.match({
-  //   id: 3,
-  //   opponent1: { score: 2 },
-  //   opponent2: { score: 1 },
-  // });
-  // guanyarRonda(data.jugadors[6]);
-  // perdreRonda(data.jugadors[7]);
-
-  // await torneig.manager.update.match({
-  //   id: 4,
-  //   opponent1: { score: 0 },
-  //   opponent2: { score: 0 },
-  // });
-
   const tourneyData = await torneig.manager.get.stageData(0);
   data.dataTorneig = tourneyData;
 }
@@ -1823,31 +1820,11 @@ async function modificar(data) {
 function matchUpPlayersRound1(room) {
   let limit = room.dataTorneig.participant.length / 2;
   for (let index = 0; index < limit; index++) {
-    let indexPlayer1 = room.dataTorneig.match[index].opponent1.id;
-    let indexPlayer2 = room.dataTorneig.match[index].opponent2.id;
-
-    let socketPlayer1 = room.dataTorneig.participant[indexPlayer1].name;
-    let socketPlayer2 = room.dataTorneig.participant[indexPlayer2].name;
-
-    let player1 = room.jugadors.find(
-      (jugador) => jugador.idSocket == socketPlayer1
-    );
-    let player2 = room.jugadors.find(
-      (jugador) => jugador.idSocket == socketPlayer2
-    );
-
-    player1.oponent.id = player2.idSocket;
-    player1.oponent.nick = player2.nick;
-    player1.oponent.avatar = player2.avatar;
-
-    player2.oponent.id = player1.idSocket;
-    player2.oponent.nick = player1.nick;
-    player2.oponent.avatar = player1.avatar;
+    matchMake(index, room);
   }
 }
 
 function comprovarRonda(matches) {
-  let acabat = true;
   matches.forEach((match) => {
     if (match.status == 3) {
       return false;
@@ -1855,6 +1832,40 @@ function comprovarRonda(matches) {
   });
   return true;
 }
+
+function matchMake(matchID, room) {
+  let indexPlayer1 = room.dataTorneig.match[matchID].opponent1.id;
+  let indexPlayer2 = room.dataTorneig.match[matchID].opponent2.id;
+
+  let socketPlayer1 = room.dataTorneig.participant[indexPlayer1].name;
+  let socketPlayer2 = room.dataTorneig.participant[indexPlayer2].name;
+
+  let player1 = room.jugadors.find(
+    (jugador) => jugador.idSocket == socketPlayer1
+  );
+
+  let player2 = room.jugadors.find(
+    (jugador) => jugador.idSocket == socketPlayer2
+  );
+
+  player1.oponent.id = player2.idSocket;
+  player1.oponent.nick = player2.nick;
+  player1.oponent.avatar = player2.avatar;
+  player1.infoPartida.encertades = 0;
+  player1.oponent.encertades = 0;
+
+  player2.oponent.id = player1.idSocket;
+  player2.oponent.nick = player1.nick;
+  player2.oponent.avatar = player1.avatar;
+  player2.infoPartida.encertades = 0;
+  player2.oponent.encertades = 0;
+
+  console.log("fent emits matchmaking");
+
+  io.to(socketPlayer1).emit("new matchup", room.jugadors);
+  io.to(socketPlayer2).emit("new matchup", room.jugadors);
+}
+
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
