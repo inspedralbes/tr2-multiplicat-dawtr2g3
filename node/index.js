@@ -1763,7 +1763,7 @@ function guanyarRonda(jugador, room) {
     ];
 
   if (jugador.infoPartida.matchID == null) {
-    acabarPartida(jugador.idSocket, room.id);
+    acabarPartidaTorneig(jugador.idSocket, room.id);
   }
 
   io.to(jugador.idSocket).emit("win");
@@ -1819,7 +1819,27 @@ function comprovarRonda(matches) {
   });
   return true;
 }
+function acabarPartidaTorneig(guanyadorSocket, roomID) {
+  let room = arrayRoom.find((room) => room.id == roomID);
+  if(room){
+    let guanyador = room.jugadors.find((jugador) => jugador.idSocket == guanyadorSocket);
+  let llistatUsuaris = room.jugadors;
 
+
+  io.to(roomID).emit("end tournament", guanyador);
+
+  let idOrig = socket.id;
+  llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+  let index = arrayRoom.findIndex((room) => room.id == roomID);
+  arrayRoom.splice(index, 1);
+  llistatUsuaris.forEach((user) => {
+    socket.id = user.idSocket;
+    socket.leave(roomID);
+  });
+  socket.id = idOrig;
+}
+
+};
 function matchMake(matchID, room) {
   console.log(room.dataTorneig);
   let indexPlayer1 = room.dataTorneig.match[matchID].opponent1.id;
