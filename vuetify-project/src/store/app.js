@@ -17,7 +17,7 @@ export const useAppStore = defineStore('app', {
     nomPartida: '',
     maxJugadors: 0,
     players: [],
-    ownPlayer: [],
+    ownPlayer: null,
     question: null,
     answer: null,
     timer: 20,
@@ -30,16 +30,20 @@ export const useAppStore = defineStore('app', {
     tutorial: false,
     enPartida: false,
     dialog: false,
+    animacionDuelo: false,
     duelo: {
-      "enDuelo": false,
-      "encertades": 0,
-      "indexPreg": [],
-      "oponent": {
-        'id': "",
-        'encertades': "",
+      enDuelo: false,
+      encertades: 0,
+      indexPreg: [],
+      oponent: {
+        id: "",
+        encertades: "",
+        avatar: "",
+        nick: "",
       },
     },
     infoTorneig: null,
+    stateTorneig: "esperant",
 
 
   }),
@@ -49,6 +53,9 @@ export const useAppStore = defineStore('app', {
     },
     setOpponent(opponent) {
       this.opponent = opponent;
+    },
+    getPantalla(){
+      return this.pantallaTorneig;
     },
 
     sumarVictoria() {
@@ -92,6 +99,9 @@ export const useAppStore = defineStore('app', {
     setAvatar(avatar) {
       this.avatar = avatar;
     },
+    getAvatar() {
+      return this.avatar;
+    },
     stopTimer() {
       clearInterval(this.timerInterval);
       this.timerStopped = true;
@@ -125,6 +135,12 @@ export const useAppStore = defineStore('app', {
           this.ownPlayer = player;
         }
       });
+    },
+    getOwnPlayer() {
+      return this.ownPlayer;
+    },
+    setOwnPlayer(player) {
+      this.ownPlayer = player;
     },
     getPlayers() {
       return this.players;
@@ -174,6 +190,12 @@ export const useAppStore = defineStore('app', {
     },
     setTorneigInfo(info) {
       this.infoTorneig = info;
-    }
+    },
+    getTourneigState() {
+      return this.stateTorneig;
+    },
+    setTourneigState(state) {
+      this.stateTorneig = state;
+    },
   },
 })

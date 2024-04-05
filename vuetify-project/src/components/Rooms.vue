@@ -182,7 +182,7 @@ export default {
         },
         join() {
             const store = useAppStore();
-            socket.emit('join', this.idPartida, store.loginInfo.username);
+            socket.emit('join', this.idPartida, store.loginInfo.username, store.getAvatar());
         },
         toast() {
             Toastify({

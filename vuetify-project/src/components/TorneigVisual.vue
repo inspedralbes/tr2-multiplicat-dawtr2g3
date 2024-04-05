@@ -2,9 +2,11 @@
   <div></div>
 
   <div id="example" ref="example" class="brackets-viewer"></div>
+  <button @click="start">Start round</button>
 </template>
 
 <script>
+import { socket } from "@/socket";
 import { useAppStore } from "../store/app.js";
 
 import "brackets-viewer/dist/brackets-viewer.min.css";
@@ -19,7 +21,9 @@ export default {
     };
   },
   methods: {
-
+    start(){
+      socket.emit("start round");
+    },
     async pintar() {
       this.$refs.example?.replaceChildren();
 

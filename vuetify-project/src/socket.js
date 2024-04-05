@@ -34,6 +34,27 @@ socket.on('finalitzar duelo', () => {
 
   socket.emit('sortir duelo');
 });
+socket.on('win', () => {
+  console.log("Has guanyat");
+  const store = useAppStore();
+  store.setTourneigState("esperant");
+});
+
+socket.on('lose', () => {
+  console.log("Has perdut");
+  const store = useAppStore();
+  store.setTourneigState("esperant");
+});
+
+socket.on('start match', (question) => {
+  const store = useAppStore();
+  store.stopTimer();
+  store.setQuestion(question);
+  store.timer = question.temps;
+  store.startTimer();
+  store.setTourneigState("partida");
+  store.canvi = true;
+});
 
 /**
  * Modifica l'array d'usuaris
@@ -114,6 +135,8 @@ socket.on("end", (guanyador, perdedors) => {
   store.enPartida = false;
   store.timer = 20;
   store.dead = false;
+  store.duelo = {};
+  store.animacionDuelo = false;
   store.setQuestionIndex(-1);
   store.setGuanyador(guanyador);
   store.setPerdedors(perdedors);
@@ -138,7 +161,7 @@ socket.on('info partida', (nom, maxJugadors) => {
   const store = useAppStore();
   store.setInfoPartida(nom, maxJugadors);
 })
-socket.on('push a lobby',()=>{
+socket.on('push a lobby', () => {
   router.push('/lobby');
 
 });
@@ -161,11 +184,16 @@ socket.on("duelo recibir", (duelo) => {
   //Triger animacion de recibir duelo
   const store = useAppStore();
   store.dialog = false;
+
   console.log("recibir duelo");
   console.log(store.ownPlayer)
-  socket.emit("duelo entrar",store.ownPlayer.idSocket,duelo.oponent.id)
+  socket.emit("duelo entrar", store.ownPlayer.idSocket, duelo.oponent.id)
   console.log(duelo);
   store.setDuelo(duelo);
+  store.animacionDuelo = true;
+  setTimeout(() => {
+    store.animacionDuelo = false;
+  }, 3000);
   console.log(socket.rooms);
 });
 
@@ -175,12 +203,16 @@ socket.on("duelo enviar", (duelo) => {
   console.log("enviar duelo");
   console.log(store.ownPlayer)
 
-  socket.emit("duelo entrar",duelo.oponent.id,store.ownPlayer.idSocket);
+  socket.emit("duelo entrar", duelo.oponent.id, store.ownPlayer.idSocket);
 
   console.log(duelo);
   store.setDuelo(duelo);
+  store.animacionDuelo = true;
+  setTimeout(() => {
+    store.animacionDuelo = false;
+  }, 3000);
 });
-socket.on('nuke',(nick)=>{
+socket.on('nuke', (nick) => {
   const store = useAppStore();
   store.nukeAnimation = nick;
   store.stopTimer();
@@ -190,7 +222,7 @@ socket.on('nuke',(nick)=>{
     store.nukeAnimation = false;
   }, 5000);
 })
-socket.on('pregunta nuke',(pregunta)=>{
+socket.on('pregunta nuke', (pregunta) => {
   console.log(pregunta);
   const store = useAppStore();
   store.question = pregunta;
@@ -205,14 +237,28 @@ socket.on('tournament info', (info) => {
 
   let { data, players } = info;
 
-  console.log(players);
+  console.log("DATA: ", data);
+  console.log("PLAYERS: ", players);
 
   data.participant.forEach((jugador, index) => {
     jugador.name = players[index].nick;
   });
 
   store.setTorneigInfo(data);
+  router.push('/torneigProfe');
+});
+
+socket.on("new matchup", (arrayUsers) => {
+  const store = useAppStore();
+  let myself = arrayUsers.find(user => user.idSocket == socket.id);
+  store.setOwnPlayer(myself);
+  store.setTourneigState("matchup");
   router.push('/torneig');
+});
+
+socket.on("lose tournament", () => {
+  router.push('/perdut');
+
 });
 
 // socket.on("get power", (poder) => {
