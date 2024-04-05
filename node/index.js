@@ -558,7 +558,7 @@ io.on("connection", (socket) => {
           let llistatUsuarisMinim = [];
           llistatUsuarisMinim = llistaMinim(llistatUsuaris);
           io.to(roomID).emit("update players", llistatUsuarisMinim);
-          let start = arrayRoom.find((room) => room.id == roomID).start;
+          let start = room.start;
           if (start) {
             if (jugadorsVius(llistatUsuaris).length == 1) {
               acabarPartida(socket, roomID);
