@@ -384,6 +384,7 @@ io.on("connection", (socket) => {
         id: roomID,
         nom: nom,
         tipus: tipus,
+        eliminats: 0,
         maxJugadors: maxJugadors,
         professor: socket.id,
         torneig: torneig,
@@ -709,7 +710,7 @@ io.on("connection", (socket) => {
                 });
                 room.dataTorneig = await room.torneig.manager.get.tournamentData(room.id);
                 guanyarRonda(jugador1, room);
-                perdreRonda(jugador2, room);
+                perdreRonda(jugador2, room, socket);
 
                 if (comprovarRonda(room.dataTorneig.match)) {
                   io.to(room.professor).emit("end round");
@@ -747,7 +748,7 @@ io.on("connection", (socket) => {
                 });
                 room.dataTorneig = await room.torneig.manager.get.tournamentData(room.id);
                 guanyarRonda(jugador2, room);
-                perdreRonda(jugador1, room);
+                perdreRonda(jugador1, room, socket);
                 if (comprovarRonda(room.dataTorneig.match)) {
                   io.to(room.professor).emit("end round");
                 }
@@ -1702,11 +1703,7 @@ function respostaFallada(user, roomID, socket) {
     if (acabat) acabarPartida(socket, roomID);
   }
 }
-/**
- * Crea un torneig amb la sala que se li indiqui i l'id del torneig a utilitzars
- * @param {string} roomID L'id de la room al qual es crea el torneig
- * @param {number} tournamentId Id del torneig, augmenta en 1 cada vegada que es crea un torneig
- */
+
 async function generarTorneig(data) {
   return await rendering(data);
 }
@@ -1762,10 +1759,6 @@ function guanyarRonda(jugador, room) {
       jugador.infoPartida.matchID
     ];
 
-  if (jugador.infoPartida.matchID == null) {
-    acabarPartidaTorneig(jugador.idSocket, room.id);
-  }
-
   io.to(jugador.idSocket).emit("win");
 
 
@@ -1781,7 +1774,7 @@ function guanyarRonda(jugador, room) {
  * @returns boolean que diu si segueix viu o no
  */
 
-function perdreRonda(jugador, room) {
+function perdreRonda(jugador, room, socket) {
   if (!jugador.infoPartida.loser) {
     jugador.infoPartida.loser = true;
     jugador.infoPartida.encertades = 0;
@@ -1798,7 +1791,15 @@ function perdreRonda(jugador, room) {
 
     return false;
   } else {
+
     io.to(jugador.idSocket).emit("lose tournament");
+
+    room.eliminats ++;
+    if(room.eliminats == room.jugadors.length - 1){
+      acabarPartidaTorneig(jugador.oponent.id, room.id, socket);
+    };
+
+    
 
     return true;
   }
@@ -1819,7 +1820,7 @@ function comprovarRonda(matches) {
   });
   return true;
 }
-function acabarPartidaTorneig(guanyadorSocket, roomID) {
+function acabarPartidaTorneig(guanyadorSocket, roomID, socket) {
   let room = arrayRoom.find((room) => room.id == roomID);
   if(room){
     let guanyador = room.jugadors.find((jugador) => jugador.idSocket == guanyadorSocket);
@@ -1841,7 +1842,6 @@ function acabarPartidaTorneig(guanyadorSocket, roomID) {
 
 };
 function matchMake(matchID, room) {
-  console.log(room.dataTorneig);
   let indexPlayer1 = room.dataTorneig.match[matchID].opponent1.id;
   let indexPlayer2 = room.dataTorneig.match[matchID].opponent2.id;
 

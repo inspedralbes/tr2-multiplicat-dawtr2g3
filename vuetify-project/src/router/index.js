@@ -12,6 +12,7 @@ import TorneigVisual from "../components/TorneigVisual.vue";
 import Torneig from "../components/Torneig.vue";
 import AnimacioDuelo from "../components/AnimacioDuelo.vue";
 import Perdut from "../components/Perdut.vue";
+import FinalTorneig from "../components/FinalTorneig.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -73,6 +74,10 @@ const router = createRouter({
       path: '/perdut',
       name: 'Perdut',
       component: Perdut
+    },{
+      path: '/finalTorneig',
+      name: 'FinalTorneig',
+      component: FinalTorneig
     }
 
   ]
