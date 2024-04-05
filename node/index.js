@@ -1830,6 +1830,7 @@ function acabarPartidaTorneig(guanyadorSocket, roomID, socket) {
   io.to(roomID).emit("end tournament", guanyador);
 
   let idOrig = socket.id;
+
   llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
   let index = arrayRoom.findIndex((room) => room.id == roomID);
   arrayRoom.splice(index, 1);
@@ -1837,6 +1838,9 @@ function acabarPartidaTorneig(guanyadorSocket, roomID, socket) {
     socket.id = user.idSocket;
     socket.leave(roomID);
   });
+  socket.id = room.professor;
+  socket.leave(roomID);
+
   socket.id = idOrig;
 }
 
