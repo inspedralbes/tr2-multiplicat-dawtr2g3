@@ -59,7 +59,7 @@
 <script>
 import { useAppStore } from "../store/app.js";
 import { computed } from "vue";
-import partidaTorneig from "./PartidaTorneig.vue";
+import partidaTorneig from "./partidaTorneig.vue";
 
 export default {
   name: "Torneig",

@@ -261,6 +261,13 @@ socket.on("lose tournament", () => {
 
 });
 
+socket.on("end tournament", (guanyador) => {
+  const store = useAppStore();
+  console.log(guanyador);
+  store.setGuanyador(guanyador);
+  router.push('/finalTorneig');
+})
+
 // socket.on("get power", (poder) => {
 //   const store = useAppStore();
 //   store.setPower(poder);

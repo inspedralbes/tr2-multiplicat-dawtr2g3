@@ -112,6 +112,9 @@ export const useAppStore = defineStore('app', {
     setGuanyador(guanyador) {
       this.guanyador = guanyador;
     },
+    getGuanyador() {
+      return this.guanyador;
+    },
     setPartides(arrayRoom) {
       this.partides = arrayRoom;
     },
@@ -197,5 +200,7 @@ export const useAppStore = defineStore('app', {
     setTourneigState(state) {
       this.stateTorneig = state;
     },
+    
+
   },
 })
