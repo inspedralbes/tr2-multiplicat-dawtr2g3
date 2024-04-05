@@ -9,7 +9,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/vuetify',
+  // SOLO SI SE SUBE EN LA CARPETA /VUETIFY base: '/vuetify',
   plugins: [
     vue({
       template: { transformAssetUrls }
