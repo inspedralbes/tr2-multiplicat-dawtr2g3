@@ -3,7 +3,7 @@
     
     <div v-if="state != 'partida'" class="pantallaVersus">
       
-      <div class="avatarJugador">
+      <div class="avatarJugador avatar1">
         <img v-if="ownPlayer.avatar == 1" class="avatar" src="../assets/avatar/avatarVaiolet.png" alt="icono avatar">
         <img v-else-if="ownPlayer.avatar == 2" class="avatar" src="../assets/avatar/avatarCerdo.png" alt="icono avatar">
         <img v-else-if="ownPlayer.avatar == 3" class="avatar" src="../assets/avatar/avatarEric.png" alt="icono avatar">
@@ -25,7 +25,7 @@
       </div>
     
       
-      <div v-if="state=='matchup'" class="avatarOponent">
+      <div v-if="state=='matchup'" class="avatarOponent avatar2">
         <h1>{{ ownPlayer.oponent.nick }}</h1>
 
         <img v-if="ownPlayer.oponent.avatar == 1" class="avatar" src="../assets/avatar/avatarVaiolet.png" alt="icono avatar">
@@ -134,5 +134,36 @@ export default {
 .avatar {
   width: 50vh;
   height: 5%;
+}
+.avatar1 {
+    animation: avatar1 2s ease-in-out;
+
+}
+
+@keyframes avatar1 {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    65% {
+        transform: translateX(0%);
+    }
+
+}
+
+.avatar2 {
+    animation: avatar2 2s ease-in-out;
+
+}
+
+@keyframes avatar2 {
+    0% {
+        transform: translateX(100%);
+    }
+
+    65% {
+        transform: translateX(0%);
+    }
+
 }
 </style>
