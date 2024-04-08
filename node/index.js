@@ -436,9 +436,12 @@ io.on("connection", (socket) => {
 
   socket.on("disconnecting", () => {
     const roomID = trobarRoom(socket);
+    console.log('tornar a lobby');
     if (roomID != undefined) {
       let index = arrayRoom.findIndex((room) => room.id == roomID);
       if (roomID == "Partida" + socket.id && index != "-1") {
+        console.log('encontrada partida');
+
         io.to(roomID).emit("closed lobby");
         let idOrig = socket.id;
 
@@ -488,10 +491,16 @@ io.on("connection", (socket) => {
           });
 
           llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+          console.log(llistatUsuaris)
+          if(room.tipus == "torneo" ){
+            io.to(roomID).emit("update players", llistatUsuaris);
+            
+          }else{
+            let llistatUsuarisMinim = [];
+            llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+            io.to(roomID).emit("update players", llistatUsuarisMinim);
 
-          let llistatUsuarisMinim = [];
-          llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-          io.to(roomID).emit("update players", llistatUsuarisMinim);
+          }
           let start = room.start;
           if (start) {
             if (jugadorsVius(llistatUsuaris).length == 1) {
@@ -500,9 +509,6 @@ io.on("connection", (socket) => {
             }
 
           }
-
-
-
 
         }
       }
