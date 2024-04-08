@@ -74,6 +74,7 @@ export default {
       data: computed(() => store.getTorneigInfo()),
       players: computed(() => store.getPlayers()),
       opponents: {opponent1: null, opponent2: null},
+      matchID: null,
       endGame: false,
       avatars: [
         "/src/assets/avatar/avatarVaiolet.png",
@@ -101,6 +102,8 @@ export default {
         this.opponents.opponent1 = match.opponent1.id;
         this.opponents.opponent2 = match.opponent2.id;
         this.endGame = true;
+        this.matchID = match.id;
+        console.log(this.matchID);
         }
       };
 
@@ -158,7 +161,7 @@ export default {
 
     startNextRound() {
       console.log("startNextRound");
-      socket.emit("start");
+      socket.emit("start round");
     },
     forçarVictoria(ordre) {
       console.log("Forçar victòria");
@@ -167,6 +170,8 @@ export default {
       socket.emit("force win", {
         guanyador: ordre == 1 ? this.opponents.opponent1 : this.opponents.opponent2,
         perdedor: ordre == 1 ? this.opponents.opponent2 : this.opponents.opponent1,
+        ordre: ordre,
+        matchID: this.matchID,
       });
     },
   },
