@@ -244,6 +244,7 @@ socket.on('tournament info', (info) => {
     jugador.avatar = players[index].avatar;
   });
 
+  store.setPlayers(players);
   store.setTorneigInfo(data);
   router.push('/torneigProfe');
 });

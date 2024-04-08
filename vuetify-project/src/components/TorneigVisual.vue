@@ -25,29 +25,32 @@
   >
     <v-card
       elevation="16"
-      class="tarjeta"
+      class="tarjeta paddingB"
       title="Forçar una victòria"
-      subtitle="Clica en una persona i confirma per a forçar una victòria"
+      subtitle="Clica en un participant per a forçar una victòria"
       width="400"
+      v-if="endGame"
     >
-      <v-card-actions>
-        <v-btn variant="tonal" height="70">
+      <v-card-actions class="centrarX">
+        <v-btn variant="tonal" height="70" @click="forçarVictoria(1)">
           <v-img 
           :aspect-ratio="1"
-          :src="this.avatars[this.data.participant[match.opponent1.id].avatar - 1]"
+          :src="avatars[data.participant[opponents.opponent1].avatar - 1]"
           cover
           width="50"
           ></v-img>
+          <div class="marginL">{{ data.participant[opponents.opponent1].name }}</div>
         </v-btn>
       </v-card-actions>
-      <v-card-actions>
-        <v-btn variant="tonal" height="70">
+      <v-card-actions class="centrarX">
+        <v-btn variant="tonal" height="70" @click="forçarVictoria(2)">
           <v-img 
           :aspect-ratio="1"
-          :src="this.avatars[this.data.participant[match.opponent2.id].avatar - 1]"
+          :src="avatars[data.participant[opponents.opponent2].avatar - 1]"
           cover
           width="50"
           ></v-img>
+          <div class="marginL">{{ data.participant[opponents.opponent2].name }}</div>
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -69,6 +72,8 @@ export default {
     const store = useAppStore();
     return {
       data: computed(() => store.getTorneigInfo()),
+      players: computed(() => store.getPlayers()),
+      opponents: {opponent1: null, opponent2: null},
       endGame: false,
       avatars: [
         "/src/assets/avatar/avatarVaiolet.png",
@@ -92,9 +97,11 @@ export default {
       this.$refs.example?.replaceChildren();
 
       window.bracketsViewer.onMatchClicked = async (match) => {
-        console.log(this.data.participant[match.opponent1.id].name);
-        console.log(this.data.participant[match.opponent2.id].name);
+        if (match.status == 2 || match.status == 3) {
+        this.opponents.opponent1 = match.opponent1.id;
+        this.opponents.opponent2 = match.opponent2.id;
         this.endGame = true;
+        }
       };
 
       if (this.data && this.data.participant !== null) {
@@ -153,6 +160,15 @@ export default {
       console.log("startNextRound");
       socket.emit("start");
     },
+    forçarVictoria(ordre) {
+      console.log("Forçar victòria");
+      this.endGame = false;
+
+      socket.emit("force win", {
+        guanyador: ordre == 1 ? this.opponents.opponent1 : this.opponents.opponent2,
+        perdedor: ordre == 1 ? this.opponents.opponent2 : this.opponents.opponent1,
+      });
+    },
   },
   async mounted() {
     await this.pintar();
@@ -175,6 +191,19 @@ export default {
   align-items: center;
   justify-content: center;
   height: 90vh;
+}
+
+.centrarX {
+  display: flex;
+  justify-content: center;
+}
+
+.marginL {
+  margin-left: 10px;
+}
+
+.paddingB {
+  padding-bottom: 20px;
 }
 
 .centrar * {
