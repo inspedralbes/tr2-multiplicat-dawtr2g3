@@ -3,13 +3,59 @@
 
   <div id="example" ref="example" class="brackets-viewer centrar"></div>
 
-  <div class="caixaBtn">  
-    <button class="nextBtn" @click="startNextRound()">Començar noves partides</button>
+  <div class="caixaBtn">
+    <button class="nextBtn" @click="startNextRound()">
+      Començar noves partides
+    </button>
   </div>
+
+  <!-- <div v-if="endGame" :class="endGame ? 'apareixer' : 'desapareixer'"> -->
+  <!-- <v-overlay :activator="endGame">
+      <v-card
+        class="tarjeta"
+        title="Forçar una victòria"
+        subtitle="Clica en una persona i confirma per a forçar una victòria"
+        width="400"
+      ></v-card>
+    </v-overlay> -->
+  <v-overlay
+    :model-value="endGame"
+    class="align-center justify-center"
+    @click:outside="endGame = false"
+  >
+    <v-card
+      elevation="16"
+      class="tarjeta"
+      title="Forçar una victòria"
+      subtitle="Clica en una persona i confirma per a forçar una victòria"
+      width="400"
+    >
+      <v-card-actions>
+        <v-btn variant="tonal" height="70">
+          <v-img 
+          :aspect-ratio="1"
+          :src="this.avatars[this.data.participant[match.opponent1.id].avatar - 1]"
+          cover
+          width="50"
+          ></v-img>
+        </v-btn>
+      </v-card-actions>
+      <v-card-actions>
+        <v-btn variant="tonal" height="70">
+          <v-img 
+          :aspect-ratio="1"
+          :src="this.avatars[this.data.participant[match.opponent2.id].avatar - 1]"
+          cover
+          width="50"
+          ></v-img>
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-overlay>
+  <!-- </div> -->
 </template>
 
 <script>
-import { socket } from "@/socket";
 import { socket } from "@/socket";
 import { useAppStore } from "../store/app.js";
 
@@ -18,12 +64,12 @@ import "brackets-viewer/dist/brackets-viewer.min.css";
 import "brackets-viewer/dist/brackets-viewer.min.js";
 import { computed } from "vue";
 
-
 export default {
   data() {
     const store = useAppStore();
     return {
       data: computed(() => store.getTorneigInfo()),
+      endGame: false,
       avatars: [
         "/src/assets/avatar/avatarVaiolet.png",
         "/src/assets/avatar/avatarCerdo.png",
@@ -38,7 +84,7 @@ export default {
         "/src/assets/avatar/avatarPerroDJ.png",
         "/src/assets/avatar/avatarPower.png",
         "/src/assets/avatar/avatarZorro.png",
-    ]
+      ],
     };
   },
   methods: {
@@ -46,21 +92,9 @@ export default {
       this.$refs.example?.replaceChildren();
 
       window.bracketsViewer.onMatchClicked = async (match) => {
-        this.idModificar = match.id;
-        console.log(this.data);
-        // console.log(this.manager);
-        // try {
-          // console.log(this.manager);
-          // await this.manager.update.match({
-          //   id: match.id,
-          //   opponent1: { score: 5 },
-          //   opponent2: { score: 7, result: "win" },
-          // });
-          // console.log(this.manager);
-          // const tourneyData = await this.manager.get.stageData(0);
-          // console.log(tourneyData);
-          // this.data = tourneyData;
-        // } catch (error) {}
+        console.log(this.data.participant[match.opponent1.id].name);
+        console.log(this.data.participant[match.opponent2.id].name);
+        this.endGame = true;
       };
 
       if (this.data && this.data.participant !== null) {
@@ -79,7 +113,7 @@ export default {
             matchGames: this.data.match_game,
             participants: this.data.participant,
           },
-          { 
+          {
             customRoundName: (info, t) => {
               // You have a reference to `t` in order to translate things.
               // Returning `undefined` will fallback to the default round name in the current language.
@@ -118,14 +152,12 @@ export default {
     startNextRound() {
       console.log("startNextRound");
       socket.emit("start");
-    }
+    },
   },
   async mounted() {
     await this.pintar();
   },
-  computed: {
-
-  },
+  computed: {},
   watch: {
     data: {
       handler() {
@@ -153,16 +185,29 @@ export default {
   background: none;
 }
 
-.caixaBtn{
+.caixaBtn {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.nextBtn{
+.nextBtn {
   background-color: white;
   border: 1px solid black;
   border-radius: 5px;
   padding: 5px;
+}
+
+.tarjeta {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.fonsTarjeta {
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
 }
 </style>
