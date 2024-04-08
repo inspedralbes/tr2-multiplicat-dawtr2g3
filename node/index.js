@@ -165,6 +165,10 @@ io.on("connection", (socket) => {
 
   socket.on("create game", (nom, maxJugadors, tipus, nick) => {
     let roomID = "Partida" + socket.id;
+    let index = arrayRoom.findIndex((room) => room.id == roomID);
+    if(index != -1){
+      return;
+    }
     socket.join(roomID);
     let user = createNewUser(socket.id, nick);
 
