@@ -1,29 +1,47 @@
 <template>
   <div></div>
 
-  <div id="example" ref="example" class="brackets-viewer"></div>
-  <button @click="start">Start round</button>
+  <div id="example" ref="example" class="brackets-viewer centrar"></div>
+
+  <div class="caixaBtn">  
+    <button class="nextBtn" @click="startNextRound()">Començar noves partides</button>
+  </div>
 </template>
 
 <script>
 import { socket } from "@/socket";
+import { socket } from "@/socket";
 import { useAppStore } from "../store/app.js";
 
+import "../assets/css/torneigVisual.css";
 import "brackets-viewer/dist/brackets-viewer.min.css";
 import "brackets-viewer/dist/brackets-viewer.min.js";
 import { computed } from "vue";
+
 
 export default {
   data() {
     const store = useAppStore();
     return {
       data: computed(() => store.getTorneigInfo()),
+      avatars: [
+        "/src/assets/avatar/avatarVaiolet.png",
+        "/src/assets/avatar/avatarCerdo.png",
+        "/src/assets/avatar/avatarEric.png",
+        "/src/assets/avatar/avatarGatoSuperman.png",
+        "/src/assets/avatar/avatarHamsterTrex.png",
+        "/src/assets/avatar/avatarHombrePeloBlanco.png",
+        "/src/assets/avatar/avatarLevie.png",
+        "/src/assets/avatar/avatarMikasa.png",
+        "/src/assets/avatar/avatarMujerPeloRojo.png",
+        "/src/assets/avatar/avatarPerroBatman.png",
+        "/src/assets/avatar/avatarPerroDJ.png",
+        "/src/assets/avatar/avatarPower.png",
+        "/src/assets/avatar/avatarZorro.png",
+    ]
     };
   },
   methods: {
-    start(){
-      socket.emit("start round");
-    },
     async pintar() {
       this.$refs.example?.replaceChildren();
 
@@ -50,7 +68,7 @@ export default {
         window.bracketsViewer.setParticipantImages(
           this.data.participant.map((participant) => ({
             participantId: participant.id,
-            imageUrl: "https://github.githubassets.com/pinned-octocat.svg",
+            imageUrl: this.avatars[participant.avatar - 1],
           }))
         );
 
@@ -96,6 +114,11 @@ export default {
         );
       }
     },
+
+    startNextRound() {
+      console.log("startNextRound");
+      socket.emit("start");
+    }
   },
   async mounted() {
     await this.pintar();
@@ -119,7 +142,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 90vh;
 }
 
 .centrar * {
@@ -128,5 +151,18 @@ export default {
 
 .brackets-viewer {
   background: none;
+}
+
+.caixaBtn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nextBtn{
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
 }
 </style>
