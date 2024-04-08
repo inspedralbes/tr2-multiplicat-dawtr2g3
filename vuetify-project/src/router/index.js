@@ -60,11 +60,11 @@ const router = createRouter({
       component: Tutorial
     },{
       path: '/torneigProfe',
-      name: 'TorneigProfe',
+      name: 'torneigProfe',
       component: TorneigVisual
     },{
       path: '/torneig',
-      name: 'Torneig',
+      name: 'torneig',
       component: Torneig
     },{
       path: '/dueloanimacio',

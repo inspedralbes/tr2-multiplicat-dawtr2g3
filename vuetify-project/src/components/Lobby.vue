@@ -204,26 +204,28 @@ export default {
     },
 
     mounted() {
-    },
-    created() {
-        console.log(this.$router.options.history.state.back)
         const store = useAppStore();
-        if (this.$router.options.history.state.back == '/partida' || this.$router.options.history.state.back == '/' ) {
+        console.log(store.enPartida)
+        if (store.enPartida) {
             socket.emit('tornar a lobby');
-            console.log('adios')
-        }
-        if(store.enPartida){
-            socket.emit('tornar a lobby');
-            router.push('/');
             store.enPartida = false;
             console.log('adios')
 
         }
     },
-    beforeUnmounted() {
+    created() {
         const store = useAppStore();
-        socket.emit('sortir lobby');
-    }
+        if (store.enPartida) {
+            socket.emit('tornar a lobby');
+            router.push('/');
+            store.players = [];
+
+            store.enPartida = false;
+            console.log('adios')
+
+        }
+    },
+
 
 }
 </script>

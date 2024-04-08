@@ -76,6 +76,7 @@ export default {
 
         crear() {
             const store = useAppStore();
+            store.enLobby = true;
             console.log(this.tipus);
             if (this.maxJugadors != 0 && this.nom != "" && this.tipus != "") {
                 socket.emit('create game', this.nom, this.maxJugadors,this.tipus, store.loginInfo.username);
@@ -85,6 +86,13 @@ export default {
     },
 
     mounted() {
+        const store = useAppStore();
+        if (store.enPartida || store.enLobby) {
+            socket.emit('tornar a lobby');
+            store.enPartida = false;
+            console.log('adios')
+
+        }
     },
     created() {
         const store = useAppStore();
