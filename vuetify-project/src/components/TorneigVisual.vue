@@ -177,6 +177,7 @@ export default {
   },
   async mounted() {
     await this.pintar();
+  
   },
   computed: {},
   watch: {
