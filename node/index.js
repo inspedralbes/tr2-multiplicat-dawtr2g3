@@ -164,6 +164,10 @@ io.on("connection", (socket) => {
 
   socket.on("create game", (nom, maxJugadors, tipus, nick) => {
     let roomID = "Partida" + socket.id;
+    let index = arrayRoom.findIndex((room) => room.id == roomID);
+    if(index != -1){
+      return;
+    }
     socket.join(roomID);
     let user = createNewUser(socket.id, nick);
 
@@ -388,6 +392,7 @@ io.on("connection", (socket) => {
         professor: socket.id,
         torneig: torneig,
         jugadors: [],
+        start: false,
       });
       arrayRoomMinim.push({
         id: roomID,
@@ -429,81 +434,17 @@ io.on("connection", (socket) => {
     io.emit("games list", arrayRoomMinim);
   });
 
-  /**
-   * Elimina el jugador de la partida i de la llista de jugadors, si és l'últim jugador de la partida o el creador, la tanca
-   */
-  socket.on("sortir lobby", () => {
-    const roomID = trobarRoom(socket);
-    if (roomID != undefined) {
-      let index = arrayRoom.findIndex((room) => room.id == roomID);
-      if (roomID == "Partida" + socket.id && index != "-1") {
-        io.to(roomID).emit("closed lobby");
-        let idOrig = socket.id;
-        let llistatUsuaris = arrayRoom.find(
-          (room) => room.id == roomID
-        ).jugadors;
-        arrayRoom.splice(index, 1);
 
-        llistatUsuaris.forEach((user) => {
-          socket.id = user.idSocket;
-          socket.leave(roomID);
-        });
-        socket.id = idOrig;
-
-        if (
-          arrayRoomMinim.findIndex((room) => room.id == roomID) != undefined
-        ) {
-          arrayRoomMinim.splice(index, 1);
-          io.emit("games list", arrayRoomMinim);
-        }
-      } else if (index != "-1") {
-        let room = arrayRoom.find((room) => room.id == roomID);
-        let llistatUsuaris = room.jugadors;
-
-        let index = llistatUsuaris.findIndex(
-          (user) => user.idSocket == socket.id
-        );
-        llistatUsuaris.splice(index, 1);
-
-        if (arrayRoomMinim.find((room) => room.id == roomID) != undefined) {
-          arrayRoomMinim.map((room) => {
-            if (room.id == roomID) {
-              let index = room.jugadors.findIndex(
-                (idSocket) => idSocket == socket.id
-              );
-              room.jugadors.splice(index, 1);
-            }
-          });
-          io.emit("games list", arrayRoomMinim);
-        }
-        arrayRoom.map((room) => {
-          if (room.id == roomID) {
-            room.jugadors = llistatUsuaris;
-          }
-        });
-
-        llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-        let llistatUsuarisMinim = [];
-        if (room.tipus != "torneo") {
-          llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-          let start = arrayRoom.find((room) => room.id == roomID).start;
-          io.to(roomID).emit("update players", llistatUsuarisMinim);
-          if (start) {
-            if (jugadorsVius(llistatUsuaris).length == 1) {
-              acabarPartida(socket, roomID);
-              io.to(roomID).emit("finalitzar duelo");
-            }
-          }
-        }
-      }
-    }
-  });
+ 
 
   socket.on("disconnecting", () => {
     const roomID = trobarRoom(socket);
+    console.log('tornar a lobby');
     if (roomID != undefined) {
       let index = arrayRoom.findIndex((room) => room.id == roomID);
       if (roomID == "Partida" + socket.id && index != "-1") {
+        console.log('encontrada partida');
+
         io.to(roomID).emit("closed lobby");
         let idOrig = socket.id;
 
@@ -552,10 +493,16 @@ io.on("connection", (socket) => {
           });
 
           llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+          console.log(llistatUsuaris)
+          if(room.tipus == "torneo" ){
+            io.to(roomID).emit("update players", llistatUsuaris);
+            
+          }else{
+            let llistatUsuarisMinim = [];
+            llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+            io.to(roomID).emit("update players", llistatUsuarisMinim);
 
-          let llistatUsuarisMinim = [];
-          llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-          io.to(roomID).emit("update players", llistatUsuarisMinim);
+          }
           let start = room.start;
           if (start) {
             if (jugadorsVius(llistatUsuaris).length == 1) {
@@ -563,17 +510,22 @@ io.on("connection", (socket) => {
               io.to(roomID).emit("finalitzar duelo");
             }
           }
+
         }
       }
     }
   });
   socket.on("tornar a lobby", () => {
     const roomID = trobarRoom(socket);
+    console.log('tornar a lobby');
     if (roomID != undefined) {
       let index = arrayRoom.findIndex((room) => room.id == roomID);
       if (roomID == "Partida" + socket.id && index != "-1") {
+        console.log('encontrada partida');
+
         io.to(roomID).emit("closed lobby");
         let idOrig = socket.id;
+
         let llistatUsuaris = arrayRoom.find(
           (room) => room.id == roomID
         ).jugadors;
@@ -592,42 +544,53 @@ io.on("connection", (socket) => {
           io.emit("games list", arrayRoomMinim);
         }
       } else if (index != "-1") {
+
         let room = arrayRoom.find((room) => room.id == roomID);
         let llistatUsuaris = room.jugadors;
 
         let index = llistatUsuaris.findIndex(
           (user) => user.idSocket == socket.id
         );
-        llistatUsuaris.splice(index, 1);
+        if (room.tipus != "torneo" || (room.tipus == "torneo" && !room.start)) {
+          llistatUsuaris.splice(index, 1);
 
-        if (arrayRoomMinim.find((room) => room.id == roomID) != undefined) {
-          arrayRoomMinim.map((room) => {
+          if (arrayRoomMinim.find((room) => room.id == roomID) != undefined) {
+            arrayRoomMinim.map((room) => {
+              if (room.id == roomID) {
+                let index = room.jugadors.findIndex(
+                  (idSocket) => idSocket == socket.id
+                );
+                room.jugadors.splice(index, 1);
+              }
+            });
+            io.emit("games list", arrayRoomMinim);
+          }
+          arrayRoom.map((room) => {
             if (room.id == roomID) {
-              let index = room.jugadors.findIndex(
-                (idSocket) => idSocket == socket.id
-              );
-              room.jugadors.splice(index, 1);
+              room.jugadors = llistatUsuaris;
             }
           });
-          io.emit("games list", arrayRoomMinim);
-        }
-        arrayRoom.map((room) => {
-          if (room.id == roomID) {
-            room.jugadors = llistatUsuaris;
-          }
-        });
 
-        llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-        if (room.tipus != "torneo") {
-          let llistatUsuarisMinim = [];
-          llistatUsuarisMinim = llistaMinim(llistatUsuaris);
-          io.to(roomID).emit("update players", llistatUsuarisMinim);
-        } else {
-          io.to(roomID).emit("update players", llistatUsuaris);
-        }
-        if (jugadorsVius(llistatUsuaris).length == 1) {
-          acabarPartida(socket, roomID);
-          io.to(roomID).emit("finalitzar duelo");
+          llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
+          console.log(llistatUsuaris)
+          if(room.tipus == "torneo" ){
+            io.to(roomID).emit("update players", llistatUsuaris);
+            
+          }else{
+            let llistatUsuarisMinim = [];
+            llistatUsuarisMinim = llistaMinim(llistatUsuaris);
+            io.to(roomID).emit("update players", llistatUsuarisMinim);
+
+          }
+          let start = room.start;
+          if (start) {
+            if (jugadorsVius(llistatUsuaris).length == 1) {
+              acabarPartida(socket, roomID);
+              io.to(roomID).emit("finalitzar duelo");
+            }
+
+          }
+
         }
       }
     }
@@ -888,6 +851,7 @@ io.on("connection", (socket) => {
 
       if (room.jugadors.length == room.maxJugadors && room.tipus == "torneo") {
         // if (room.tipus == "torneo") {
+          room.start = true;
         randomArray(room.jugadors);
 
         room.start = Date.now();

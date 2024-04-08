@@ -182,6 +182,7 @@ export default {
         },
         join() {
             const store = useAppStore();
+            store.enLobby = true;
             socket.emit('join', this.idPartida, store.loginInfo.username, store.getAvatar());
         },
         toast() {
@@ -197,7 +198,14 @@ export default {
 
     mounted() {
 
+        const store = useAppStore();
+        if (store.enPartida || store.enLobby) {
+            socket.emit('tornar a lobby');
+            store.enPartida = false;
+            console.log('adios')
 
+        }
+        
         socket.on('max jugadors', () => {
             console.log("max jugadors");
             this.toast();
@@ -206,10 +214,6 @@ export default {
     created() {
         console.log(this.$router.options.history.state.back)
 
-        if (this.$router.options.history.state.back == '/lobby' || this.$router.options.history.state.back == '/' ) {
-            socket.emit('tornar a lobby');
-            console.log('adios')
-        }
     },
 
 }

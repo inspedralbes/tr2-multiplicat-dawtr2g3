@@ -60,6 +60,7 @@ socket.on('start match', (question) => {
  */
 socket.on("update players", (playerArray) => {
   const store = useAppStore();
+  console.log(playerArray)  
   store.setPlayers(playerArray);
 });
 
@@ -76,6 +77,10 @@ socket.on("update chat", (msg) => {
  */
 socket.on("closed lobby", () => {
   const store = useAppStore();
+  store.players = [];
+  store.enPartida = false;
+
+  console.log('closed lobby')
   router.push('/partides');
   store.stopTimer();
 });
@@ -174,6 +179,7 @@ socket.on("play", (question) => {
   store.setQuestion(question);
   store.setAnswer(null);
   store.timer = question.temps;
+  store.enLobby = false;
   store.enPartida = true;
   router.push('/partida');
   store.startTimer();
@@ -244,6 +250,8 @@ socket.on('tournament info', (info) => {
     jugador.avatar = players[index].avatar;
   });
 
+  store.enLobby = false;
+  store.enPartida = true;
   store.setPlayers(players);
   store.setTorneigInfo(data);
   router.push('/torneigProfe');
@@ -251,6 +259,9 @@ socket.on('tournament info', (info) => {
 
 socket.on("new matchup", (arrayUsers) => {
   const store = useAppStore();
+  store.enPartida = true;
+  store.enLobby = false;
+
   let myself = arrayUsers.find(user => user.idSocket == socket.id);
   store.setOwnPlayer(myself);
   store.setTourneigState("matchup");
@@ -264,6 +275,8 @@ socket.on("lose tournament", () => {
 
 socket.on("end tournament", (guanyador) => {
   const store = useAppStore();
+    store.enPartida = false;
+
   console.log(guanyador);
   store.setGuanyador(guanyador);
   router.push('/finalTorneig');
