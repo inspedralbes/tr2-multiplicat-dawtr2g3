@@ -150,8 +150,8 @@ export default {
     },
 
     startNextRound() {
-      console.log("startNextRound");
-      socket.emit("start");
+      console.log("start round");
+      socket.emit("start round");
     },
   },
   async mounted() {
