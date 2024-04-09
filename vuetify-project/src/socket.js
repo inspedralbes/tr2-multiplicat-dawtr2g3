@@ -34,15 +34,17 @@ socket.on('finalitzar duelo', () => {
   socket.emit('sortir duelo');
 });
 socket.on('win', () => {
-  console.log("Has guanyat");
   const store = useAppStore();
+  store.setGuanyat(true);
   store.setTourneigState("esperant");
+  store.stopTimer();
 });
 
 socket.on('lose', () => {
-  console.log("Has perdut");
   const store = useAppStore();
+  store.setPerdut(true);
   store.setTourneigState("esperant");
+  store.stopTimer();
 });
 
 socket.on('start match', (question) => {
@@ -60,7 +62,6 @@ socket.on('start match', (question) => {
  */
 socket.on("update players", (playerArray) => {
   const store = useAppStore();
-  console.log(playerArray)  
   store.setPlayers(playerArray);
 });
 

@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="centrarX">
+        <h1>GUANYADOR</h1>
         <h1>{{ guanyador.nick }}</h1>
 
         <img v-if="guanyador.avatar == 1" class="avatar" src="../assets/avatar/avatarVaiolet.png" alt="icono avatar">
@@ -21,6 +22,7 @@
 <script>
 import { useAppStore } from "../store/app.js";
 import { computed } from 'vue';
+import JSConfetti from 'js-confetti'
 
 export default {
         name: 'FinalTorneig',
@@ -32,10 +34,30 @@ export default {
         },
         methods: {
             // Funcions
+        },
+        mounted() {
+            const confetti = new JSConfetti()
+            window.setInterval(() => {
+                if (Math.floor(Math.random() * 10) < 1){
+                    confetti.addConfetti()
+                }
+            }, 100)
+            
         }
     }
 </script>
 
 <style lang="scss" scoped>
+
+.centrarX {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+// .centrarX * {
+//     align-items: center;
+// }
 
 </style>

@@ -32,6 +32,8 @@ export const useAppStore = defineStore('app', {
     enLobby: false,
     dialog: false,
     animacionDuelo: false,
+    guanyat: false,
+    perdut: false,
     duelo: {
       enDuelo: false,
       encertades: 0,
@@ -201,7 +203,18 @@ export const useAppStore = defineStore('app', {
     setTourneigState(state) {
       this.stateTorneig = state;
     },
-    
+    setGuanyat(guanyat) {
+      this.guanyat = guanyat;
+    },
+    getGuanyat() {
+      return this.guanyat;
+    },
+    setPerdut(perdut) {
+      this.perdut = perdut;
+    },
+    getPerdut() {
+      return this.perdut;
+    },
 
   },
 })

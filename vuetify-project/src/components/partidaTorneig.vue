@@ -1,318 +1,375 @@
 <template>
-               
-            <div class="container__preguntas preguntas">
-                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
-                    @comprovar="(index) => answer(index)" />
+  <div class="container__partida">
+    <div class="container__preguntas preguntas">
+      <Drag
+        :respostes="game.question.respostes"
+        :pregunta="game.question.pregunta"
+        @comprovar="(index) => answer(index)"
+      />
+    </div>
+    <div class="container__jugadors">
+      <div class="avatarJugador avatar1">
+        <img
+          v-if="ownPlayer.avatar == 1"
+          class="avatar"
+          src="../assets/avatar/avatarVaiolet.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 2"
+          class="avatar"
+          src="../assets/avatar/avatarCerdo.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 3"
+          class="avatar"
+          src="../assets/avatar/avatarEric.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 4"
+          class="avatar"
+          src="../assets/avatar/avatarGatoSuperman.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 5"
+          class="avatar"
+          src="../assets/avatar/avatarHamsterTrex.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 6"
+          class="avatar"
+          src="../assets/avatar/avatarHombrePeloBlanco.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 7"
+          class="avatar"
+          src="../assets/avatar/avatarLevie.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 8"
+          class="avatar"
+          src="../assets/avatar/avatarMikasa.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 9"
+          class="avatar"
+          src="../assets/avatar/avatarMujerPeloRojo.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 10"
+          class="avatar"
+          src="../assets/avatar/avatarPerroBatman.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 11"
+          class="avatar"
+          src="../assets/avatar/avatarPerroDJ.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 12"
+          class="avatar"
+          src="../assets/avatar/avatarPower.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.avatar == 13"
+          class="avatar"
+          src="../assets/avatar/avatarZorro.png"
+          alt="icono avatar"
+        />
+        <h1 class="ownPlayerNick">{{ ownPlayer.nick }}</h1>
+      </div>
+      <div class="containerEncertaresOwnPlayer">
+        <div class="containerIcons">
+          <div
+            v-for="(item, index) in nEncertades"
+            :key="index"
+            class="encertades"
+          >
+            <div v-if="ownPlayer.infoPartida.encertades > index">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="3em"
+                height="3em"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill="none"
+                  stroke="#3df200"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="m2.75 8.75l3.5 3.5l7-7.5"
+                />
+              </svg>
             </div>
-            
+            <div v-else>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="3em"
+                height="3em"
+                viewBox="0 0 256 256"
+              >
+                <path
+                  fill="currentColor"
+                  d="M128 80a48 48 0 1 0 48 48a48 48 0 0 0-48-48m0 60a12 12 0 1 1 12-12a12 12 0 0 1-12 12"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="containerEncertadesOponent">
+        <div class="containerIcons">
+          <div
+            v-for="(item, index) in nEncertades"
+            :key="index"
+            class="encertades"
+          >
+            <div v-if="ownPlayer.oponent.encertades > 4 - index">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="3em"
+                height="3em"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill="none"
+                  stroke="#3df200"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="m2.75 8.75l3.5 3.5l7-7.5"
+                />
+              </svg>
+            </div>
+            <div v-else>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="3em"
+                height="3em"
+                viewBox="0 0 256 256"
+              >
+                <path
+                  fill="currentColor"
+                  d="M128 80a48 48 0 1 0 48 48a48 48 0 0 0-48-48m0 60a12 12 0 1 1 12-12a12 12 0 0 1-12 12"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="avatarOponent avatar2">
+        <img
+          v-if="ownPlayer.oponent.avatar == 1"
+          class="avatar"
+          src="../assets/avatar/avatarVaiolet.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 2"
+          class="avatar"
+          src="../assets/avatar/avatarCerdo.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 3"
+          class="avatar"
+          src="../assets/avatar/avatarEric.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 4"
+          class="avatar"
+          src="../assets/avatar/avatarGatoSuperman.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 5"
+          class="avatar"
+          src="../assets/avatar/avatarHamsterTrex.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 6"
+          class="avatar"
+          src="../assets/avatar/avatarHombrePeloBlanco.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 7"
+          class="avatar"
+          src="../assets/avatar/avatarLevie.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 8"
+          class="avatar"
+          src="../assets/avatar/avatarMikasa.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 9"
+          class="avatar"
+          src="../assets/avatar/avatarMujerPeloRojo.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 10"
+          class="avatar"
+          src="../assets/avatar/avatarPerroBatman.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 11"
+          class="avatar"
+          src="../assets/avatar/avatarPerroDJ.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 12"
+          class="avatar"
+          src="../assets/avatar/avatarPower.png"
+          alt="icono avatar"
+        />
+        <img
+          v-else-if="ownPlayer.oponent.avatar == 13"
+          class="avatar"
+          src="../assets/avatar/avatarZorro.png"
+          alt="icono avatar"
+        />
+        <h1 class="oponentNick">{{ ownPlayer.oponent.nick }}</h1>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-
-.duelo {
-    background-image: url("../assets/backgrounds/fondo-duelo.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    display: grid;
-    grid-template-areas:
-        "preguntaDuelo"
-        "usuarioDuelo";
-}
-.container__preguntaDuelo {
-    display: grid;
-    grid-area: preguntaDuelo;
-    background-color: white;
-    position: relative;
-    color: aliceblue;
-    width: 50vw;
-    height: 60vh;
-    border-radius: 6px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.container__dueloUsuarios {
-    grid-area: usuarioDuelo;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-.usuarioEnemigo{
-    right: 10vh;
-}
-.usuarioDuelo{
-    left: 10vh;
-}
-.cantidadPreguntas{
-    color: black;
-    font-size: 2vh;
-    margin: 1vh;
-}
-//container de la partida
-.animacioVida {
-    background-color: #ffdd33;
-    animation: tilt-shaking 0.5s;
+.container__partida {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  height: 100vh;
 }
 
-@keyframes tilt-shaking {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    25% {
-        transform: rotate(5deg);
-    }
-
-    50% {
-        transform: rotate(0eg);
-    }
-
-    75% {
-        transform: rotate(-5deg);
-    }
-
-    100% {
-        transform: rotate(0deg);
-    }
-}
-//container del usuario
-.container__usuario {
-    background-color: rgb(37, 7, 107, 0.8);
-    width: 62vh;
-    height: 20vh;
-    border-radius: 60ch;
-    position: relative;
-    display: flex;
-}
-
-.container__avatar {
-    position: absolute;
-    top: 0;
-    left: 3ch;
-    right: 0;
-}
-
-.container__avatarUsuario {
-    position: absolute;
-    top: 0;
-    left: 52ch;
-    right: 0;
-}
 .avatar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 19vh;
-    width: 19vh;
-    z-index: 0;
-}
-.avatarUsuario {
-    position: absolute;
-    top: 1ch;
-    left: 0;
-    height: 18vh;
-    width: 18vh;
-    z-index: 0;
-}
-.barra__vida {
-    position: absolute;
-    top: 11vh;
-    left: 6vh;
-    right: 0;
-    z-index: 1;
-}
-.barra__vidaUsuario {
-    position: absolute;
-    top: 11vh;
-    left: -33vh;
-    right: 0;
-    z-index: 1;
+  height: 30vh;
 }
 
-.barra__vidaUsuario img{
-    transform: scaleX(-1);
-}
-.numero__vida {
-    position: absolute;
-    top: 0;
-    left: 34vh;
-    right: 0;
-    font-size: 4vh;
-    text-align: center;
-    color: #ffdd33;
+.container__jugadors {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr 2fr 2fr 1fr;
+  justify-content: center;
+  align-items: center;
 }
 
-.imagen-vida {
-    position: absolute;
-    height: 7vh;
-
+.avatarOponent {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: end;
+  margin-right: 10vh;
+  grid-column: 5;
 }
 
-.vida {
-    height: 8vh;
+.avatarJugador {
+  margin-left: 10vh;
+  grid-column: 2
 }
 
-.container__info {
-    grid-area: info;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-
+.oponentNick {
+  margin-right: 14vh;
 }
 
-.nickEnemigo {
-    position: absolute;
-    top: 3vh;
-    left: 0;
-    right: 3vh;
-    font-size: 4vh;
-    font-weight: bold;
-    text-align: center;
-    color: #ffdd33;
+.ownPlayerNick {
+  margin-left: 14vh;
 }
 
-.nickUsuario {
-    position: absolute;
-    top: 3vh;
-    left: -35vh;
-    right: 0;
-    font-size: 4vh;
-    font-weight: bold;
-    text-align: center;
-    color: #ffdd33;
+.containerEncertaresOwnPlayer {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-left: 5vh;
+  grid-column: 3;
+}
+
+.containerEncertadesOponent {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  height: 100%;
+  margin-right: 5vh;
+  grid-column: 4;
+}
+
+.containerIcons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid black;
+  background-color: white;
+  border-radius: 10px;
+  padding-top: 7px;
 }
 </style>
 
 <script>
-import { socket } from '../socket';
-import { computed } from 'vue';
+import { socket } from "../socket";
+import { computed } from "vue";
 import { useAppStore } from "../store/app.js";
 import Drag from "./Drag.vue";
-import Poder from "./Poder.vue";
-import { toHandlers } from 'vue';
-import JugadorPartida from './JugadorPartida.vue';
-import store from '@/store';
+import store from "@/store";
 export default {
-    data() {
-        const store = useAppStore();
+  props: {
+    ownPlayer: Object,
+  },
+  data() {
+    const store = useAppStore();
 
-        return {
-            state: {
-                loading: false,
-                error: false,
-            },
-            game: {
-                chat: computed(() => store.chat),
-                questionIndex: computed(() => store.questionIndex),
-                players: computed(() => store.players),
-                ownPlayer: computed(() => store.ownPlayer),
-                question: computed(() => store.question),
-                answer: computed(() => store.answer),
-                temps: computed(() => store.timer),
-                mort: computed(() => store.dead),
-                avatar: computed(() => store.avatar),
-                oponent: computed(() => store.ownPlayer.oponent),
+    return {
+      nEncertades: 5,
+      state: {
+        loading: false,
+        error: false,
+      },
+      game: {
+        question: computed(() => store.question),
+        answer: computed(() => store.answer),
+        notFirstQuestion: false,
+        dialog: false,
+      },
+      timerInterval: null,
+      disabled: false,
+    };
+  },
+  components: { Drag },
 
-                notFirstQuestion: false,
-                dialog: false,
-            },
-            timerInterval: null,
-            disabled: false,
-            animacioVida: computed(() => store.animacioVida),
-        };
+  methods: {
+    /**
+     * respon a la pregunta
+     * @param {int} index index de la resposta
+     */
+    answer(index) {
+      this.game.notFirstQuestion = true;
+      socket.emit("answer torneig", this.game.question.idPregunta, index);
     },
-    components: { Drag, Poder, JugadorPartida },
+  },
 
-    methods: {
-
-        skip() {
-            socket.emit('skip');
-            this.disabled = true;
-            setTimeout(() => {
-                this.disabled = false;
-            }, 1000);
-        },
-
-        utilitzarPoder() {
-            if (this.game.ownPlayer.poder.length > 0) {
-                let objectiu = socket.id;
-
-                if (this.game.mort) {
-                    this.game.dialog = true;
-                } else {
-                    if (this.game.ownPlayer.poder == "menysTemps" || this.game.ownPlayer.poder == "duelo") {
-                        this.game.dialog = true;
-                    } else {
-                        socket.emit("use power", this.game.ownPlayer.poder, objectiu);
-                    }
-                }
-
-            }
-        },
-
-        escollirObjectiu(id) {
-            socket.emit("use power", this.game.ownPlayer.poder, id);
-            this.game.dialog = false;
-        },
-
-        /**
-         * Para el temps
-         */
-        pararTemps() {
-            store.stopTImer();
-
-        },
-
-        /**
-         * respon a la pregunta
-         * @param {int} index index de la resposta
-         */
-        answer(index) {
-            this.game.notFirstQuestion = true;
-            socket.emit('answer torneig', this.game.question.idPregunta, index);
-
-        },
-
-        /**
-         * Envia un missatge al chat
-         */
-        enviarMissatge() {
-            const store = useAppStore();
-
-            var input = document.getElementById("inputChat");
-            socket.emit('send message', input.value, store.loginInfo.username);
-            input.value = "";
-        },
-        getHP() {
-
-            if (this.game.ownPlayer.vida > 75) {
-                return "../assets/ilustracio-vida/full-health.png";
-            } else if (this.game.ownPlayer.vida > 50) {
-                return "../assets/ilustracio-vida/75_health.png";
-            } else if (this.game.ownPlayer.vida > 25) {
-                return "../assets/ilustracio-vida/50_health.png";
-            } else if (this.game.ownPlayer.vida > 0) {
-                return "../assets/ilustracio-vida/25_health.png";
-            } else {
-                return "../assets/ilustracio-vida/0_health.png";
-            }
-        }
-    },
-
-    mounted() {
-        this.state.loading = false;
-
-    },
-
-}
+  mounted() {
+    this.state.loading = false;
+  },
+};
 </script>
-
