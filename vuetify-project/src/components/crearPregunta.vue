@@ -2,6 +2,7 @@
     <iconsHead></iconsHead>
     <div class="container">
         <form @submit.prevent="submit">
+            <h1 class="title">Formulari per crear pregunta</h1>
             <div class="form-group">
                 <label for="enunciat">Enunciat</label>
                 <input type="text" v-model="enunciat" class="form-control" id="enunciat">
@@ -25,7 +26,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="temps">Temps</label>
+                <label for="temps">Temps per respondre</label>
                 <input type="number" v-model="temps" class="form-control" id="temps">
             </div>
             <div class="form-group">
@@ -108,20 +109,49 @@ export default {
 </script>
 
 <style scoped>
+.title{
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+}
 .container {
     max-width: 400px;
     margin: 0 auto;
-    background-color: #fff;
+    border-radius: 5px;
+    margin-top: 5vh;
 }
+.form-control{
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    background-color: rgb(209, 209, 209);
+    box-sizing: border-box;
+    border-radius: 5px;
 
+}
 .form-group {
     margin-bottom: 20px;
+    background-color: #fff;
+    padding: 5px;
+    width: 95%;
+    margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
 }
 
 .btn-primary {
     background-color: #007bff;
     color: #fff;
     border: none;
+    border-radius: 5px;
+    margin-left: auto;
+    position: relative;
+    right: 0;
+    width: 50%;
+    margin-left: 25%;
 }
 
 .btn-primary:hover {
