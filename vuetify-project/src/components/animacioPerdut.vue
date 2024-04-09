@@ -59,14 +59,9 @@ export default {
     opacity: 1;
     z-index: 1;
 
-    animation: fade-in 2s linear;
-    * {
-        font-family: OptimusPrinceps, sans-serif;
-        letter-spacing: 5px;
-        font-size: 8em;
-        font-weight: 400;
-        animation: fade-in 2s linear, text-zoom 5s linear;
-    }
+    animation: fade-in 10s linear;
+    
+    
 }
 .fondo {
     position: absolute;
