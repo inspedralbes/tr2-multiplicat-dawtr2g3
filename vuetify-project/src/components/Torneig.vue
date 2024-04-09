@@ -220,6 +220,23 @@
     >
     </v-card>
   </v-overlay>
+  <v-overlay
+    :model-value="tutorial"
+    class="align-center justify-center"
+    @click:outside="tutorial = !tutorial"
+  >
+    <v-card
+      color="#ffab4a"
+      elevation="16"
+      class="tarjeta paddingB"
+      title="Tutorial curt"
+      subtitle="Aquest tutorial et mostra com jugar"
+      text="Has d'ARROSSEGAR la resposta que creguis correcta a la pregunta"
+      width="500"
+      v-if="tutorial"
+    >
+    </v-card>
+  </v-overlay>
 </template>
 
 <script>
@@ -237,6 +254,7 @@ export default {
       dots: 0,
       guanyat: computed(() => store.getGuanyat()),
       perdut: computed(() => store.getPerdut()),
+      tutorial: true,
     };
   },
   components: {
