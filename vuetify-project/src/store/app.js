@@ -25,6 +25,7 @@ export const useAppStore = defineStore('app', {
     timerInterval: null,
     dead: false,
     animacioVida: false,
+    animacioMort: false,
     avatar: 1,
     timerStopped: true,
     tutorial: false,
@@ -190,6 +191,10 @@ export const useAppStore = defineStore('app', {
     },
     playerDead() {
       this.dead = true;
+      this.animacioMort = true;
+      setTimeout(() => {
+        this.animacioMort = false;
+      }, 10000);
     },
     getTorneigInfo() {
       return this.infoTorneig;
