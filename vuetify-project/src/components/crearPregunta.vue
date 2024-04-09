@@ -27,7 +27,14 @@
             </div>
             <div class="form-group">
                 <label for="temps">Temps per respondre</label>
-                <input type="number" v-model="temps" class="form-control" id="temps">
+                <input type="number" v-model="temps" @input="(e)=>{
+                    if(e.target.value < 0){
+                        e.target.value = 0;
+                    }
+                    if(e.target.value > 100){
+                        e.target.value = 100;
+                    }
+                }" class="form-control" id="temps">
             </div>
             <div class="form-group">
                 <label for="resposta1">Resposta correcte</label>
