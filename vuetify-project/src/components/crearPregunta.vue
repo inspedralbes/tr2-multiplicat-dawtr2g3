@@ -7,13 +7,6 @@
                 <input type="text" v-model="enunciat" class="form-control" id="enunciat">
             </div>
             <div class="form-group">
-                <label for="tipus">Tipus</label>
-                <select v-model="tipus" class="form-control" id="tipus">
-                    <option value="1">Resposta multiple</option>
-                    <option value="2">Drag and drop</option>
-                </select>
-            </div>
-            <div class="form-group">
                 <label for="categoria">Categoria</label>
                 <select v-model="categoria" class="form-control" id="categoria">
                     <option value="1">Unitats de longitud</option>
@@ -92,7 +85,7 @@ export default {
             let resposta = await this.manager.crearPregunta(
                 this.temps,
                 this.enunciat,
-                this.tipus,
+                1,
                 this.dificultat,
                 this.categoria,
                 this.resposta1,
@@ -118,6 +111,7 @@ export default {
 .container {
     max-width: 400px;
     margin: 0 auto;
+    background-color: #fff;
 }
 
 .form-group {
