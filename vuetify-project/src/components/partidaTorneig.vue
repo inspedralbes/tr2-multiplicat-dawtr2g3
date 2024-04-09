@@ -346,9 +346,7 @@ export default {
         error: false,
       },
       game: {
-        question: computed(() => store.question),
-        answer: computed(() => store.answer),
-        notFirstQuestion: false,
+        question: computed(() => store.question),        notFirstQuestion: false,
         dialog: false,
       },
       timerInterval: null,
