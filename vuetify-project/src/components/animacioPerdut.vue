@@ -2,8 +2,9 @@
     <img src="../assets/backgrounds/background-general.png" class="fondo" alt="">
     <div class="animacio">
         <div class="death-background">
-            <h1 class="text">Has perdut</h1>
+            <h1 >Has perdut</h1>
         </div>
+        <p class="text" :class="{'animacioText':animacioText}">Pots veure com van els teus companys a la pantalla del professor</p>
     </div>
 </template>
 <script>
@@ -18,6 +19,7 @@ export default {
             state: computed(() => store.getTourneigState()),
             ownPlayer: computed(() => store.getOwnPlayer()),
             duelo: computed(() => store.getDuelo()),
+            animacioText: false
         };
     },
     components: {
@@ -26,7 +28,9 @@ export default {
 
     },
     mounted() {
-
+        setTimeout(() => {
+            this.animacioText = true
+        }, 5000);
     }
 };
 </script>
@@ -35,6 +39,7 @@ export default {
 
 .animacio {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -42,7 +47,27 @@ export default {
 
 
 }
+.text{
+    font-size: 2em;
+    color: white;
+    font-family: OptimusPrinceps, sans-serif;
+    letter-spacing: 5px;
+    font-weight: 400;
+    opacity: 0;
+}
+.animacioText{
+    opacity: 1;
+    z-index: 1;
 
+    animation: fade-in 2s linear;
+    * {
+        font-family: OptimusPrinceps, sans-serif;
+        letter-spacing: 5px;
+        font-size: 8em;
+        font-weight: 400;
+        animation: fade-in 2s linear, text-zoom 5s linear;
+    }
+}
 .fondo {
     position: absolute;
     width: 100%;
