@@ -49,10 +49,7 @@ socket.on('lose', () => {
 
 socket.on('start match', (question) => {
   const store = useAppStore();
-  store.stopTimer();
   store.setQuestion(question);
-  store.timer = question.temps;
-  store.startTimer();
   store.setTourneigState("partida");
   store.canvi = true;
 });
@@ -96,6 +93,13 @@ socket.on("new question", (question) => {
   store.setQuestion(question);
   store.timer = question.temps;
   store.startTimer();
+  store.canvi = true;
+});
+
+socket.on("new question torneig", (question) => {
+  console.log(question);
+  const store = useAppStore();
+  store.setQuestion(question);
   store.canvi = true;
 });
 

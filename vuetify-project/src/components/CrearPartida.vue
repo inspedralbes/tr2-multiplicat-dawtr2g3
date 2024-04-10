@@ -90,6 +90,8 @@ export default {
         if (store.enPartida || store.enLobby) {
             socket.emit('tornar a lobby');
             store.enPartida = false;
+            store.enLobby = false;
+
             console.log('adios')
 
         }
