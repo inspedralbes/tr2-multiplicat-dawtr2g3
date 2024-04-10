@@ -63,16 +63,40 @@ class ControllerPregunta extends Controller
             'respostes' => 'required',
             'categoria' => 'required',
             'temps' => 'required',
+            'token' => 'required'
         ]);
+        $checkToken = $request->token;
+        if (!($checkToken == null || $checkToken == "" || $checkToken == "null")) {
 
-        $pregunta = new Pregunta();
-        $pregunta->enunciat = $request->enunciat;
-        $pregunta->tipus = $request->tipus;
-        $pregunta->dificultat = $request->dificultat;
-        $pregunta->respostes = $request->respostes;
-        $pregunta->categoria = $request->categoria;
-        $pregunta->temps = $request->temps;
-        $pregunta->save();
-        return response()->json($pregunta, 201);
+            //Return if the user is logged in or not from the token
+            [$id, $token] = explode('|', $checkToken, 2);
+            $id = ltrim($id, '{');
+            $token = rtrim($token, '}');
+
+
+
+            $accessToken = PersonalAccessToken::find($id);
+            if ($accessToken) {
+                if (hash_equals($accessToken->token, hash('sha256', $token))) {
+                    $userId = $accessToken->tokenable_id;
+                    $user = User::find($userId);
+                    if ($user->verificat == 1) {
+                        $pregunta = new Pregunta();
+                        $pregunta->enunciat = $request->enunciat;
+                        $pregunta->tipus = $request->tipus;
+                        $pregunta->dificultat = $request->dificultat;
+                        $pregunta->respostes = $request->respostes;
+                        $pregunta->categoria = $request->categoria;
+                        $pregunta->temps = $request->temps;
+                        $pregunta->save();
+                        return response()->json($pregunta, 201);
+                    }else{
+                        return response()->json(['message' => 'Usuari no verificat'], 401);
+                    }
+                }
+            }else{
+                return response()->json(['message'=> 'Sessio expirada'], 404);
+            }
+        }
     }
 }

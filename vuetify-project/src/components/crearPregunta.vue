@@ -85,6 +85,7 @@ export default {
             resposta2: "",
             resposta3: "",
             resposta4: "",
+            token: computed(() => store.getToken()),
         };
     },
 
@@ -99,7 +100,8 @@ export default {
                 this.resposta1,
                 this.resposta2,
                 this.resposta3,
-                this.resposta4
+                this.resposta4,
+                this.token
             );
             Toastify({
 
