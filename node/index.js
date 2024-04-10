@@ -439,7 +439,6 @@ io.on("connection", (socket) => {
 
   socket.on("disconnecting", () => {
     const roomID = trobarRoom(socket);
-    console.log('tornar a lobby');
     if (roomID != undefined) {
       let index = arrayRoom.findIndex((room) => room.id == roomID);
       if (roomID == "Partida" + socket.id && index != "-1") {
@@ -517,7 +516,6 @@ io.on("connection", (socket) => {
   });
   socket.on("tornar a lobby", () => {
     const roomID = trobarRoom(socket);
-    console.log('tornar a lobby');
     if (roomID != undefined) {
       let index = arrayRoom.findIndex((room) => room.id == roomID);
       if (roomID == "Partida" + socket.id && index != "-1") {

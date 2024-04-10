@@ -334,10 +334,15 @@ export default {
     }
   },
   created() {
-    console.log(this.$router.options.history.state.back)
-    if (this.$router.options.history.state.back == '/lobby' || this.$router.options.history.state.back == '/') {
+
+    const store = useAppStore();
+    console.log(store.enPartida)
+    console.log(store.enLobby)
+    if (store.enPartida || store.enLobby) {
       socket.emit('tornar a lobby');
-      console.log('adios')
+      store.enPartida = false;
+      store.enLobby = false;
+
     }
   },
 
