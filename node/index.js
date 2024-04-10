@@ -677,25 +677,12 @@ io.on("connection", (socket) => {
 
                 if (comprovarRonda(room.dataTorneig.match)) {
                   io.to(room.professor).emit("end round");
-                  console.log('acabada');
-                  let arrayPreg = [];
-                  room.preguntasMal = randomArray(room.preguntasMal);
 
-                  room.preguntasMal.forEach((preguntaMal, index) => {
-                    let pregunta = tipusTest(preguntaMal, index);
-
-                    let arrayResp = "[" + pregunta.respostes + "]";
-                    room.preguntasMal[index].respostes = JSON.parse(arrayResp);
-                    pregunta.respostes = randomArray(JSON.parse(arrayResp));
-                    arrayPreg.push(pregunta);
-                  });
-                  console.log(arrayPreg);
-                  room.arrayPreg = arrayPreg;
                 }
               } else {
                 socket.emit(
                   "new question torneig",
-                  arrayPreg[jugador1.infoPartida.encertades]
+                  arrayPreg[(jugador1.infoPartida.matchID*5 + jugador1.infoPartida.encertades)%arrayPreg.length]
                 );
                 const tournamentData =
                   await room.torneig.manager.get.tournamentData(room.id);
@@ -737,25 +724,11 @@ io.on("connection", (socket) => {
                 perdreRonda(jugador1, room, socket);
                 if (comprovarRonda(room.dataTorneig.match)) {
                   io.to(room.professor).emit("end round");
-                  console.log('acabada');
-                  let arrayPreg = [];
-                  room.preguntasMal = randomArray(room.preguntasMal);
-
-                  room.preguntasMal.forEach((preguntaMal, index) => {
-                    let pregunta = tipusTest(preguntaMal, index);
-
-                    let arrayResp = "[" + pregunta.respostes + "]";
-                    room.preguntasMal[index].respostes = JSON.parse(arrayResp);
-                    pregunta.respostes = randomArray(JSON.parse(arrayResp));
-                    arrayPreg.push(pregunta);
-                  });
-                  console.log(arrayPreg);
-                  room.arrayPreg = arrayPreg;
                 }
               } else {
                 socket.emit(
                   "new question torneig",
-                  arrayPreg[jugador2.infoPartida.encertades]
+                  arrayPreg[(jugador2.infoPartida.matchID*5 + jugador2.infoPartida.encertades)%arrayPreg.length]
                 );
                 const tournamentData =
                   await room.torneig.manager.get.tournamentData(room.id);
@@ -816,20 +789,6 @@ io.on("connection", (socket) => {
 
       if (comprovarRonda(room.dataTorneig.match)) {
         io.to(room.professor).emit("end round");
-        console.log('acabada');
-        let arrayPreg = [];
-        room.preguntasMal = randomArray(room.preguntasMal);
-        room.preguntasMal.forEach((preguntaMal, index) => {
-          let pregunta = tipusTest(preguntaMal, index);
-
-          let arrayResp = "[" + pregunta.respostes + "]";
-          room.preguntasMal[index].respostes = JSON.parse(arrayResp);
-          pregunta.respostes = randomArray(JSON.parse(arrayResp));
-          arrayPreg.push(pregunta);
-        });
-        console.log(arrayPreg);
-        room.arrayPreg = arrayPreg;
-
       }
     } else {
       let jugador1 = jugadorPerdedor;
@@ -876,8 +835,16 @@ io.on("connection", (socket) => {
           let player2 = room.dataTorneig.participant.find(
             (jugador) => jugador.id == partida.opponent2.id
           );
-          io.to(player1.name).emit("start match", arrayPreg[0]);
-          io.to(player2.name).emit("start match", arrayPreg[0]);
+
+          let jugador1 = room.jugadors.find(
+            (jugador) => jugador.idSocket == player1.name
+          );
+          let jugador2 = room.jugadors.find(
+            (jugador) => jugador.idSocket == player2.name
+          );
+
+          io.to(player1.name).emit("start match", arrayPreg[jugador1.infoPartida.matchID*5]);
+          io.to(player2.name).emit("start match", arrayPreg[jugador2.infoPartida.matchID*5]);
         }
       });
     }
