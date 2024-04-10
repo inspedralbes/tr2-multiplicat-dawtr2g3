@@ -59,6 +59,10 @@
         <v-btn rounded="xl" class="btn__crear" color="#f5a23d" size="x-large"
           :disabled='this.nom == "" || !this.loginInfo.verificat' @click="crear">Crear</v-btn>
       </div>
+      <div class="container__button" @click="verificat">
+        <v-btn rounded="xl" class="btn__crear" color="#f5a23d" size="x-large"
+          :disabled='this.nom == "" || !this.loginInfo.verificat' @click="afegir">Afegir</v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -234,6 +238,23 @@ export default {
       store.setNick(this.nom);
       router.push('/partides');
 
+    },
+    afegir() {
+      let error = false;
+      if (this.loginInfo.loggedIn == false) {
+        error = true
+
+      } else {
+        if (!this.loginInfo.verificat) {
+          error = true;
+
+        }
+      }
+      if (!error) {
+        const store = useAppStore();
+        store.setNick(this.nom);
+        router.push('/crearpregunta')
+      }
     },
     crear() {
       let error = false;
