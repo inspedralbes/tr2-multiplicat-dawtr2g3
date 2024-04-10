@@ -52,7 +52,7 @@ export const useAppStore = defineStore('app', {
 
   }),
   persist: {
-    paths: ['loginInfo']
+    paths: ['loginInfo','tutorial']
   },
   actions: {
     setTutorial(tutorial) {
