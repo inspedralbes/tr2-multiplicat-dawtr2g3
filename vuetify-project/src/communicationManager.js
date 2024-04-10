@@ -57,6 +57,7 @@ export class CommunicationManager {
             body: formData
         });
         let jsonResponse = await response.json();
+        console.log(jsonResponse)
         return jsonResponse;
     }
     logout() {
