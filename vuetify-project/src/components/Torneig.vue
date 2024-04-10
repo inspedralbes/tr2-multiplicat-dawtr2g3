@@ -80,7 +80,7 @@
           src="../assets/avatar/avatarZorro.png"
           alt="icono avatar"
         />
-        <h1>{{ ownPlayer.nick }}</h1>
+        <h1 class="ownPlayerNick nick">{{ ownPlayer.nick }}</h1>
       </div>
 
       <div class="iconoVersus">
@@ -88,7 +88,7 @@
       </div>
 
       <div v-if="state == 'matchup'" class="avatarOponent avatar2">
-        <h1>{{ ownPlayer.oponent.nick }}</h1>
+        <h1 class="oponentNick nick">{{ ownPlayer.oponent.nick }}</h1>
 
         <img
           v-if="ownPlayer.oponent.avatar == 1"
@@ -182,8 +182,6 @@
       </div>
     </div>
     <partidaTorneig :ownPlayer="ownPlayer" v-else />
-    <button @click="() => (guanyat = !guanyat)">HOLAAA</button>
-    <button @click="() => (perdut = !perdut)">ADEEEEEEU</button>
   </div>
 
   <v-overlay
@@ -293,15 +291,27 @@ export default {
   justify-self: center;
   align-self: center;
 }
-.pantallaVersus * h1 {
-  background-color: rgb(255, 255, 255);
-  border-radius: 50px;
-  border: 2px solid black;
+.nick {
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 10vw;
-  margin: auto;
+  font-size: 2em;
+  border-radius: 50px;
+  margin-top: 20px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 30vh; 
+  max-width: 20vw;
+  height: 1.4em; 
+  white-space: nowrap;
+  margin-left: auto;
+  margin-right: auto;
+}
+.oponentNick {
+  color: #fff;
+  background: -webkit-linear-gradient(27.5deg, #ca0000dd, #000000dd);
+}
+.ownPlayerNick {
+  background: -webkit-linear-gradient(27.5deg, #ffffffdd, #2bff00dd);
 }
 .iconoVersus {
   grid-column: 2;
@@ -319,6 +329,9 @@ export default {
   grid-column: 3;
   justify-self: center;
   align-self: center;
+  background-color: white;
+  padding: 10px 20px;
+  border-radius: 50px;
 }
 .iconoVersus img {
   height: 50vh;

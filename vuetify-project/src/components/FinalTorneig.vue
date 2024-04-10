@@ -90,7 +90,6 @@ export default {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-
 }
 
 .grid__nom {
@@ -100,7 +99,6 @@ export default {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-
 }
 
 .grid__img {
