@@ -87,7 +87,7 @@
           src="../assets/avatar/avatarZorro.png"
           alt="icono avatar"
         />
-        <h1 class="ownPlayerNick">{{ ownPlayer.nick }}</h1>
+        <h1 class="ownPlayerNick nick">{{ ownPlayer.nick }}</h1>
       </div>
       <div class="containerEncertaresOwnPlayer">
         <div class="containerIcons">
@@ -121,7 +121,7 @@
                 viewBox="0 0 256 256"
               >
                 <path
-                  fill="currentColor"
+                  fill="#ff0000"
                   d="M128 80a48 48 0 1 0 48 48a48 48 0 0 0-48-48m0 60a12 12 0 1 1 12-12a12 12 0 0 1-12 12"
                 />
               </svg>
@@ -161,7 +161,7 @@
                 viewBox="0 0 256 256"
               >
                 <path
-                  fill="currentColor"
+                  fill="#ff0000"
                   d="M128 80a48 48 0 1 0 48 48a48 48 0 0 0-48-48m0 60a12 12 0 1 1 12-12a12 12 0 0 1-12 12"
                 />
               </svg>
@@ -249,7 +249,7 @@
           src="../assets/avatar/avatarZorro.png"
           alt="icono avatar"
         />
-        <h1 class="oponentNick">{{ ownPlayer.oponent.nick }}</h1>
+        <h1 class="oponentNick nick">{{ ownPlayer.oponent.nick }}</h1>
       </div>
     </div>
   </div>
@@ -264,6 +264,9 @@
 
 .avatar {
   height: 30vh;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .container__jugadors {
@@ -273,33 +276,56 @@
   align-items: center;
 }
 
+// margin-right: 10vh;
+
 .avatarOponent {
   display: flex;
   flex-direction: column;
-  align-items: end;
-  justify-content: end;
-  margin-right: 10vh;
+  justify-content: center;
   grid-column: 5;
+  height: 100%;
 }
 
+//   margin-left: 10vh;
+
 .avatarJugador {
-  margin-left: 10vh;
-  grid-column: 2
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  grid-column: 2;
+  height: 100%;
+}
+
+.nick {
+  display: flex;
+  justify-content: center;
+  font-size: 2em;
+  border-radius: 50px;
+  margin-top: 20px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 30vh; 
+  max-width: 20vw;
+  height: 1.4em; 
+  white-space: nowrap;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .oponentNick {
-  margin-right: 14vh;
+  
+  color: #fff;
+  background: -webkit-linear-gradient(27.5deg, #ca0000aa, #000000aa);
 }
 
 .ownPlayerNick {
-  margin-left: 14vh;
+  background: -webkit-linear-gradient(27.5deg, #ffffffaa, #2bff00aa);
 }
 
 .containerEncertaresOwnPlayer {
   display: flex;
   align-items: center;
   height: 100%;
-  margin-left: 5vh;
   grid-column: 3;
 }
 
@@ -309,7 +335,6 @@
   justify-content: end;
   align-items: center;
   height: 100%;
-  margin-right: 5vh;
   grid-column: 4;
 }
 
@@ -323,6 +348,7 @@
   background-color: white;
   border-radius: 10px;
   padding-top: 7px;
+  margin: 0 20px;
 }
 </style>
 
@@ -346,7 +372,8 @@ export default {
         error: false,
       },
       game: {
-        question: computed(() => store.question),        notFirstQuestion: false,
+        question: computed(() => store.question),
+        notFirstQuestion: false,
         dialog: false,
       },
       timerInterval: null,

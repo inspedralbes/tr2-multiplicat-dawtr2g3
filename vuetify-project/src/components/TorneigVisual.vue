@@ -4,9 +4,9 @@
   <div id="example" ref="example" class="brackets-viewer centrar"></div>
 
   <div class="caixaBtn">
-    <button class="nextBtn" @click="startNextRound()">
+    <v-btn class="nextBtn" @click="startNextRound()">
       Començar noves partides
-    </button>
+    </v-btn>
   </div>
 
   <!-- <div v-if="endGame" :class="endGame ? 'apareixer' : 'desapareixer'"> -->
@@ -227,9 +227,6 @@ export default {
 }
 
 .nextBtn {
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 5px;
   padding: 5px;
 }
 

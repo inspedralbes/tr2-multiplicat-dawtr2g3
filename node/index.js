@@ -739,6 +739,7 @@ io.on("connection", (socket) => {
                 });
               }
             }
+            io.to(roomID).emit("update players", room.jugadors);
           }
         }
       } else {
