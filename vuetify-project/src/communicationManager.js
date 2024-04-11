@@ -40,6 +40,7 @@ export class CommunicationManager {
     }
     async logout(token) {
         let formData = new FormData();
+        
         formData.append('token', token);
         let response = await fetch(this.fetchLink + 'logout', {
             method: 'POST',
@@ -49,6 +50,7 @@ export class CommunicationManager {
             body: formData
         });
         let jsonResponse = await response.json();
+        console.log(jsonResponse)
         const store = useAppStore();
         store.loginInfo = {
             loggedIn: false,
@@ -97,8 +99,7 @@ export class CommunicationManager {
         console.log(jsonResponse)
         return jsonResponse;
     }
-    logout() {
-    }
+
 
     // Other communication methods...
 

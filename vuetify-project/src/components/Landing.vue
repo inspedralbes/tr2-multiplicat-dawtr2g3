@@ -51,7 +51,7 @@
           </div>
           <div class="items__btn-log-reg" v-else>
             <v-btn rounded color="#f72a2a" class="px-5 ml-2 mt-3 text-white"
-              @click="$router.push('/register')">Logout</v-btn>
+              @click="logout">Logout</v-btn>
             <v-btn rounded color="#1e4efa" class="px-5 ml-2 mt-3 text-white" @click="afegir">Afegir</v-btn>
           </div>
         </div>
@@ -68,115 +68,7 @@
   </div>
 </template>
 <!-- CENTRAR FONDO https://es.godaddy.com/blog/imagen-responsive-en-css3-para-el-fondo-de-tu-web/ -->
-<style scoped>
-.container__button {
-  width: 100%;
-}
 
-.title-landing {
-  font-family: "Battle Beasts";
-  font-size: 10rem !important;
-  font-weight: 300;
-  line-height: 6rem;
-  text-transform: none !important;
-  color: #ffc00a;
-  margin-top: 10%;
-  margin-bottom: 5%;
-}
-
-.container {
-  width: 100vw;
-  height: 50vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.container__card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  left: 12vw;
-}
-
-.card__items {
-  display: grid;
-  grid-template-columns: 0.5fr 1fr;
-  grid-row-gap: 7%;
-  grid-template-areas:
-    "avatar userName"
-    "tutorial logReg";
-}
-
-.items__avatar {
-  grid-area: avatar;
-  display: flex;
-  justify-content: center;
-
-}
-
-.avatar-refresh {
-  top: 72%;
-  right: 25%;
-}
-
-.items__userName {
-  grid-area: userName;
-  display: flex;
-  justify-content: center;
-}
-
-.items__btn-tutorial {
-  grid-area: tutorial;
-  display: flex;
-  justify-content: start;
-  border-top: 1px solid rgb(255, 255, 255);
-}
-
-.items__btn-log-reg {
-  grid-area: logReg;
-  display: flex;
-  justify-content: end;
-  border-top: 1px solid rgb(255, 255, 255);
-}
-
-.container__buttons {
-  margin: auto;
-  height: 20vh;
-  width: 500px;
-  justify-content: center;
-  align-items: center;
-  display: grid;
-  position: relative;
-  right: 5vw;
-}
-
-.btn__entrar,
-.btn__crear {
-  font-size: 3rem !important;
-  width: 100%;
-}
-
-@media screen and (max-width: 1100px) {
-
-  .container {
-    width: 100vw;
-    height: 50vh;
-    display: grid;
-    justify-content: center;
-    grid-template-columns: 1fr;
-  }
-
-  .container__card {
-    left: 0;
-  }
-
-  .container__buttons {
-    margin-top: 3vh;
-    right: 0;
-  }
-}
-</style>
 
 <script>
 // import { useAppStore } from "../stores/app.js";
@@ -228,6 +120,19 @@ export default {
       if (!error) {
         router.push('/crearPregunta')
       }
+    },
+    async logout(){
+      console.log("logout");
+      const store = useAppStore();
+       let response = await this.manager.logout(store.loginInfo.token);
+       if(response == 1){
+        Toastify({
+          text: "Sessió tancada",
+          backgroundColor: '#f5a23d',
+          duration: 3000
+        }).showToast();
+        this.nom = '';
+       }
     },
     empezar() {
       const store = useAppStore();
@@ -371,3 +276,112 @@ export default {
 
 }
 </script>
+<style scoped>
+.container__button {
+  width: 100%;
+}
+
+.title-landing {
+  font-family: "Battle Beasts";
+  font-size: 10rem !important;
+  font-weight: 300;
+  line-height: 6rem;
+  text-transform: none !important;
+  color: #ffc00a;
+  margin-top: 10%;
+  margin-bottom: 5%;
+}
+
+.container {
+  width: 100vw;
+  height: 50vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.container__card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  left: 12vw;
+}
+
+.card__items {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  grid-row-gap: 7%;
+  grid-template-areas:
+    "avatar userName"
+    "tutorial logReg";
+}
+
+.items__avatar {
+  grid-area: avatar;
+  display: flex;
+  justify-content: center;
+
+}
+
+.avatar-refresh {
+  top: 72%;
+  right: 25%;
+}
+
+.items__userName {
+  grid-area: userName;
+  display: flex;
+  justify-content: center;
+}
+
+.items__btn-tutorial {
+  grid-area: tutorial;
+  display: flex;
+  justify-content: start;
+  border-top: 1px solid rgb(255, 255, 255);
+}
+
+.items__btn-log-reg {
+  grid-area: logReg;
+  display: flex;
+  justify-content: end;
+  border-top: 1px solid rgb(255, 255, 255);
+}
+
+.container__buttons {
+  margin: auto;
+  height: 20vh;
+  width: 500px;
+  justify-content: center;
+  align-items: center;
+  display: grid;
+  position: relative;
+  right: 5vw;
+}
+
+.btn__entrar,
+.btn__crear {
+  font-size: 3rem !important;
+  width: 100%;
+}
+
+@media screen and (max-width: 1100px) {
+
+  .container {
+    width: 100vw;
+    height: 50vh;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 1fr;
+  }
+
+  .container__card {
+    left: 0;
+  }
+
+  .container__buttons {
+    margin-top: 3vh;
+    right: 0;
+  }
+}
+</style>
