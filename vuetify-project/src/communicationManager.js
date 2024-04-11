@@ -34,12 +34,7 @@ export class CommunicationManager {
         let jsonResponse = await response.json();
         if (jsonResponse.status == 403 || jsonResponse.status == 401) {
             const store = useAppStore();
-            store.loginInfo = {
-                loggedIn: false,
-                username: '',
-                token: '',
-                verificat: false,
-            }
+           store.logout();
         }
         return jsonResponse;
     }

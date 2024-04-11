@@ -1,9 +1,5 @@
 <template>
-  <img
-    src="../assets/backgrounds/background-general.png"
-    class="fondo"
-    alt=""
-  />
+  <img src="../assets/backgrounds/background-general.png" class="fondo" alt="" />
   <div class="animacio">
     <div class="death-background">
       <h1>Has perdut</h1>
@@ -35,6 +31,15 @@ export default {
       this.animacioText = true;
     }, 5000);
   },
+  beforeRouteEnter(to, from, next) {
+    const store = useAppStore();
+    if (!store.enPartida) {
+      next('/');
+    } else {
+      next();
+    }
+  },
+
 };
 </script>
 <style scoped>
@@ -48,6 +53,7 @@ export default {
   height: 100vh;
   width: 100%;
 }
+
 .text {
   font-size: 2em;
   color: white;
@@ -56,12 +62,14 @@ export default {
   font-weight: 400;
   opacity: 0;
 }
+
 .animacioText {
   opacity: 1;
   z-index: 1;
 
   animation: fade-in 10s linear;
 }
+
 .fondo {
   position: absolute;
   width: 100%;
@@ -75,12 +83,10 @@ export default {
   display: block;
   width: 100%;
   height: 100%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 1) 69%,
-    rgba(0, 0, 0, 1) 100%
-  );
+  background: radial-gradient(ellipse at center,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 1) 69%,
+      rgba(0, 0, 0, 1) 100%);
   position: absolute;
   top: 0;
   left: 0;
@@ -116,6 +122,7 @@ export default {
     filter: grayscale(100%);
   }
 }
+
 @keyframes fade-in {
   0% {
     opacity: 0;

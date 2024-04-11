@@ -52,7 +52,7 @@ export const useAppStore = defineStore('app', {
 
   }),
   persist: {
-    paths: ['loginInfo','tutorial']
+    paths: ['loginInfo', 'tutorial']
   },
   actions: {
     setTutorial(tutorial) {
@@ -61,10 +61,17 @@ export const useAppStore = defineStore('app', {
     setOpponent(opponent) {
       this.opponent = opponent;
     },
-    getPantalla(){
+    getPantalla() {
       return this.pantallaTorneig;
     },
-
+    logout() {
+      this.loginInfo = {
+        loggedIn: false,
+        username: '',
+        token: '',
+        verificat: false,
+      }
+    },
     sumarVictoria() {
       this.victories++;
       return this.victories;
@@ -90,15 +97,15 @@ export const useAppStore = defineStore('app', {
     },
     startTimer() {
       if (this.timerStopped) {
-          this.timerInterval = setInterval(() => {
+        this.timerInterval = setInterval(() => {
 
-            if (this.timer <= 0) {
-              socket.emit('bleed');
-              this.triggerAnimacioVida();
-            } else {
-              this.timer--;
-            }
-          }, 1000);
+          if (this.timer <= 0) {
+            socket.emit('bleed');
+            this.triggerAnimacioVida();
+          } else {
+            this.timer--;
+          }
+        }, 1000);
         this.timerStopped = false;
       }
     },
@@ -182,7 +189,7 @@ export const useAppStore = defineStore('app', {
     setNick(nick) {
       this.loginInfo.username = nick;
     },
-    
+
     setAnswer(newAnswer) {
       this.answer = newAnswer;
     },

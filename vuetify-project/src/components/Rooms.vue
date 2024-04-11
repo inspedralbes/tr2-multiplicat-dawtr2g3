@@ -211,6 +211,14 @@ export default {
             this.toast();
         });
     },
+    beforeRouteEnter(to, from, next) {
+        const store = useAppStore();
+        if (!store.loginInfo.username) {
+            next('/');
+        } else {
+            next();
+        }
+    },
     created() {
         console.log(this.$router.options.history.state.back)
 

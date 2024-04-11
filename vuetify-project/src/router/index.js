@@ -67,12 +67,8 @@ const router = createRouter({
       name: 'torneig',
       component: Torneig
     },{
-      path: '/dueloanimacio',
-      name: 'DueloAnimacio',
-      component: AnimacioDuelo
-    },{
       path: '/perdut',
-      name: 'Perdut',
+      name: 'perdut',
       component: Perdut
     },{
       path: '/finalTorneig',
