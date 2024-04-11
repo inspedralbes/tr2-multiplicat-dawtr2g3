@@ -1036,7 +1036,7 @@ io.on("connection", (socket) => {
             if (!user.mort) {
               user.vida -= 55;
               if (user.vida <= 0) {
-                user.vida = 1;
+                user.vida = 0;
               }
               respostaFallada(user, roomID, socket);
             }
