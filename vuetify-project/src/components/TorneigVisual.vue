@@ -33,24 +33,28 @@
     >
       <v-card-actions class="centrarX">
         <v-btn variant="tonal" height="70" @click="forçarVictoria(1)">
-          <v-img 
-          :aspect-ratio="1"
-          :src="avatars[data.participant[opponents.opponent1].avatar - 1]"
-          cover
-          width="50"
+          <v-img
+            :aspect-ratio="1"
+            :src="avatars[data.participant[opponents.opponent1].avatar - 1]"
+            cover
+            width="50"
           ></v-img>
-          <div class="marginL">{{ data.participant[opponents.opponent1].name }}</div>
+          <div class="marginL">
+            {{ data.participant[opponents.opponent1].name }}
+          </div>
         </v-btn>
       </v-card-actions>
       <v-card-actions class="centrarX">
         <v-btn variant="tonal" height="70" @click="forçarVictoria(2)">
-          <v-img 
-          :aspect-ratio="1"
-          :src="avatars[data.participant[opponents.opponent2].avatar - 1]"
-          cover
-          width="50"
+          <v-img
+            :aspect-ratio="1"
+            :src="avatars[data.participant[opponents.opponent2].avatar - 1]"
+            cover
+            width="50"
           ></v-img>
-          <div class="marginL">{{ data.participant[opponents.opponent2].name }}</div>
+          <div class="marginL">
+            {{ data.participant[opponents.opponent2].name }}
+          </div>
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -73,7 +77,7 @@ export default {
     return {
       data: computed(() => store.getTorneigInfo()),
       players: computed(() => store.getPlayers()),
-      opponents: {opponent1: null, opponent2: null},
+      opponents: { opponent1: null, opponent2: null },
       matchID: null,
       endGame: false,
       avatars: [
@@ -99,11 +103,11 @@ export default {
 
       window.bracketsViewer.onMatchClicked = async (match) => {
         if (match.status == 2 || match.status == 3) {
-        this.opponents.opponent1 = match.opponent1.id;
-        this.opponents.opponent2 = match.opponent2.id;
-        this.endGame = true;
-        this.matchID = match.id;
-        console.log(this.matchID);
+          this.opponents.opponent1 = match.opponent1.id;
+          this.opponents.opponent2 = match.opponent2.id;
+          this.endGame = true;
+          this.matchID = match.id;
+          console.log(this.matchID);
         }
       };
 
@@ -168,8 +172,10 @@ export default {
       this.endGame = false;
 
       socket.emit("force win", {
-        guanyador: ordre == 1 ? this.opponents.opponent1 : this.opponents.opponent2,
-        perdedor: ordre == 1 ? this.opponents.opponent2 : this.opponents.opponent1,
+        guanyador:
+          ordre == 1 ? this.opponents.opponent1 : this.opponents.opponent2,
+        perdedor:
+          ordre == 1 ? this.opponents.opponent2 : this.opponents.opponent1,
         ordre: ordre,
         matchID: this.matchID,
       });
@@ -177,7 +183,58 @@ export default {
   },
   async mounted() {
     await this.pintar();
-  
+    setTimeout(() => {
+      const store = useAppStore();
+      const bracketsViewer = document.querySelector(".brackets-viewer");
+
+      if (navigator.userAgent.indexOf("Firefox") == -1) {
+        bracketsViewer.style.margin = "0 0";
+        bracketsViewer.style.padding = "0 0";
+        switch (store.getPlayers().length) {
+          case 4:
+            bracketsViewer.style.zoom = "1.7";
+            break;
+          case 8:
+            bracketsViewer.style.zoom = "1.2";
+            break;
+          default:
+            bracketsViewer.style.zoom = "1";
+        }
+      } else {
+        switch (store.getPlayers().length) {
+          case 4:
+            bracketsViewer.style.setProperty("--text-size", "22px");
+            bracketsViewer.style.setProperty("--round-margin", "114px");
+            bracketsViewer.style.setProperty("--match-width", "231px");
+            bracketsViewer.style.setProperty(
+              "--match-horizontal-padding",
+              "14px"
+            );
+            bracketsViewer.style.setProperty(
+              "--match-vertical-padding",
+              "12px"
+            );
+            bracketsViewer.style.setProperty("--match-border-radius", "0.5em");
+            break;
+          case 8:
+            bracketsViewer.style.setProperty("--text-size", "17px");
+            bracketsViewer.style.setProperty("--round-margin", "82px");
+            bracketsViewer.style.setProperty("--match-width", "192px");
+            bracketsViewer.style.setProperty(
+              "--match-horizontal-padding",
+              "13px"
+            );
+            bracketsViewer.style.setProperty(
+              "--match-vertical-padding",
+              "9px"
+            );
+            bracketsViewer.style.setProperty("--match-border-radius", "0.4em");
+            break;
+          default:
+            bracketsViewer.style.zoom = "1";
+        }
+      }
+    }, 50);
   },
   computed: {},
   watch: {
@@ -196,7 +253,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 90vh;
 }
 
 .centrarX {
@@ -228,6 +284,7 @@ export default {
 
 .nextBtn {
   padding: 5px;
+  background-color: antiquewhite;
 }
 
 .tarjeta {

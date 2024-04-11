@@ -295,7 +295,7 @@ export default {
   display: flex;
   justify-content: center;
   font-size: 2em;
-  border-radius: 50px;
+  border-radius: 0.5em;
   margin-top: 20px;
   text-overflow: ellipsis;
   overflow: hidden;

@@ -5,8 +5,8 @@
     color: white;
   }
   
-  .brackets-viewer h2{
-    color: white;
+  .brackets-viewer  h2{
+    color: white !important;
   }
 
   /* brackets-viewer class permite cambiar variables globales */
