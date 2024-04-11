@@ -225,6 +225,14 @@ export default {
 
         }
     },
+    beforeRouteEnter(to, from, next) {
+        const store = useAppStore();
+        if (!store.enLobby) {
+            next('/');
+        } else {
+            next();
+        }
+    },
 
 
 }

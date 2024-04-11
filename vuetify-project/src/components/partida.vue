@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="container__preguntas preguntas">
-                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
+                <Drag  :respostes="game.question.respostes" :pregunta="game.question.pregunta"
                     @comprovar="(index) => answer(index)" />
             </div>
             <div v-if="!game.mort" class="container__reloj">
@@ -330,10 +330,16 @@ export default {
             }
         }
     },
-
-    mounted() {
-        this.state.loading = false;
+    
+    beforeRouteEnter(to, from, next) {
+        const store = useAppStore();
+        if (!store.enPartida) {
+            next('/');
+        } else {
+            next();
+        }
     },
+   
 
 }
 </script>

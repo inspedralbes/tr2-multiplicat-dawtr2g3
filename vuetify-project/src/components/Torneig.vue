@@ -2,84 +2,28 @@
   <div>
     <div v-if="state != 'partida'" class="pantallaVersus">
       <div class="avatarJugador avatar1">
-        <img
-          v-if="ownPlayer.avatar == 1"
-          class="avatar"
-          src="../assets/avatar/avatarVaiolet.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 2"
-          class="avatar"
-          src="../assets/avatar/avatarCerdo.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 3"
-          class="avatar"
-          src="../assets/avatar/avatarEric.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 4"
-          class="avatar"
-          src="../assets/avatar/avatarGatoSuperman.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 5"
-          class="avatar"
-          src="../assets/avatar/avatarHamsterTrex.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 6"
-          class="avatar"
-          src="../assets/avatar/avatarHombrePeloBlanco.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 7"
-          class="avatar"
-          src="../assets/avatar/avatarLevie.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 8"
-          class="avatar"
-          src="../assets/avatar/avatarMikasa.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 9"
-          class="avatar"
-          src="../assets/avatar/avatarMujerPeloRojo.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 10"
-          class="avatar"
-          src="../assets/avatar/avatarPerroBatman.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 11"
-          class="avatar"
-          src="../assets/avatar/avatarPerroDJ.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 12"
-          class="avatar"
-          src="../assets/avatar/avatarPower.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.avatar == 13"
-          class="avatar"
-          src="../assets/avatar/avatarZorro.png"
-          alt="icono avatar"
-        />
+        <img v-if="ownPlayer.avatar == 1" class="avatar" src="../assets/avatar/avatarVaiolet.png" alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 2" class="avatar" src="../assets/avatar/avatarCerdo.png" alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 3" class="avatar" src="../assets/avatar/avatarEric.png" alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 4" class="avatar" src="../assets/avatar/avatarGatoSuperman.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 5" class="avatar" src="../assets/avatar/avatarHamsterTrex.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 6" class="avatar" src="../assets/avatar/avatarHombrePeloBlanco.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 7" class="avatar" src="../assets/avatar/avatarLevie.png" alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 8" class="avatar" src="../assets/avatar/avatarMikasa.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 9" class="avatar" src="../assets/avatar/avatarMujerPeloRojo.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 10" class="avatar" src="../assets/avatar/avatarPerroBatman.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 11" class="avatar" src="../assets/avatar/avatarPerroDJ.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 12" class="avatar" src="../assets/avatar/avatarPower.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.avatar == 13" class="avatar" src="../assets/avatar/avatarZorro.png"
+          alt="icono avatar" />
         <h1 class="ownPlayerNick nick">{{ ownPlayer.nick }}</h1>
       </div>
 
@@ -90,84 +34,32 @@
       <div v-if="state == 'matchup'" class="avatarOponent avatar2">
         <h1 class="oponentNick nick">{{ ownPlayer.oponent.nick }}</h1>
 
-        <img
-          v-if="ownPlayer.oponent.avatar == 1"
-          class="avatar"
-          src="../assets/avatar/avatarVaiolet.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 2"
-          class="avatar"
-          src="../assets/avatar/avatarCerdo.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 3"
-          class="avatar"
-          src="../assets/avatar/avatarEric.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 4"
-          class="avatar"
-          src="../assets/avatar/avatarGatoSuperman.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 5"
-          class="avatar"
-          src="../assets/avatar/avatarHamsterTrex.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 6"
-          class="avatar"
-          src="../assets/avatar/avatarHombrePeloBlanco.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 7"
-          class="avatar"
-          src="../assets/avatar/avatarLevie.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 8"
-          class="avatar"
-          src="../assets/avatar/avatarMikasa.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 9"
-          class="avatar"
-          src="../assets/avatar/avatarMujerPeloRojo.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 10"
-          class="avatar"
-          src="../assets/avatar/avatarPerroBatman.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 11"
-          class="avatar"
-          src="../assets/avatar/avatarPerroDJ.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 12"
-          class="avatar"
-          src="../assets/avatar/avatarPower.png"
-          alt="icono avatar"
-        />
-        <img
-          v-else-if="ownPlayer.oponent.avatar == 13"
-          class="avatar"
-          src="../assets/avatar/avatarZorro.png"
-          alt="icono avatar"
-        />
+        <img v-if="ownPlayer.oponent.avatar == 1" class="avatar" src="../assets/avatar/avatarVaiolet.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 2" class="avatar" src="../assets/avatar/avatarCerdo.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 3" class="avatar" src="../assets/avatar/avatarEric.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 4" class="avatar" src="../assets/avatar/avatarGatoSuperman.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 5" class="avatar" src="../assets/avatar/avatarHamsterTrex.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 6" class="avatar" src="../assets/avatar/avatarHombrePeloBlanco.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 7" class="avatar" src="../assets/avatar/avatarLevie.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 8" class="avatar" src="../assets/avatar/avatarMikasa.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 9" class="avatar" src="../assets/avatar/avatarMujerPeloRojo.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 10" class="avatar" src="../assets/avatar/avatarPerroBatman.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 11" class="avatar" src="../assets/avatar/avatarPerroDJ.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 12" class="avatar" src="../assets/avatar/avatarPower.png"
+          alt="icono avatar" />
+        <img v-else-if="ownPlayer.oponent.avatar == 13" class="avatar" src="../assets/avatar/avatarZorro.png"
+          alt="icono avatar" />
       </div>
 
       <div v-if="state == 'esperant'" class="esperant">
@@ -184,55 +76,22 @@
     <partidaTorneig :ownPlayer="ownPlayer" v-else />
   </div>
 
-  <v-overlay
-    :model-value="guanyat"
-    class="align-center justify-center"
-    @click:outside="tancarGuanyat()"
-  >
-    <v-card
-      color="#9afa93"
-      elevation="16"
-      class="tarjeta paddingB"
-      title="Victòria!"
-      subtitle="Molt bé! Has guanyat! Passes a la següent ronda!"
-      text="Clica fora per a tancar la finestra"
-      width="400"
-      v-if="guanyat"
-    >
+  <v-overlay :model-value="guanyat" class="align-center justify-center" @click:outside="tancarGuanyat()">
+    <v-card color="#9afa93" elevation="16" class="tarjeta paddingB" title="Victòria!"
+      subtitle="Molt bé! Has guanyat! Passes a la següent ronda!" text="Clica fora per a tancar la finestra" width="400"
+      v-if="guanyat">
     </v-card>
   </v-overlay>
-  <v-overlay
-    :model-value="perdut"
-    class="align-center justify-center"
-    @click:outside="tancarPerdut()"
-  >
-    <v-card
-      color="#fc8d8d"
-      elevation="16"
-      class="tarjeta paddingB"
-      title="Derrota..."
+  <v-overlay :model-value="perdut" class="align-center justify-center" @click:outside="tancarPerdut()">
+    <v-card color="#fc8d8d" elevation="16" class="tarjeta paddingB" title="Derrota..."
       subtitle="Has perdut, però no et preocupis! Encara tens una altra oportunitat!"
-      text="Clica fora per a tancar la finestra"
-      width="500"
-      v-if="perdut"
-    >
+      text="Clica fora per a tancar la finestra" width="500" v-if="perdut">
     </v-card>
   </v-overlay>
-  <v-overlay
-    :model-value="tutorial"
-    class="align-center justify-center"
-    @click:outside="tutorial = !tutorial"
-  >
-    <v-card
-      color="#ffab4a"
-      elevation="16"
-      class="tarjeta paddingB"
-      title="Tutorial curt"
+  <v-overlay :model-value="tutorial" class="align-center justify-center" @click:outside="tutorial = !tutorial">
+    <v-card color="#ffab4a" elevation="16" class="tarjeta paddingB" title="Tutorial curt"
       subtitle="Aquest tutorial et mostra com jugar"
-      text="Has d'ARROSSEGAR la resposta que creguis correcta a la pregunta"
-      width="500"
-      v-if="tutorial"
-    >
+      text="Has d'ARROSSEGAR la resposta que creguis correcta a la pregunta" width="500" v-if="tutorial">
     </v-card>
   </v-overlay>
 </template>
@@ -273,6 +132,14 @@ export default {
       this.dots = (this.dots + 1) % 4;
     }, 1000);
   },
+  beforeRouteEnter(to, from, next) {
+    const store = useAppStore();
+    if (!store.enPartida) {
+      next('/');
+    } else {
+      next();
+    }
+  },
 };
 </script>
 
@@ -285,12 +152,14 @@ export default {
   align-items: center;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
 }
+
 .avatarJugador {
   grid-column: 1;
   grid-row: 1/4;
   justify-self: center;
   align-self: center;
 }
+
 .nick {
   display: flex;
   justify-content: center;
@@ -299,32 +168,37 @@ export default {
   margin-top: 20px;
   text-overflow: ellipsis;
   overflow: hidden;
-  width: 30vh; 
+  width: 30vh;
   max-width: 20vw;
-  height: 1.4em; 
+  height: 1.4em;
   white-space: nowrap;
   margin-left: auto;
   margin-right: auto;
 }
+
 .oponentNick {
   color: #fff;
   background: -webkit-linear-gradient(27.5deg, #ca0000dd, #000000dd);
 }
+
 .ownPlayerNick {
   background: -webkit-linear-gradient(27.5deg, #ffffffdd, #2bff00dd);
 }
+
 .iconoVersus {
   grid-column: 2;
   grid-row: 2/5;
   justify-self: center;
   align-self: center;
 }
+
 .avatarOponent {
   grid-column: 3;
   grid-row: 3/-1;
   justify-self: center;
   align-self: center;
 }
+
 .esperant {
   grid-column: 3;
   justify-self: center;
@@ -333,14 +207,17 @@ export default {
   padding: 10px 20px;
   border-radius: 50px;
 }
+
 .iconoVersus img {
   height: 50vh;
   width: 50vh;
 }
+
 .avatar {
   width: 50vh;
   height: 5%;
 }
+
 .avatar1 {
   animation: avatar1 2s ease-in-out;
 }

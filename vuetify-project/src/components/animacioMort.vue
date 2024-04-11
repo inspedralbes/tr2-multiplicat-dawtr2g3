@@ -31,7 +31,7 @@ export default {
         setTimeout(() => {
             this.animacioText = true
         }, 5000);
-    }
+    },
 };
 </script>
 <style scoped>

@@ -209,13 +209,13 @@ export default {
       router.push('/');
     }
   },
-
-  mounted() {
-
-  },
-  created() {
-
-  },
+  beforeRouteEnter(to, from, next) {
+    if (from.name == 'partida') {
+      next();
+    } else {
+      next('/');
+    }
+  }
 
 }
 </script>

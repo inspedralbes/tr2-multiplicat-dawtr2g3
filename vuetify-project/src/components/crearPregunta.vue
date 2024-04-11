@@ -88,7 +88,14 @@ export default {
             token: computed(() => store.getToken()),
         };
     },
-
+    beforeRouteEnter(to, from, next) {
+        const store = useAppStore();
+        if (!store.loginInfo.verificat) {
+            next('/');
+        } else {
+            next();
+        }
+    },
     methods: {
         async submit() {
             let resposta = await this.manager.crearPregunta(
@@ -112,6 +119,8 @@ export default {
                     duration: 3000
 
                 }).showToast();
+                router.push('/');
+
                 return;
             } else if (resposta.status == 404) {
                 Toastify({
@@ -121,6 +130,9 @@ export default {
                     duration: 3000
 
                 }).showToast();
+                const store = useAppStore();
+                store.logout();
+                router.push('/');
                 return;
             } else if (resposta.status == 200) {
 
@@ -190,4 +202,5 @@ export default {
 
 .btn-primary:hover {
     background-color: #0069d9;
-}</style>
+}
+</style>

@@ -56,7 +56,15 @@ export default {
     },
     beforeUnmount() {
         clearInterval(this.interval)
+    },
+    beforeRouteEnter(to, from, next) {
+        if (from.name == 'torneig' || from.name == 'torneigProfe' || from.name == 'perdut') {
+            next()
+        } else {
+            next('/')
+        }
     }
+
 }
 </script>
 
