@@ -44,10 +44,15 @@
           <div class="items__btn-tutorial btn-tutorial">
             <v-btn rounded color="#106b03" @click="$router.push('/tutorial')" class="px-5 mr-5 mt-3">Tutorial</v-btn>
           </div>
-          <div class="items__btn-log-reg">
+          <div class="items__btn-log-reg" v-if="!loginInfo.loggedIn">
             <v-btn rounded color="#fad09e" class="px-5 ml-2 mt-3 text-white"
               @click="$router.push('/register')">Registre</v-btn>
             <v-btn rounded color="#f5a23d" class="px-5 ml-2 mt-3 text-white" @click="$router.push('/login')">Login</v-btn>
+          </div>
+          <div class="items__btn-log-reg" v-else>
+            <v-btn rounded color="#f72a2a" class="px-5 ml-2 mt-3 text-white"
+              @click="$router.push('/register')">Logout</v-btn>
+            <v-btn rounded color="#1e4efa" class="px-5 ml-2 mt-3 text-white" @click="afegir">Afegir</v-btn>
           </div>
         </div>
       </v-card>
@@ -58,10 +63,6 @@
       <div class="container__button" @click="verificat">
         <v-btn rounded="xl" class="btn__crear" color="#f5a23d" size="x-large"
           :disabled='this.nom == "" || !this.loginInfo.verificat' @click="crear">Crear</v-btn>
-      </div>
-      <div class="container__button" @click="verificat">
-        <v-btn rounded="xl" class="btn__crear" color="#f5a23d" size="x-large"
-          :disabled='this.nom == "" || !this.loginInfo.verificat' @click="afegir">Afegir</v-btn>
       </div>
     </div>
   </div>
