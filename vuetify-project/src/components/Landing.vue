@@ -96,7 +96,7 @@ export default {
       fetTutorial: false,
       tempsRestant: null,
       nom: '',
-      avatar: 1,
+      avatar: computed(() => store.avatar),
       manager: new CommunicationManager(),
       loginInfo: {
         username: computed(() => store.loginInfo.username),
@@ -206,9 +206,8 @@ export default {
 
     canviarAvatar() {
       let nouAvatar = Math.floor(Math.random() * 13) + 1;
-      this.avatar = nouAvatar;
       const store = useAppStore();
-      store.setAvatar(this.avatar);
+      store.setAvatar(nouAvatar);
     },
     async checkToken(){
       const store = useAppStore();
