@@ -32,52 +32,53 @@ let arrayRoomMinim = [];
 async function iniciarLobby(roomID) {
   const data = await fetchPreguntas();
   let room = arrayRoom.find((room) => room.id == roomID);
+  if (room) {
+    if (room.tipus == "royale") {
+      const fetchDuelo = await fetchPreguntasDuelo();
+      let preguntasDueloMal = JSON.parse(JSON.stringify(fetchDuelo));
+      let preguntasDuelo = JSON.parse(JSON.stringify(preguntasDueloMal));
+      preguntasDuelo.forEach((pregunta) => {
+        pregunta.respostes = randomArray(pregunta.respostes);
+      });
+      let preguntasMal = data;
+      randomArray(preguntasMal);
+      let arrayPreg = [];
+      preguntasMal.forEach((preguntaMal, index) => {
+        let pregunta = tipusTest(preguntaMal, index);
 
-  if (room.tipus == "royale") {
-    const fetchDuelo = await fetchPreguntasDuelo();
-    let preguntasDueloMal = JSON.parse(JSON.stringify(fetchDuelo));
-    let preguntasDuelo = JSON.parse(JSON.stringify(preguntasDueloMal));
-    preguntasDuelo.forEach((pregunta) => {
-      pregunta.respostes = randomArray(pregunta.respostes);
-    });
-    let preguntasMal = data;
-    randomArray(preguntasMal);
-    let arrayPreg = [];
-    preguntasMal.forEach((preguntaMal, index) => {
-      let pregunta = tipusTest(preguntaMal, index);
+        let arrayResp = "[" + pregunta.respostes + "]";
+        preguntasMal[index].respostes = JSON.parse(arrayResp);
+        pregunta.respostes = randomArray(JSON.parse(arrayResp));
+        arrayPreg.push(pregunta);
+      });
+      arrayRoom.map((room) => {
+        if (room.id == roomID) {
+          room.arrayPreg = arrayPreg;
+          room.preguntasMal = preguntasMal;
+          room.preguntasDueloMal = preguntasDueloMal;
+          room.preguntasDuelo = preguntasDuelo;
+        }
+      });
+    } else if (room.tipus == "torneo") {
+      let preguntasMal = data;
+      randomArray(preguntasMal);
+      let arrayPreg = [];
+      preguntasMal.forEach((preguntaMal, index) => {
+        let pregunta = tipusTest(preguntaMal, index);
 
-      let arrayResp = "[" + pregunta.respostes + "]";
-      preguntasMal[index].respostes = JSON.parse(arrayResp);
-      pregunta.respostes = randomArray(JSON.parse(arrayResp));
-      arrayPreg.push(pregunta);
-    });
-    arrayRoom.map((room) => {
-      if (room.id == roomID) {
-        room.arrayPreg = arrayPreg;
-        room.preguntasMal = preguntasMal;
-        room.preguntasDueloMal = preguntasDueloMal;
-        room.preguntasDuelo = preguntasDuelo;
-      }
-    });
-  } else if (room.tipus == "torneo") {
-    let preguntasMal = data;
-    randomArray(preguntasMal);
-    let arrayPreg = [];
-    preguntasMal.forEach((preguntaMal, index) => {
-      let pregunta = tipusTest(preguntaMal, index);
+        let arrayResp = "[" + pregunta.respostes + "]";
+        preguntasMal[index].respostes = JSON.parse(arrayResp);
+        pregunta.respostes = randomArray(JSON.parse(arrayResp));
+        arrayPreg.push(pregunta);
+      });
 
-      let arrayResp = "[" + pregunta.respostes + "]";
-      preguntasMal[index].respostes = JSON.parse(arrayResp);
-      pregunta.respostes = randomArray(JSON.parse(arrayResp));
-      arrayPreg.push(pregunta);
-    });
-
-    arrayRoom.map((room) => {
-      if (room.id == roomID) {
-        room.arrayPreg = arrayPreg;
-        room.preguntasMal = preguntasMal;
-      }
-    });
+      arrayRoom.map((room) => {
+        if (room.id == roomID) {
+          room.arrayPreg = arrayPreg;
+          room.preguntasMal = preguntasMal;
+        }
+      });
+    }
   }
 }
 
@@ -95,9 +96,11 @@ io.on("connection", (socket) => {
    */
   socket.on("join", (roomID, nom, avatar) => {
     let partida = arrayRoom.find((room) => room.id == roomID);
+    console.log("join: " +socket.id);
     if (partida) {
       if (partida.maxJugadors) {
         if (partida.maxJugadors <= partida.jugadors.length) {
+          console.log('max jugadors');
           socket.emit("max jugadors");
         } else {
           socket.join(roomID);
@@ -669,9 +672,9 @@ io.on("connection", (socket) => {
                 socket.emit(
                   "new question torneig",
                   arrayPreg[
-                    (jugador1.infoPartida.matchID * 5 +
-                      jugador1.infoPartida.encertades) %
-                      arrayPreg.length
+                  (jugador1.infoPartida.matchID * 5 +
+                    jugador1.infoPartida.encertades) %
+                  arrayPreg.length
                   ]
                 );
                 const tournamentData =
@@ -719,9 +722,9 @@ io.on("connection", (socket) => {
                 socket.emit(
                   "new question torneig",
                   arrayPreg[
-                    (jugador2.infoPartida.matchID * 5 +
-                      jugador2.infoPartida.encertades) %
-                      arrayPreg.length
+                  (jugador2.infoPartida.matchID * 5 +
+                    jugador2.infoPartida.encertades) %
+                  arrayPreg.length
                   ]
                 );
                 const tournamentData =
@@ -981,7 +984,7 @@ io.on("connection", (socket) => {
           if (
             preguntasDuelo[user.duelo.encertades].respostes[posResp] ==
             preguntasDueloMal[user.duelo.encertades].respostes[
-              respuestaCorrecta
+            respuestaCorrecta
             ]
           ) {
             correcte = true;
@@ -1030,8 +1033,13 @@ io.on("connection", (socket) => {
             user.preguntaNukeMal.respostes[posResp] !=
             user.preguntaNuke.respostes[respuestaCorrecta]
           ) {
-            user.vida -= 55;
-            respostaFallada(user, roomID, socket);
+            if (!user.mort) {
+              user.vida -= 55;
+              if (user.vida <= 0) {
+                user.vida = 1;
+              }
+              respostaFallada(user, roomID, socket);
+            }
           }
           user.preguntaNuke = undefined;
           user.preguntaNukeMal = undefined;
@@ -1073,7 +1081,7 @@ io.on("connection", (socket) => {
                   user.poder = poder;
                 }
               }
-              if (user.encertades == 20) {
+              if (user.encertades == 5 && !user.mort) {
                 user.poder = "nuke";
               }
             } else {
@@ -1318,9 +1326,11 @@ async function utilitzarPoderNuke(userNuke, roomID) {
   io.to(roomID).emit("nuke", userNuke.nick);
   setTimeout(() => {
     usersAfectats.forEach((user) => {
-      user.preguntaNuke = preguntaNuke;
-      user.preguntaNukeMal = preguntaNukeMal;
-      io.to(user.idSocket).emit("pregunta nuke", preguntaNukeMal);
+      if (!user.mort) {
+        user.preguntaNuke = preguntaNuke;
+        user.preguntaNukeMal = preguntaNukeMal;
+        io.to(user.idSocket).emit("pregunta nuke", preguntaNukeMal);
+      }
     });
   }, 5000);
 }
@@ -1809,7 +1819,7 @@ function guanyarRonda(jugador, room) {
   jugador.infoPartida.encertades = 0;
   jugador.infoPartida.matchID =
     room.torneig.guanyar[Math.log2(jugador.infoPartida.nJugadors) - 2][
-      jugador.infoPartida.matchID
+    jugador.infoPartida.matchID
     ];
 
   io.to(jugador.idSocket).emit("win");
@@ -1833,7 +1843,7 @@ function perdreRonda(jugador, room, socket) {
     jugador.infoPartida.encertades = 0;
     jugador.infoPartida.matchID =
       room.torneig.perdre[Math.log2(jugador.infoPartida.nJugadors) - 2][
-        jugador.infoPartida.matchID
+      jugador.infoPartida.matchID
       ];
     io.to(jugador.idSocket).emit("lose");
 

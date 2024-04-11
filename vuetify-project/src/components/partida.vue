@@ -1,9 +1,5 @@
 <template>
-    <div v-if="state.loading">
-        <div class="spinner-grow text-primary" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
+   
     <animacioMort v-if="game.animacioMort" />
     <div v-else v-bind:class="{ 'mort': game.mort }">
         <div v-if="!game.duelo.enDuelo && !game.nuke" class="container">

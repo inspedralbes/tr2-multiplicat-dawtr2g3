@@ -228,12 +228,11 @@ socket.on('nuke', (nick) => {
   store.stopTimer();
   console.log(store.nukeAnimation);
   setTimeout(() => {
-    console.log('stop animation');
     store.nukeAnimation = false;
+    store.startTimer();
   }, 5000);
 })
 socket.on('pregunta nuke', (pregunta) => {
-  console.log(pregunta);
   const store = useAppStore();
   store.question = pregunta;
   store.question.pregunta = store.question.enunciat
