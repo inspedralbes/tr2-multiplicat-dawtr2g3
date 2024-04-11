@@ -185,6 +185,7 @@ import router from '@/router'
 import { computed } from 'vue';
 import Toastify from 'toastify-js';
 import { resolveDirective } from 'vue';
+import CommunicationManager from '../communicationManager.js';
 
 
 import iconsHead from './iconesHead.vue';
@@ -203,6 +204,7 @@ export default {
       tempsRestant: null,
       nom: '',
       avatar: 1,
+      manager: new CommunicationManager(),
       loginInfo: {
         username: computed(() => store.loginInfo.username),
         loggedIn: computed(() => store.loginInfo.loggedIn),
@@ -302,12 +304,26 @@ export default {
       const store = useAppStore();
       store.setAvatar(this.avatar);
     },
-
+    async checkToken(){
+      const store = useAppStore();
+      if (store.loginInfo.token != '') {
+       let response = await this.manager.checkToken(store.loginInfo.token);
+       console.log(response);
+       if(response.status == 401 || response.status == 403){
+         Toastify({
+           text: "Sessió caducada",
+           backgroundColor: '#FC1A1A',
+           duration: 3000
+         }).showToast();
+       }
+      }
+    }
 
   },
 
   mounted() {
     const store = useAppStore();
+    this.checkToken();
     if (!store.tutorial) {
       var toast = Toastify({
 
@@ -328,6 +344,12 @@ export default {
       }).showToast();
     }
 
+    if (this.loginInfo.username != '') {
+      this.nom = this.loginInfo.username;
+      console.log(this.nom);
+    }
+  },
+  computed() {
     if (this.loginInfo.username != '') {
       this.nom = this.loginInfo.username;
       console.log(this.nom);

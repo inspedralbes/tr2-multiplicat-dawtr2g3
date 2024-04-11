@@ -21,6 +21,48 @@ export class CommunicationManager {
         let jsonResponse = await response.json();
         return jsonResponse;
     }
+    async checkToken(token) {
+        let formData = new FormData();
+        formData.append('token', token);
+        let response = await fetch(this.fetchLink + 'checkToken', {
+            method: 'POST',
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: formData
+        });
+        let jsonResponse = await response.json();
+        if (jsonResponse.status == 403 || jsonResponse.status == 401) {
+            const store = useAppStore();
+            store.loginInfo = {
+                loggedIn: false,
+                username: '',
+                token: '',
+                verificat: false,
+            }
+        }
+        return jsonResponse;
+    }
+    async logout(token) {
+        let formData = new FormData();
+        formData.append('token', token);
+        let response = await fetch(this.fetchLink + 'logout', {
+            method: 'POST',
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: formData
+        });
+        let jsonResponse = await response.json();
+        const store = useAppStore();
+        store.loginInfo = {
+            loggedIn: false,
+            username: '',
+            token: '',
+            verificat: false,
+        }
+        return jsonResponse;
+    }
     async register(username, email, password, password_confirmation) {
         let formData = new FormData();
         formData.append('nom', username);
@@ -37,7 +79,7 @@ export class CommunicationManager {
         let jsonResponse = await response.json();
         return jsonResponse;
     }
-    async crearPregunta(temps, enunciat, tipus, dificultat, categoria, resposta1, resposta2, resposta3, resposta4,token) {
+    async crearPregunta(temps, enunciat, tipus, dificultat, categoria, resposta1, resposta2, resposta3, resposta4, token) {
         let respostes = [resposta1, resposta2, resposta3, resposta4];
         respostes = JSON.stringify(respostes);
         let formData = new FormData();
@@ -52,7 +94,7 @@ export class CommunicationManager {
             method: 'POST',
             headers: {
                 "Access-Control-Allow-Origin": "*",
-                
+
             },
             body: formData
         });
