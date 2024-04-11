@@ -9,6 +9,10 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Laravel\Sanctum\PersonalAccessToken;
+
+
 class ControllerUsuari extends Controller
 {
     public function register(Request $request)
@@ -109,10 +113,29 @@ class ControllerUsuari extends Controller
 
     public function logout(Request $request)
     {
-        auth()->user()->tokens()->delete();
-        return [
-            'message' => 'Log out fet'
+        $checkToken = $request->token;
+        if (!($checkToken == null || $checkToken == "" || $checkToken == "null")) {
+
+            //Return if the user is logged in or not from the token
+            [$id, $token] = explode('|', $checkToken, 2);
+            $id = ltrim($id, '{');
+            $token = rtrim($token, '}');
+            $accessToken = PersonalAccessToken::find($id);
+            if ($accessToken) {
+                if (hash_equals($accessToken->token, hash('sha256', $token))) {
+                    $userId = $accessToken->tokenable_id;
+                    DB::table('personal_access_tokens')->where('tokenable_id', '=', $userId)->delete();
+                    return $userId;
+                }   
+            }
+        }
+        $response = [
+            'message' => 'Log out fet',
+            'status' => 200,
         ];
+       
+        return (json_encode($response));
+       
     }
 }
 

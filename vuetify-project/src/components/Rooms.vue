@@ -204,8 +204,6 @@ export default {
             store.enPartida = false;
             store.enLobby = false;
 
-            console.log('adios')
-
         }
         
         socket.on('max jugadors', () => {

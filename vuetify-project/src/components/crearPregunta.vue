@@ -27,11 +27,11 @@
             </div>
             <div class="form-group">
                 <label for="temps">Temps per respondre</label>
-                <input type="number" v-model="temps" @input="(e)=>{
-                    if(e.target.value < 0){
+                <input type="number" v-model="temps" @input="(e) => {
+                    if (e.target.value < 0) {
                         e.target.value = 0;
                     }
-                    if(e.target.value > 100){
+                    if (e.target.value > 100) {
                         e.target.value = 100;
                     }
                 }" class="form-control" id="temps">
@@ -85,6 +85,7 @@ export default {
             resposta2: "",
             resposta3: "",
             resposta4: "",
+            token: computed(() => store.getToken()),
         };
     },
 
@@ -99,35 +100,60 @@ export default {
                 this.resposta1,
                 this.resposta2,
                 this.resposta3,
-                this.resposta4
+                this.resposta4,
+                this.token
             );
-            Toastify({
+            console.log(resposta)
+            if (resposta.status == 401) {
+                Toastify({
 
-                text: "Pregunta creada correctament",
-                backgroundColor: '#18AF00',
-                duration: 3000
+                    text: "Error al crear la pregunta",
+                    backgroundColor: '#FC1A1A',
+                    duration: 3000
 
-            }).showToast();
+                }).showToast();
+                return;
+            } else if (resposta.status == 404) {
+                Toastify({
+
+                    text: "Sessio expirada",
+                    backgroundColor: '#FC1A1A',
+                    duration: 3000
+
+                }).showToast();
+                return;
+            } else if (resposta.status == 200) {
+
+                Toastify({
+
+                    text: "Pregunta creada correctament",
+                    backgroundColor: '#18AF00',
+                    duration: 3000
+
+                }).showToast();
+            }
             router.push('/');
-            
+
         },
     },
 }
 </script>
 
 <style scoped>
-.title{
+.title {
     text-align: center;
     margin-bottom: 20px;
     color: #fff;
 }
+
 .container {
     max-width: 400px;
     margin: 0 auto;
     border-radius: 5px;
     margin-top: 5vh;
 }
-.form-control{
+
+.form-control {
     width: 100%;
     padding: 10px;
     margin: 5px 0 22px 0;
@@ -138,6 +164,7 @@ export default {
     border-radius: 5px;
 
 }
+
 .form-group {
     margin-bottom: 20px;
     background-color: #fff;
@@ -163,5 +190,4 @@ export default {
 
 .btn-primary:hover {
     background-color: #0069d9;
-}
-</style>
+}</style>

@@ -158,6 +158,9 @@ export const useAppStore = defineStore('app', {
     getQuestionIndex() {
       return this.questionIndex;
     },
+    getToken() {
+      return this.loginInfo.token;
+    },
     setQuestion(question) {
       this.question = question;
       this.timer = question.temps;
