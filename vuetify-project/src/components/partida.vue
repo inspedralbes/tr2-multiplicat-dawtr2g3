@@ -1,9 +1,6 @@
 <template>
-    <div v-if="state.loading">
-        <div class="spinner-grow text-primary" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
+   
+    <animacioMort v-if="game.animacioMort" />
     <div v-else v-bind:class="{ 'mort': game.mort }">
         <div v-if="!game.duelo.enDuelo && !game.nuke" class="container">
             <div class="container__jugadors jugadors">
@@ -14,7 +11,7 @@
                 </div>
             </div>
             <div class="container__preguntas preguntas">
-                <Drag :respostes="game.question.respostes" :pregunta="game.question.pregunta"
+                <Drag  :respostes="game.question.respostes" :pregunta="game.question.pregunta"
                     @comprovar="(index) => answer(index)" />
             </div>
             <div v-if="!game.mort" class="container__reloj">
@@ -192,6 +189,7 @@
             <div class="warning-text"><strong>Warning:</strong> Atenció, {{ nukeAnimation }} ha arribat a una racha de 20 i ha activat la NUKE!</div>
         </div>
     </div>
+
 </template>
 
 
@@ -205,6 +203,7 @@ import { toHandlers } from 'vue';
 import JugadorPartida from './JugadorPartida.vue';
 import store from '@/store';
 import AnimacioDuelo from './AnimacioDuelo.vue'; 
+import animacioMort from './animacioMort.vue';
 export default {
     data() {
         const store = useAppStore();
@@ -234,13 +233,14 @@ export default {
                 notFirstQuestion: false,
                 dialog: computed(() => store.dialog),
                 animacionDuelo: computed(() => store.animacionDuelo),
+                animacioMort: computed(() => store.animacioMort),
             },
             timerInterval: null,
             disabled: false,
             animacioVida: computed(() => store.animacioVida),
         };
     },
-    components: { Drag, Poder, JugadorPartida, AnimacioDuelo },
+    components: { Drag, Poder, JugadorPartida, AnimacioDuelo, animacioMort },
     methods: {
         skip() {
             socket.emit('skip');
@@ -326,10 +326,16 @@ export default {
             }
         }
     },
-
-    mounted() {
-        this.state.loading = false;
+    
+    beforeRouteEnter(to, from, next) {
+        const store = useAppStore();
+        if (!store.enPartida) {
+            next('/');
+        } else {
+            next();
+        }
     },
+   
 
 }
 </script>

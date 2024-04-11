@@ -13,7 +13,7 @@ import Torneig from "../components/Torneig.vue";
 import AnimacioDuelo from "../components/AnimacioDuelo.vue";
 import Perdut from "../components/Perdut.vue";
 import FinalTorneig from "../components/FinalTorneig.vue";
-
+import crearPregunta from "../components/crearPregunta.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -60,24 +60,26 @@ const router = createRouter({
       component: Tutorial
     },{
       path: '/torneigProfe',
-      name: 'TorneigProfe',
+      name: 'torneigProfe',
       component: TorneigVisual
     },{
       path: '/torneig',
-      name: 'Torneig',
+      name: 'torneig',
       component: Torneig
     },{
-      path: '/dueloanimacio',
-      name: 'DueloAnimacio',
-      component: AnimacioDuelo
-    },{
       path: '/perdut',
-      name: 'Perdut',
+      name: 'perdut',
       component: Perdut
     },{
       path: '/finalTorneig',
       name: 'FinalTorneig',
       component: FinalTorneig
+    },
+    {
+      path: '/crearpregunta',
+      name: 'crearpregunta',
+      component: crearPregunta,
+      
     }
 
   ]

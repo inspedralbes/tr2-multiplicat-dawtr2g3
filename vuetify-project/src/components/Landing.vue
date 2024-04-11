@@ -44,10 +44,15 @@
           <div class="items__btn-tutorial btn-tutorial">
             <v-btn rounded color="#106b03" @click="$router.push('/tutorial')" class="px-5 mr-5 mt-3">Tutorial</v-btn>
           </div>
-          <div class="items__btn-log-reg">
+          <div class="items__btn-log-reg" v-if="!loginInfo.loggedIn">
             <v-btn rounded color="#fad09e" class="px-5 ml-2 mt-3 text-white"
               @click="$router.push('/register')">Registre</v-btn>
             <v-btn rounded color="#f5a23d" class="px-5 ml-2 mt-3 text-white" @click="$router.push('/login')">Login</v-btn>
+          </div>
+          <div class="items__btn-log-reg" v-else>
+            <v-btn rounded color="#f72a2a" class="px-5 ml-2 mt-3 text-white"
+              @click="logout">Logout</v-btn>
+            <v-btn rounded color="#1e4efa" class="px-5 ml-2 mt-3 text-white" @click="afegir">Afegir</v-btn>
           </div>
         </div>
       </v-card>
@@ -63,6 +68,213 @@
   </div>
 </template>
 <!-- CENTRAR FONDO https://es.godaddy.com/blog/imagen-responsive-en-css3-para-el-fondo-de-tu-web/ -->
+
+
+<script>
+// import { useAppStore } from "../stores/app.js";
+import { socket } from '../socket';
+import { useAppStore } from '@/store/app';
+import router from '@/router'
+import { computed } from 'vue';
+import Toastify from 'toastify-js';
+import { resolveDirective } from 'vue';
+import CommunicationManager from '../communicationManager.js';
+
+
+import iconsHead from './iconesHead.vue';
+
+
+export default {
+  components
+    : {
+    iconsHead
+  },
+  data() {
+    const store = useAppStore();
+
+    return {
+      fetTutorial: false,
+      tempsRestant: null,
+      nom: '',
+      avatar: computed(() => store.avatar),
+      manager: new CommunicationManager(),
+      loginInfo: {
+        username: computed(() => store.loginInfo.username),
+        loggedIn: computed(() => store.loginInfo.loggedIn),
+        verificat: computed(() => store.loginInfo.verificat),
+      },
+    };
+  },
+  methods: {
+    crearPregunta() {
+      let error = false;
+      if (this.loginInfo.loggedIn == false) {
+        error = true
+
+      } else {
+        if (!this.loginInfo.verificat) {
+          error = true;
+
+        }
+      }
+      if (!error) {
+        router.push('/crearPregunta')
+      }
+    },
+    async logout(){
+      console.log("logout");
+      const store = useAppStore();
+       let response = await this.manager.logout(store.loginInfo.token);
+       if(response == 1){
+        Toastify({
+          text: "Sessió tancada",
+          backgroundColor: '#f5a23d',
+          duration: 3000
+        }).showToast();
+        this.nom = '';
+       }
+    },
+    empezar() {
+      const store = useAppStore();
+
+      if (!store.tutorial) {
+        store.setTutorial(true);
+        router.push('/tutorial');
+
+      }
+
+      store.setNick(this.nom);
+      router.push('/partides');
+
+    },
+    afegir() {
+      let error = false;
+      if (this.loginInfo.loggedIn == false) {
+        error = true
+
+      } else {
+        if (!this.loginInfo.verificat) {
+          error = true;
+
+        }
+      }
+      if (!error) {
+        const store = useAppStore();
+        store.setNick(this.nom);
+        router.push('/crearpregunta')
+      }
+    },
+    crear() {
+      let error = false;
+      if (this.loginInfo.loggedIn == false) {
+        error = true
+
+      } else {
+        if (!this.loginInfo.verificat) {
+          error = true;
+
+        }
+      }
+      if (!error) {
+        const store = useAppStore();
+        store.setNick(this.nom);
+        router.push('/crearPartida')
+      }
+    },
+    verificat() {
+      console.log(this.loginInfo.verificat);
+      if (this.loginInfo.loggedIn == false) {
+        Toastify({
+
+          text: "No estas logejat",
+          backgroundColor: '#FC1A1A',
+          duration: 3000
+
+        }).showToast();
+      } else {
+        if (!this.loginInfo.verificat) {
+          Toastify({
+
+            text: "Nomes comptes verificades poden crear partides o preguntes",
+            backgroundColor: '#FC1A1A',
+            duration: 3000
+
+          }).showToast();
+        }
+      }
+    },
+
+    canviarAvatar() {
+      let nouAvatar = Math.floor(Math.random() * 13) + 1;
+      const store = useAppStore();
+      store.setAvatar(nouAvatar);
+    },
+    async checkToken(){
+      const store = useAppStore();
+      if (store.loginInfo.token != '') {
+       let response = await this.manager.checkToken(store.loginInfo.token);
+       console.log(response);
+       if(response.status == 401 || response.status == 403){
+         Toastify({
+           text: "Sessió caducada",
+           backgroundColor: '#FC1A1A',
+           duration: 3000
+         }).showToast();
+       }
+      }
+    }
+
+  },
+
+  mounted() {
+    const store = useAppStore();
+    this.checkToken();
+    if (!store.tutorial) {
+      var toast = Toastify({
+
+        text: "Si us plau, fes el tutorial per poder jugar correctament fent click aqui!",
+        backgroundColor: '#FC1A1A',
+        duration: 5000,
+        position: 'center',
+        offset: {
+          x: 0,
+          y: '35vh'
+        },
+        close: true,
+        onClick: function () {
+          router.push('/tutorial');
+          toast.hideToast();
+        }
+
+      }).showToast();
+    }
+
+    if (this.loginInfo.username != '') {
+      this.nom = this.loginInfo.username;
+      console.log(this.nom);
+    }
+  },
+  computed() {
+    if (this.loginInfo.username != '') {
+      this.nom = this.loginInfo.username;
+      console.log(this.nom);
+    }
+  },
+  created() {
+
+    const store = useAppStore();
+    console.log(store.enPartida)
+    console.log(store.enLobby)
+    if (store.enPartida || store.enLobby) {
+      socket.emit('tornar a lobby');
+      store.enPartida = false;
+      store.enLobby = false;
+
+    }
+  },
+
+}
+</script>
 <style scoped>
 .container__button {
   width: 100%;
@@ -172,153 +384,3 @@
   }
 }
 </style>
-
-<script>
-// import { useAppStore } from "../stores/app.js";
-import { socket } from '../socket';
-import { useAppStore } from '@/store/app';
-import router from '@/router'
-import { computed } from 'vue';
-import Toastify from 'toastify-js';
-import { resolveDirective } from 'vue';
-
-
-import iconsHead from './iconesHead.vue';
-
-
-export default {
-  components
-    : {
-    iconsHead
-  },
-  data() {
-    const store = useAppStore();
-
-    return {
-      fetTutorial: false,
-      tempsRestant: null,
-      nom: '',
-      avatar: 1,
-      loginInfo: {
-        username: computed(() => store.loginInfo.username),
-        loggedIn: computed(() => store.loginInfo.loggedIn),
-        verificat: computed(() => store.loginInfo.verificat),
-      },
-    };
-  },
-  methods: {
-    crearPregunta() {
-      let error = false;
-      if (this.loginInfo.loggedIn == false) {
-        error = true
-
-      } else {
-        if (!this.loginInfo.verificat) {
-          error = true;
-
-        }
-      }
-      if (!error) {
-        router.push('/crearPregunta')
-      }
-    },
-    empezar() {
-      const store = useAppStore();
-
-      if (!store.tutorial) {
-        store.setTutorial(true);
-        router.push('/tutorial');
-
-      }
-
-      store.setNick(this.nom);
-      router.push('/partides');
-
-    },
-    crear() {
-      let error = false;
-      if (this.loginInfo.loggedIn == false) {
-        error = true
-
-      } else {
-        if (!this.loginInfo.verificat) {
-          error = true;
-
-        }
-      }
-      if (!error) {
-        const store = useAppStore();
-        store.setNick(this.nom);
-        router.push('/crearPartida')
-      }
-    },
-    verificat() {
-      console.log(this.loginInfo.verificat);
-      if (this.loginInfo.loggedIn == false) {
-        Toastify({
-
-          text: "No estas logejat",
-          backgroundColor: '#FC1A1A',
-          duration: 3000
-
-        }).showToast();
-      } else {
-        if (!this.loginInfo.verificat) {
-          Toastify({
-
-            text: "Nomes comptes verificades poden crear partides o preguntes",
-            backgroundColor: '#FC1A1A',
-            duration: 3000
-
-          }).showToast();
-        }
-      }
-    },
-
-    canviarAvatar() {
-      let nouAvatar = Math.floor(Math.random() * 13) + 1;
-      this.avatar = nouAvatar;
-      const store = useAppStore();
-      store.setAvatar(this.avatar);
-    },
-
-
-  },
-
-  mounted() {
-    const store = useAppStore();
-    if (!store.tutorial) {
-      var toast = Toastify({
-
-        text: "Si us plau, fes el tutorial per poder jugar correctament fent click aqui!",
-        backgroundColor: '#FC1A1A',
-        duration: 5000,
-        position: 'center',
-        offset: {
-          x: 0,
-          y: '35vh'
-        },
-        close: true,
-        onClick: function () {
-          router.push('/tutorial');
-          toast.hideToast();
-        }
-
-      }).showToast();
-    }
-
-    if (this.loginInfo.username != '') {
-      this.nom = this.loginInfo.username;
-      console.log(this.nom);
-    }
-  },
-  created() {
-    console.log(this.$router.options.history.state.back)
-    if (this.$router.options.history.state.back == '/lobby' || this.$router.options.history.state.back == '/') {
-      socket.emit('tornar a lobby');
-      console.log('adios')
-    }
-  },
-
-}
-</script>

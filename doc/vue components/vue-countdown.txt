@@ -1,5 +1,0 @@
-Link documentació del vue-countdown.
-
-Amb l'atribut tag se li pot dir com es comportara a l'html
-
-https://fengyuanchen.github.io/vue-countdown/

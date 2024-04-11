@@ -9,6 +9,10 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Laravel\Sanctum\PersonalAccessToken;
+
+
 class ControllerUsuari extends Controller
 {
     public function register(Request $request)
@@ -18,7 +22,7 @@ class ControllerUsuari extends Controller
                 'status' => 399,
                 'missatge' => 'Falten camps per omplir'
             ];
-            return response($response,399);
+            return response($response, 399);
         }
         $validator = Validator::make($request->all(), [
             'password' => 'required|string|confirmed'
@@ -29,9 +33,9 @@ class ControllerUsuari extends Controller
                 'status' => 399,
                 'missatge' => 'Comprova que la contrasenya i la confirmació siguin la mateixa'
             ];
-            return response($response,399);
+            return response($response, 399);
         }
-        
+
         $validator = Validator::make($request->all(), [
             'mail' => 'required|string|unique:users,mail',
         ]);
@@ -42,9 +46,9 @@ class ControllerUsuari extends Controller
 
                 'missatge' => 'Email ja esta en ús'
             ];
-            return response($response,340);
+            return response($response, 340);
         }
-        
+
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|unique:users,nom',
         ]);
@@ -54,7 +58,7 @@ class ControllerUsuari extends Controller
                 'error' => 340,
                 'missatge' => 'Nom ja esta en ús'
             ];
-            return response($response,340);
+            return response($response, 340);
         }
 
         $user = User::create([
@@ -76,7 +80,43 @@ class ControllerUsuari extends Controller
         ];
         return response($response, 201);
     }
+    public function checkToken(Request $request)
+    {
+        $checkToken = $request->token;
+        if (!($checkToken == null || $checkToken == "" || $checkToken == "null")) {
+            //Return if the user is logged in or not from the token
+            [$id, $token] = explode('|', $checkToken, 2);
+            $id = ltrim($id, '{');
+            $token = rtrim($token, '}');
+            $accessToken = PersonalAccessToken::find($id);
+            if ($accessToken) {
+                if (hash_equals($accessToken->token, hash('sha256', $token))) {
+                    $userId = $accessToken->tokenable_id;
+                    $user = User::find($userId);
+                    $response = [
+                        'message' => 'Usuari loguejat',
+                        'user' => $user,
+                        'status' => 200,
+                    ];
+                    return (json_encode($response));
+                }
+            } else {
+                $response = [
+                    'message' => 'Sessió caducada',
+                    'status' => 401,
+                ];
+                return (json_encode($response));
+            }
+        } else {
 
+
+            $response = [
+                'message' => 'Usuari no loguejat',
+                'status' => 401,
+            ];
+            return (json_encode($response));
+        }
+    }
     public function login(Request $request)
     {
         $fields = $request->validate([
@@ -109,11 +149,27 @@ class ControllerUsuari extends Controller
 
     public function logout(Request $request)
     {
-        auth()->user()->tokens()->delete();
-        return [
-            'message' => 'Log out fet'
+        $checkToken = $request->token;
+        if (!($checkToken == null || $checkToken == "" || $checkToken == "null")) {
+
+            //Return if the user is logged in or not from the token
+            [$id, $token] = explode('|', $checkToken, 2);
+            $id = ltrim($id, '{');
+            $token = rtrim($token, '}');
+            $accessToken = PersonalAccessToken::find($id);
+            if ($accessToken) {
+                if (hash_equals($accessToken->token, hash('sha256', $token))) {
+                    $userId = $accessToken->tokenable_id;
+                    DB::table('personal_access_tokens')->where('tokenable_id', '=', $userId)->delete();
+                    return $userId;
+                }
+            }
+        }
+        $response = [
+            'message' => 'Log out fet',
+            'status' => 200,
         ];
+
+        return (json_encode($response));
     }
 }
-
-

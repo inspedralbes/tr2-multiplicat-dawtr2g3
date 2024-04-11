@@ -25,12 +25,16 @@ export const useAppStore = defineStore('app', {
     timerInterval: null,
     dead: false,
     animacioVida: false,
+    animacioMort: false,
     avatar: 1,
     timerStopped: true,
     tutorial: false,
     enPartida: false,
+    enLobby: false,
     dialog: false,
     animacionDuelo: false,
+    guanyat: false,
+    perdut: false,
     duelo: {
       enDuelo: false,
       encertades: 0,
@@ -47,6 +51,9 @@ export const useAppStore = defineStore('app', {
 
 
   }),
+  persist: {
+    paths: ['loginInfo', 'tutorial', 'avatar']
+  },
   actions: {
     setTutorial(tutorial) {
       this.tutorial = tutorial;
@@ -54,10 +61,17 @@ export const useAppStore = defineStore('app', {
     setOpponent(opponent) {
       this.opponent = opponent;
     },
-    getPantalla(){
+    getPantalla() {
       return this.pantallaTorneig;
     },
-
+    logout() {
+      this.loginInfo = {
+        loggedIn: false,
+        username: '',
+        token: '',
+        verificat: false,
+      }
+    },
     sumarVictoria() {
       this.victories++;
       return this.victories;
@@ -83,15 +97,15 @@ export const useAppStore = defineStore('app', {
     },
     startTimer() {
       if (this.timerStopped) {
-          this.timerInterval = setInterval(() => {
+        this.timerInterval = setInterval(() => {
 
-            if (this.timer <= 0) {
-              socket.emit('bleed');
-              this.triggerAnimacioVida();
-            } else {
-              this.timer--;
-            }
-          }, 1000);
+          if (this.timer <= 0) {
+            socket.emit('bleed');
+            this.triggerAnimacioVida();
+          } else {
+            this.timer--;
+          }
+        }, 1000);
         this.timerStopped = false;
       }
     },
@@ -154,6 +168,9 @@ export const useAppStore = defineStore('app', {
     getQuestionIndex() {
       return this.questionIndex;
     },
+    getToken() {
+      return this.loginInfo.token;
+    },
     setQuestion(question) {
       this.question = question;
       this.timer = question.temps;
@@ -172,7 +189,7 @@ export const useAppStore = defineStore('app', {
     setNick(nick) {
       this.loginInfo.username = nick;
     },
-    
+
     setAnswer(newAnswer) {
       this.answer = newAnswer;
     },
@@ -187,6 +204,10 @@ export const useAppStore = defineStore('app', {
     },
     playerDead() {
       this.dead = true;
+      this.animacioMort = true;
+      setTimeout(() => {
+        this.animacioMort = false;
+      }, 10000);
     },
     getTorneigInfo() {
       return this.infoTorneig;
@@ -200,7 +221,18 @@ export const useAppStore = defineStore('app', {
     setTourneigState(state) {
       this.stateTorneig = state;
     },
-    
+    setGuanyat(guanyat) {
+      this.guanyat = guanyat;
+    },
+    getGuanyat() {
+      return this.guanyat;
+    },
+    setPerdut(perdut) {
+      this.perdut = perdut;
+    },
+    getPerdut() {
+      return this.perdut;
+    },
 
   },
 })

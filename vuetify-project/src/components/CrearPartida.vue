@@ -24,19 +24,22 @@
                 <div class="buttons-background b-right">
                     <select class="buttons-size-style" @click="this.maxJugadors = 0" v-model="tipus">
                         <option :value="''" disabled selected>Tipus de partida</option>
-                        <option  @click="this.maxJugadors = 0" :value="'royale'">Royale</option>
-                        <option  @click="this.maxJugadors = 0" :value="'torneo'">Torneo</option>
+                        <option @click="this.maxJugadors = 0" :value="'royale'">Royale</option>
+                        <option @click="this.maxJugadors = 0" :value="'torneo'">Torneo</option>
                     </select>
                 </div>
                 <div class="buttons-background b-left">
                     <select :disabled="this.tipus == ''" class="buttons-size-style" v-model="maxJugadors">
                         <option :value="0" disabled selected>nº Jugadors</option>
-                        <option v-if="this.tipus == '' || this.tipus == 'royale'" v-for="n in 39" :value="n + 1">{{ n + 1 }}</option>
-                        <option v-if="this.tipus == 'torneo'" v-for="i in 4" :value="Math.pow(2, i+1)">{{ Math.pow(2, i+1) }}</option>
+                        <option v-if="this.tipus == '' || this.tipus == 'royale'" v-for="n in 39" :value="n + 1">{{ n + 1 }}
+                        </option>
+                        <option v-if="this.tipus == 'torneo'" v-for="i in 4" :value="Math.pow(2, i + 1)">{{ Math.pow(2, i +
+                            1)
+                        }}</option>
 
                     </select>
                 </div>
-                
+
                 <!--  <div class="buttons-background b-right">
                     <select class="buttons-size-style" >
                         <option  disabled selected>Limit de partida</option>
@@ -76,22 +79,39 @@ export default {
 
         crear() {
             const store = useAppStore();
+            store.enLobby = true;
             console.log(this.tipus);
             if (this.maxJugadors != 0 && this.nom != "" && this.tipus != "") {
-                socket.emit('create game', this.nom, this.maxJugadors,this.tipus, store.loginInfo.username);
+                socket.emit('create game', this.nom, this.maxJugadors, this.tipus, store.loginInfo.username);
                 this.$router.push('/lobby');
             }
         }
     },
 
     mounted() {
-    },
-    created() {
         const store = useAppStore();
         if (!store.loginInfo.verificat) {
             this.$router.push('/');
         }
+
+        if (store.enPartida || store.enLobby) {
+            socket.emit('tornar a lobby');
+            store.enPartida = false;
+            store.enLobby = false;
+
+            console.log('adios')
+
+        }
     },
+    beforeRouteEnter(to, from, next) {
+        const store = useAppStore();
+        if (!store.loginInfo.verificat) {
+            next('/');
+        } else {
+            next();
+        }
+    },
+    
 
 }
 </script>

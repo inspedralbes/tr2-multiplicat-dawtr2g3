@@ -24,10 +24,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login',[ControllerUsuari::class, 'login']); 
 Route::post('/register',[ControllerUsuari::class, 'register']); 
-
+Route::post('/logout',[ControllerUsuari::class,'logout']);
 Route::get('/preguntes',[ControllerPregunta::class, 'index']); 
 Route::get('/preguntesDuelo',[ControllerPreguntaDuelo::class, 'index']); 
 Route::get('/preguntaNuke',[ControllerPreguntaNuke::class, 'index']); 
-
+Route::post('/checkToken',[ControllerUsuari::class, 'checkToken']);
 Route::get('/preguntes/{id}',[ControllerPregunta::class, 'show']); 
 Route::post('/crearPregunta',[ControllerPregunta::class, 'crearPregunta'])->name('crearPregunta');

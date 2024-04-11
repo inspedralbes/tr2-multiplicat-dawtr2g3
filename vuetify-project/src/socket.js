@@ -35,23 +35,22 @@ socket.on('finalitzar duelo', () => {
   socket.emit('sortir duelo');
 });
 socket.on('win', () => {
-  console.log("Has guanyat");
   const store = useAppStore();
+  store.setGuanyat(true);
   store.setTourneigState("esperant");
+  store.stopTimer();
 });
 
 socket.on('lose', () => {
-  console.log("Has perdut");
   const store = useAppStore();
+  store.setPerdut(true);
   store.setTourneigState("esperant");
+  store.stopTimer();
 });
 
 socket.on('start match', (question) => {
   const store = useAppStore();
-  store.stopTimer();
   store.setQuestion(question);
-  store.timer = question.temps;
-  store.startTimer();
   store.setTourneigState("partida");
   store.canvi = true;
 });
@@ -77,6 +76,10 @@ socket.on("update chat", (msg) => {
  */
 socket.on("closed lobby", () => {
   const store = useAppStore();
+  store.players = [];
+  store.enPartida = false;
+
+  console.log('closed lobby')
   router.push('/partides');
   store.stopTimer();
 });
@@ -91,6 +94,13 @@ socket.on("new question", (question) => {
   store.setQuestion(question);
   store.timer = question.temps;
   store.startTimer();
+  store.canvi = true;
+});
+
+socket.on("new question torneig", (question) => {
+  console.log(question);
+  const store = useAppStore();
+  store.setQuestion(question);
   store.canvi = true;
 });
 
@@ -175,6 +185,7 @@ socket.on("play", (question) => {
   store.setQuestion(question);
   store.setAnswer(null);
   store.timer = question.temps;
+  store.enLobby = false;
   store.enPartida = true;
   router.push('/partida');
   store.startTimer();
@@ -218,12 +229,11 @@ socket.on('nuke', (nick) => {
   store.stopTimer();
   console.log(store.nukeAnimation);
   setTimeout(() => {
-    console.log('stop animation');
     store.nukeAnimation = false;
+    store.startTimer();
   }, 5000);
 })
 socket.on('pregunta nuke', (pregunta) => {
-  console.log(pregunta);
   const store = useAppStore();
   store.question = pregunta;
   store.question.pregunta = store.question.enunciat
@@ -242,14 +252,21 @@ socket.on('tournament info', (info) => {
 
   data.participant.forEach((jugador, index) => {
     jugador.name = players[index].nick;
+    jugador.avatar = players[index].avatar;
   });
 
+  store.enLobby = false;
+  store.enPartida = true;
+  store.setPlayers(players);
   store.setTorneigInfo(data);
   router.push('/torneigProfe');
 });
 
 socket.on("new matchup", (arrayUsers) => {
   const store = useAppStore();
+  store.enPartida = true;
+  store.enLobby = false;
+
   let myself = arrayUsers.find(user => user.idSocket == socket.id);
   store.setOwnPlayer(myself);
   store.setTourneigState("matchup");
@@ -263,6 +280,8 @@ socket.on("lose tournament", () => {
 
 socket.on("end tournament", (guanyador) => {
   const store = useAppStore();
+    store.enPartida = false;
+
   console.log(guanyador);
   store.setGuanyador(guanyador);
   router.push('/finalTorneig');
