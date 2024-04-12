@@ -1,4 +1,4 @@
-# Projecte Multiplicat
+# Projecte Multiplicat v2.1.1
 
 
 ## Math Battle
