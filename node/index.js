@@ -1710,7 +1710,9 @@ function respostaFallada(user, roomID, socket) {
     if (user.infoPoders.robarVida > 0) {
       user.infoPoders.robarVida = 0;
     }
-
+    if(user.vida <= 0){
+      user.vida = 0;
+    }
     user.falladesConsecutives++;
     user.encertades = 0;
     if (!user.mort) {
