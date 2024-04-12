@@ -13,7 +13,7 @@
                 class="imagen__vida">
 
         </div>
-        <div class="racha" :style="[jugador.encertades>4?{color:'red'}:{color:'blue'}]">{{ jugador.encertades<1?'':jugador.encertades }}</div>
+        <div class="racha" :style="[jugador.encertades>4?{color:'red'}:{color:'blue'}]">{{ jugador.encertades<2?'':jugador.encertades }}</div>
     </div>
 </template>
 

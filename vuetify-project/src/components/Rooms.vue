@@ -53,7 +53,6 @@
     margin-top: 1vh;
     text-align: center;
     /* estils */
-    color: rgba(255, 166, 2, 1);
     font-size: 2.5vw;
 }
 
