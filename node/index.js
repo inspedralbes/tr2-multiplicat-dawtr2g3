@@ -854,6 +854,9 @@ io.on("connection", (socket) => {
       if (room.jugadors.length >= 2 && room.tipus == "royale") {
         room.start = Date.now();
         io.to(roomID).emit("play", arrayPreg[0]);
+        let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
+        arrayRoomMinim.splice(index, 1);
+        io.emit("games list", arrayRoomMinim);
       }
 
       if (room.jugadors.length == room.maxJugadors && room.tipus == "torneo") {
@@ -878,10 +881,11 @@ io.on("connection", (socket) => {
           .catch((error) => {
             console.error(error);
           });
+        let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
+        arrayRoomMinim.splice(index, 1);
+        io.emit("games list", arrayRoomMinim);
       }
-      let index = arrayRoomMinim.findIndex((room) => room.id == roomID);
-      arrayRoomMinim.splice(index, 1);
-      io.emit("games list", arrayRoomMinim);
+
     }
   });
 
