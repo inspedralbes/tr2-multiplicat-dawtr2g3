@@ -191,7 +191,6 @@ export default {
     },
     methods: {
         start() {
-            console.log("empezar");
             socket.emit('start');
         },
         enviarMissatge() {
@@ -205,11 +204,9 @@ export default {
 
     mounted() {
         const store = useAppStore();
-        console.log(store.enPartida)
         if (store.enPartida) {
             socket.emit('tornar a lobby');
             store.enPartida = false;
-            console.log('adios')
 
         }
     },
@@ -221,7 +218,6 @@ export default {
             store.players = [];
 
             store.enPartida = false;
-            console.log('adios')
 
         }
     },

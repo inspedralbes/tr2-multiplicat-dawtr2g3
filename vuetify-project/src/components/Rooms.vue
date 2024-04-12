@@ -207,7 +207,6 @@ export default {
         }
         
         socket.on('max jugadors', () => {
-            console.log("max jugadors");
             this.toast();
         });
     },
@@ -220,7 +219,6 @@ export default {
         }
     },
     created() {
-        console.log(this.$router.options.history.state.back)
 
     },
 

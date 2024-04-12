@@ -107,7 +107,6 @@ export default {
           this.opponents.opponent2 = match.opponent2.id;
           this.endGame = true;
           this.matchID = match.id;
-          console.log(this.matchID);
         }
       };
 
@@ -164,11 +163,9 @@ export default {
     },
 
     startNextRound() {
-      console.log("startNextRound");
       socket.emit("start round");
     },
     forçarVictoria(ordre) {
-      console.log("Forçar victòria");
       this.endGame = false;
 
       socket.emit("force win", {

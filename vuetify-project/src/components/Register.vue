@@ -98,7 +98,6 @@ export default {
       this.loading = true;
       const store = useAppStore();
       let response = await this.manager.register(this.nom, this.email, this.password, this.password_confirmation);
-      console.log(response);
       if (response.status == 201) {
         store.setLoginInfo(true, response.user.nom, response.token, response.user.verificat);
         router.push('/');

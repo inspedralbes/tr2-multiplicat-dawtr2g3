@@ -122,7 +122,6 @@ export default {
       }
     },
     async logout(){
-      console.log("logout");
       const store = useAppStore();
        let response = await this.manager.logout(store.loginInfo.token);
        if(response == 1){
@@ -182,7 +181,6 @@ export default {
       }
     },
     verificat() {
-      console.log(this.loginInfo.verificat);
       if (this.loginInfo.loggedIn == false) {
         Toastify({
 
@@ -213,7 +211,6 @@ export default {
       const store = useAppStore();
       if (store.loginInfo.token != '') {
        let response = await this.manager.checkToken(store.loginInfo.token);
-       console.log(response);
        if(response.status == 401 || response.status == 403){
          Toastify({
            text: "Sessió caducada",
@@ -251,20 +248,17 @@ export default {
 
     if (this.loginInfo.username != '') {
       this.nom = this.loginInfo.username;
-      console.log(this.nom);
     }
   },
   computed() {
     if (this.loginInfo.username != '') {
       this.nom = this.loginInfo.username;
-      console.log(this.nom);
     }
   },
   created() {
 
     const store = useAppStore();
-    console.log(store.enPartida)
-    console.log(store.enLobby)
+
     if (store.enPartida || store.enLobby) {
       socket.emit('tornar a lobby');
       store.enPartida = false;

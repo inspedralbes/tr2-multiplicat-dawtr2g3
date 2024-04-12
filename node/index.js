@@ -96,11 +96,9 @@ io.on("connection", (socket) => {
    */
   socket.on("join", (roomID, nom, avatar) => {
     let partida = arrayRoom.find((room) => room.id == roomID);
-    console.log("join: " +socket.id);
     if (partida) {
       if (partida.maxJugadors) {
         if (partida.maxJugadors <= partida.jugadors.length) {
-          console.log('max jugadors');
           socket.emit("max jugadors");
         } else {
           socket.join(roomID);
@@ -442,7 +440,6 @@ io.on("connection", (socket) => {
     if (roomID != undefined) {
       let index = arrayRoom.findIndex((room) => room.id == roomID);
       if (roomID == "Partida" + socket.id && index != "-1") {
-        console.log("encontrada partida");
 
         io.to(roomID).emit("closed lobby");
         let idOrig = socket.id;
@@ -492,7 +489,6 @@ io.on("connection", (socket) => {
           });
 
           llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-          console.log(llistatUsuaris);
           if (room.tipus == "torneo") {
             io.to(roomID).emit("update players", llistatUsuaris);
           } else {
@@ -516,7 +512,6 @@ io.on("connection", (socket) => {
     if (roomID != undefined) {
       let index = arrayRoom.findIndex((room) => room.id == roomID);
       if (roomID == "Partida" + socket.id && index != "-1") {
-        console.log("encontrada partida");
 
         io.to(roomID).emit("closed lobby");
         let idOrig = socket.id;
@@ -566,7 +561,6 @@ io.on("connection", (socket) => {
           });
 
           llistatUsuaris = arrayRoom.find((room) => room.id == roomID).jugadors;
-          console.log(llistatUsuaris);
           if (room.tipus == "torneo") {
             io.to(roomID).emit("update players", llistatUsuaris);
           } else {
@@ -598,7 +592,6 @@ io.on("connection", (socket) => {
       let jugadors = room.jugadors;
       let player1;
       let player2;
-      console.log(arrayPreg[idPreg].respostes[posResp]);
       if (
         arrayPreg[idPreg].respostes[posResp] ==
         preguntasMal[idPreg].respostes[respuestaCorrecta]
@@ -751,7 +744,6 @@ io.on("connection", (socket) => {
 
     let idGuanyador = room.dataTorneig.participant[guanyador].name;
     let idPerdedor = room.dataTorneig.participant[perdedor].name;
-    console.log(idGuanyador, idPerdedor);
 
     let jugadorGuanyador = room.jugadors.find(
       (jugador) => jugador.idSocket == idGuanyador

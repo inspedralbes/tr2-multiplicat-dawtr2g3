@@ -9,7 +9,6 @@ import JugadorPartida from "./components/JugadorPartida.vue";
 const socketURL = "http://mathroyale.daw.inspedralbes.cat:3589";
 
 
-console.log(socketURL);
 
 export const socket = io(socketURL, {
   extraHeaders: {
@@ -79,7 +78,6 @@ socket.on("closed lobby", () => {
   store.players = [];
   store.enPartida = false;
 
-  console.log('closed lobby')
   router.push('/partides');
   store.stopTimer();
 });
@@ -88,7 +86,6 @@ socket.on("closed lobby", () => {
  * Guarda la pregunta
  */
 socket.on("new question", (question) => {
-  console.log(question);
   const store = useAppStore();
   store.stopTimer();
   store.setQuestion(question);
@@ -98,7 +95,6 @@ socket.on("new question", (question) => {
 });
 
 socket.on("new question torneig", (question) => {
-  console.log(question);
   const store = useAppStore();
   store.setQuestion(question);
   store.canvi = true;
@@ -196,27 +192,21 @@ socket.on("duelo recibir", (duelo) => {
   const store = useAppStore();
   store.dialog = false;
 
-  console.log("recibir duelo");
-  console.log(store.ownPlayer)
   socket.emit("duelo entrar", store.ownPlayer.idSocket, duelo.oponent.id)
-  console.log(duelo);
   store.setDuelo(duelo);
   store.animacionDuelo = true;
   setTimeout(() => {
     store.animacionDuelo = false;
   }, 3000);
-  console.log(socket.rooms);
 });
 
 socket.on("duelo enviar", (duelo) => {
   //Triger animacion de enviar duelo
   const store = useAppStore();
-  console.log("enviar duelo");
-  console.log(store.ownPlayer)
+
 
   socket.emit("duelo entrar", duelo.oponent.id, store.ownPlayer.idSocket);
 
-  console.log(duelo);
   store.setDuelo(duelo);
   store.animacionDuelo = true;
   setTimeout(() => {
@@ -227,7 +217,6 @@ socket.on('nuke', (nick) => {
   const store = useAppStore();
   store.nukeAnimation = nick;
   store.stopTimer();
-  console.log(store.nukeAnimation);
   setTimeout(() => {
     store.nukeAnimation = false;
     store.startTimer();
@@ -246,9 +235,6 @@ socket.on('tournament info', (info) => {
   const store = useAppStore();
 
   let { data, players } = info;
-
-  console.log("DATA: ", data);
-  console.log("PLAYERS: ", players);
 
   data.participant.forEach((jugador, index) => {
     jugador.name = players[index].nick;
@@ -282,7 +268,6 @@ socket.on("end tournament", (guanyador) => {
   const store = useAppStore();
     store.enPartida = false;
 
-  console.log(guanyador);
   store.setGuanyador(guanyador);
   router.push('/finalTorneig');
 })

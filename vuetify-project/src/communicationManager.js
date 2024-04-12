@@ -51,7 +51,6 @@ export class CommunicationManager {
             body: formData
         });
         let jsonResponse = await response.json();
-        console.log(jsonResponse)
         const store = useAppStore();
         store.loginInfo = {
             loggedIn: false,
@@ -97,7 +96,6 @@ export class CommunicationManager {
             body: formData
         });
         let jsonResponse = await response.json();
-        console.log(jsonResponse)
         return jsonResponse;
     }
 

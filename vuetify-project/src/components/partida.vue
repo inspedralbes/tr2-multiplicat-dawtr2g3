@@ -294,7 +294,6 @@ export default {
          * @param {int} index index de la resposta
          */
         answer(index) {
-            console.log("hola");
             this.game.notFirstQuestion = true;
             const store = useAppStore();
             store.nuke = false;

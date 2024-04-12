@@ -80,7 +80,6 @@ export default {
         crear() {
             const store = useAppStore();
             store.enLobby = true;
-            console.log(this.tipus);
             if (this.maxJugadors != 0 && this.nom != "" && this.tipus != "") {
                 socket.emit('create game', this.nom, this.maxJugadors, this.tipus, store.loginInfo.username);
                 this.$router.push('/lobby');
@@ -99,7 +98,6 @@ export default {
             store.enPartida = false;
             store.enLobby = false;
 
-            console.log('adios')
 
         }
     },

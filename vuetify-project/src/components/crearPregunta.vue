@@ -110,7 +110,6 @@ export default {
                 this.resposta4,
                 this.token
             );
-            console.log(resposta)
             if (resposta.status == 401) {
                 Toastify({
 
