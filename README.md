@@ -11,3 +11,4 @@
 * *[Math_Royale](http://mathroyale.daw.inspedralbes.cat/vuetify/)*
 
 
+* Versió 2.0 i endavant fetes per Loris Crisafo i Arnau Fernández
