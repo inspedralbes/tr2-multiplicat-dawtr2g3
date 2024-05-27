@@ -12,3 +12,6 @@
 
 
 * Versió 2.0 i endavant fetes per Loris Crisafo i Arnau Fernández
+
+
+aqui funciona
