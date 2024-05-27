@@ -1,0 +1,67 @@
+services:
+  math-royale-vue:
+    image: node:21-alpine3.18
+    container_name: math-royale-vue
+    volumes:
+      - ./vuetify-project:/usr/src/app
+    working_dir: /usr/src/app
+    command: sh -c "cp .env.develop .env.local && npm install && npm run dev"
+    ports:
+      - "4000:4000"
+    depends_on:
+      - math-royale-back
+  
+  math-royale-back:
+    build: 
+      dockerfile: ./develop.DockerFile
+      context: ./node
+    container_name: math-royale-back
+    volumes:
+      - ./node:/usr/src/app
+    working_dir: /usr/src/app
+    command: sh -c "cp .env.develop .env && npm install && nodemon index.js -L"
+    ports:
+      - "3589:3589"
+    depends_on:
+      - math-royale-web
+    links:
+      - math-royale-web
+
+  math-royale-mysql:
+    image: mysql
+    container_name: math-royale-mysql
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: prova1
+    volumes:
+      - math-royale-db:/var/lib/mysql:rw
+
+  math-royale-adminer:
+    image: adminer:4.8.1-standalone
+    container_name: math-royale-adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - math-royale-mysql
+
+  math-royale-web:
+    build: 
+      dockerfile: ./apache.DockerFile
+      context: ./sites-available
+    container_name: math-royale-web
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./laravel:/var/www/html/
+    links:
+      - math-royale-mysql
+    working_dir: /var/www/html/
+    command: sh -c "composer install && cp .env.develop .env && php artisan key:generate && php artisan migrate && php artisan serve --host=0.0.0.0"
+
+
+volumes:
+  math-royale-db:
